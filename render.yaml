@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: stran-archive
+    name: stranabdullah
     runtime: node
     plan: free
     region: oregon

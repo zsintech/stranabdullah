@@ -132,5 +132,5 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 });
 
 app.listen(port, "0.0.0.0", () => {
-  console.log(`Stran archive listening on http://0.0.0.0:${port}`);
+  console.log(`stranabdullah listening on http://0.0.0.0:${port}`);
 });

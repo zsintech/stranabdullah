@@ -1,4 +1,4 @@
-# Stran Archive
+# stranabdullah
 
 Express + EJS archive site for هەڤاڵ ستران عەبدوڵڵا.
 
