@@ -14,6 +14,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["app.ts", "routes/**/*.ts", "src/**/*.ts"],
+  "include": ["app.ts", "routes/**/*.ts", "src/**/*.ts", "src/**/*.d.ts", "scripts/**/*.ts"],
   "exclude": ["node_modules"]
 }
