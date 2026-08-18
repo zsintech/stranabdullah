@@ -2149,14 +2149,22 @@
   .feature-spread > .feature-spread__year {
     position: absolute;
     z-index: 0;
-    inset-inline-end: 0;
-    inset-block-start: 0.15em;
-    max-inline-size: 7.5rem;
-    overflow: hidden;
-    font-size: clamp(2rem, 4vw, 2.75rem);
+    inset-inline-end: 1.15rem;
+    inset-block-end: 0.7rem;
+    inset-block-start: auto;
+    max-inline-size: none;
+    overflow: visible;
+    font-size: clamp(1.4rem, 2.8vw, 1.9rem);
     line-height: 1;
+    letter-spacing: -0.03em;
     white-space: nowrap;
     pointer-events: none;
+    color: color-mix(in srgb, var(--sage) 20%, transparent);
+  }
+
+  /* Text-only cards are short — skip the watermark so it can’t clip the saucer */
+  .feature-spread--text > .feature-spread__year {
+    display: none;
   }
   .feature-spread__media {
     position: relative;
