@@ -1,6 +1,9 @@
 import demoContent from "@/data/demo-content.json";
-import { ContentItemSchema, type ArchiveFilters, type ContentItem, type ContentType } from "@/types/content";
-import type { ContentRepository, ListResult } from "@/repositories/content-repository";
+import { DEFAULT_BIOGRAPHY, BiographySettingsSchema, type BiographySettings } from "@/types/biography";
+import { ContentItemSchema, type ArchiveFilters, type ContentItem, type ContentStatus, type ContentType } from "@/types/content";
+import type { AdminContentRepository, AdminListFilters, ContentDraftInput, ListResult } from "@/repositories/content-repository";
+import { applyDraft, matchesAdminQuery, sortByUpdated } from "@/repositories/content-draft";
+import { invalidateArchiveCountCache } from "@/lib/public-cache";
 
 function loadDemoItems(): ContentItem[] {
   return demoContent.map((raw) => ContentItemSchema.parse(raw));
@@ -19,7 +22,6 @@ function publishedSorted(items: ContentItem[]): ContentItem[] {
 function applyFilters(items: ContentItem[], filters?: ArchiveFilters): ContentItem[] {
   let result = publishedSorted(items);
 
-  // Keep books on /books and bio “about” notes off the writing archive feed.
   if (!filters?.type) {
     result = result.filter(
       (item) =>
@@ -62,13 +64,28 @@ function applyFilters(items: ContentItem[], filters?: ArchiveFilters): ContentIt
   return result;
 }
 
-export function createSeedContentRepository(): ContentRepository {
-  const all = loadDemoItems();
+function assertUniqueSlug(items: ContentItem[], slug: string, exceptId?: string) {
+  if (items.some((item) => item.slug === slug && item.id !== exceptId)) {
+    throw new Error("ئەم لینکە پێشتر بەکارهاتووە.");
+  }
+}
+
+export function createSeedContentRepository(): AdminContentRepository {
+  const items = loadDemoItems();
+  let biography: BiographySettings = { ...DEFAULT_BIOGRAPHY };
+
+  const replace = (next: ContentItem) => {
+    const index = items.findIndex((item) => item.id === next.id);
+    if (index >= 0) items[index] = next;
+    else items.unshift(next);
+    invalidateArchiveCountCache();
+    return next;
+  };
 
   return {
     async listPublished(filters?: ArchiveFilters): Promise<ListResult> {
       const limit = filters?.limit ?? 24;
-      const filtered = applyFilters(all, filters);
+      const filtered = applyFilters(items, filters);
       const start = filters?.cursor
         ? filtered.findIndex((item) => item.id === filters.cursor) + 1
         : 0;
@@ -82,24 +99,92 @@ export function createSeedContentRepository(): ContentRepository {
     },
 
     async getBySlug(slug: string) {
-      return publishedSorted(all).find((item) => item.slug === slug) ?? null;
+      return publishedSorted(items).find((item) => item.slug === slug) ?? null;
     },
 
     async getFeatured(limit = 6) {
-      return publishedSorted(all)
+      return publishedSorted(items)
         .filter((item) => item.featured)
         .sort((a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99))
         .slice(0, limit);
     },
 
     async getLatest(limit = 6) {
-      return publishedSorted(all).slice(0, limit);
+      return publishedSorted(items).slice(0, limit);
     },
 
     async getByType(type: ContentType, limit = 6) {
-      return publishedSorted(all)
+      return publishedSorted(items)
         .filter((item) => item.contentType === type)
         .slice(0, limit);
+    },
+
+    async listAll(filters?: AdminListFilters) {
+      return sortByUpdated(items.filter((item) => matchesAdminQuery(item, filters)));
+    },
+
+    async getById(id: string) {
+      return items.find((item) => item.id === id) ?? null;
+    },
+
+    async create(input: ContentDraftInput, actorEmail: string) {
+      const item = applyDraft(undefined, input, actorEmail);
+      assertUniqueSlug(items, item.slug);
+      return replace(item);
+    },
+
+    async update(id: string, input: ContentDraftInput, actorEmail: string) {
+      const current = items.find((item) => item.id === id);
+      if (!current) throw new Error("تۆمار نەدۆزرایەوە.");
+      const item = applyDraft(current, input, actorEmail);
+      assertUniqueSlug(items, item.slug, id);
+      return replace(item);
+    },
+
+    async setStatus(id: string, status: ContentStatus, actorEmail: string) {
+      const current = items.find((item) => item.id === id);
+      if (!current) throw new Error("تۆمار نەدۆزرایەوە.");
+      const publishedAt =
+        status === "published" ? current.publishedAt || new Date().toISOString() : current.publishedAt;
+      return replace(
+        ContentItemSchema.parse({
+          ...current,
+          status,
+          publishedAt,
+          audit: { ...current.audit, updatedAt: new Date().toISOString(), updatedBy: actorEmail },
+        }),
+      );
+    },
+
+    async setFeatured(id: string, featured: boolean, actorEmail: string) {
+      const current = items.find((item) => item.id === id);
+      if (!current) throw new Error("تۆمار نەدۆزرایەوە.");
+      const now = new Date().toISOString();
+      if (featured) {
+        for (const item of items) {
+          if (item.featured && item.id !== id) {
+            item.featured = false;
+            item.audit = { ...item.audit, updatedAt: now, updatedBy: actorEmail };
+          }
+        }
+      }
+      return replace(
+        ContentItemSchema.parse({
+          ...current,
+          featured,
+          featuredOrder: featured ? 1 : current.featuredOrder,
+          audit: { ...current.audit, updatedAt: now, updatedBy: actorEmail },
+        }),
+      );
+    },
+
+    async getBiography() {
+      return biography;
+    },
+
+    async saveBiography(data: BiographySettings) {
+      biography = BiographySettingsSchema.parse(data);
+      return biography;
     },
   };
 }

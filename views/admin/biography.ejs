@@ -1,0 +1,40 @@
+<section>
+  <h1 class="t-h2">ژیاننامە</h1>
+  <p class="t-body mt-2">ئەم دەقە لە پەڕەی ژیاننامەی گشتی دەردەکەوێت.</p>
+
+  <form method="post" action="/admin/biography" enctype="multipart/form-data" class="admin-form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
+    <div>
+      <label class="field-label" for="name">ناو</label>
+      <input class="field" id="name" name="name" required value="<%= biography.name %>" />
+    </div>
+    <div>
+      <label class="field-label" for="intro">پێشەکی</label>
+      <textarea class="field admin-textarea" id="intro" name="intro"><%= biography.intro %></textarea>
+    </div>
+    <div>
+      <label class="field-label" for="body">دەقی زیاتر</label>
+      <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body"><%= biography.body %></textarea>
+    </div>
+    <div>
+      <label class="field-label" for="portraitUrl">وێنە (URL)</label>
+      <input class="field" id="portraitUrl" name="portraitUrl" dir="ltr" value="<%= biography.portraitUrl %>" />
+    </div>
+    <div>
+      <label class="field-label" for="portrait">یان فایلێک باربکە</label>
+      <input id="portrait" name="portrait" type="file" accept="image/*" />
+    </div>
+    <% if (biography.portraitUrl) { %>
+    <img class="admin-cover-preview" src="<%= biography.portraitUrl %>" alt="" />
+    <% } %>
+    <div>
+      <label class="field-label" for="portraitAlt">دەقی جێگرەوەی وێنە</label>
+      <input class="field" id="portraitAlt" name="portraitAlt" value="<%= biography.portraitAlt %>" />
+    </div>
+    <div>
+      <label class="field-label" for="note">تێبینیی خوارەوە</label>
+      <textarea class="field admin-textarea" id="note" name="note"><%= biography.note %></textarea>
+    </div>
+    <button class="btn btn-primary" type="submit">پاشەکەوت</button>
+  </form>
+</section>

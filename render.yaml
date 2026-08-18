@@ -11,8 +11,34 @@ services:
       - key: NODE_ENV
         value: production
       - key: CONTENT_SOURCE
-        value: seed
+        value: firestore
       - key: NEXT_PUBLIC_USE_FIREBASE_EMULATORS
         value: "false"
+      - key: SESSION_COOKIE_NAME
+        value: adminSession
+      - key: SESSION_EXPIRES_DAYS
+        value: "14"
       - key: COOKIE_SIGNATURE_SECRET
         generateValue: true
+      - key: CSRF_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_FIREBASE_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: NEXT_PUBLIC_FIREBASE_APP_ID
+        sync: false
+      - key: FIREBASE_ADMIN_PROJECT_ID
+        sync: false
+      - key: FIREBASE_ADMIN_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_ADMIN_PRIVATE_KEY
+        sync: false
+      - key: ADMIN_ALLOWED_EMAILS
+        sync: false

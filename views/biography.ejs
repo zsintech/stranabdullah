@@ -3,26 +3,22 @@
     <div class="site-container bio-intro__grid">
       <div class="bio-intro__copy">
         <p class="t-eyebrow page-masthead__eyebrow--on-dark">ژیاننامە</p>
-        <h1 id="bio-heading" class="t-h1 mt-2 page-masthead__title--on-dark">هەڤاڵ ستران عەبدوڵڵا</h1>
+        <h1 id="bio-heading" class="t-h1 mt-2 page-masthead__title--on-dark"><%= biography.name %></h1>
         <%- include("partials/gold-rule", { extraClass: "mt-6 max-w-[16rem]" }) %>
-        <p class="t-lead mt-6 w-full max-w-2xl page-masthead__lead--on-dark">
-          نووسەر و ڕۆژنامەنووس. لە کەرکوک لەدایکبوو (١٩٦٩)؛ لە ١٩٩٣ەوە لە میدیای
-          کوردستانی دەنووسێت. سەرنووسەری کوردستانی نوێ و ئاسۆ بووە؛ لە ٢٠١٩ەوە
-          ئەندامی سەرکردایەتی یەکێتیی نیشتمانیی کوردستانە.
-        </p>
-        <p class="t-body mt-4 w-full max-w-2xl page-masthead__lead--on-dark">
-          نووسینەکانی لە ژیان، المرصد، PUKmedia و کتێبخانە گشتییەکاندا بڵاوکراونەتەوە.
-          ئەم پەڕەیە تۆماری ئەرشیف و کەتەلۆگی کتێبەکان کۆدەکاتەوە؛ وردەکاریی تەواوی
-          پۆست و ژیاننامە دواتر لەلایەن نووسینگەوە دەسەلمێندرێت.
-        </p>
+        <% String(biography.intro || "").split(/\n+/).filter(Boolean).forEach(function (para, idx) { %>
+        <p class="<%= idx === 0 ? 't-lead mt-6' : 't-body mt-4' %> w-full max-w-2xl page-masthead__lead--on-dark"><%= para %></p>
+        <% }); %>
+        <% String(biography.body || "").split(/\n+/).filter(Boolean).forEach(function (para) { %>
+        <p class="t-body mt-4 w-full max-w-2xl page-masthead__lead--on-dark"><%= para %></p>
+        <% }); %>
       </div>
 
       <figure class="bio-intro__figure">
         <div class="bio-intro__plate" aria-hidden="true"></div>
         <img
           class="bio-intro__portrait"
-          src="/brand/portrait-cutout.png"
-          alt="وێنەی ناسنامەیی هەڤاڵ ستران عەبدوڵڵا"
+          src="<%= biography.portraitUrl %>"
+          alt="<%= biography.portraitAlt %>"
           width="1024"
           height="1024"
           decoding="async"
@@ -92,11 +88,9 @@
     <% } %>
 
     <section class="float-saucer float-saucer--rounded float-saucer--lift-sm bio-note-saucer measure mt-14">
-      <p class="t-meta max-w-xl">
-        سەرچاوەکانی «دەربارە»: پرۆفایلی گشتی KurdCollect، کەتەلۆگی کتێبخانەی ژین،
-        هەواڵنامە، و ئاگادارییەکانی PUKmedia. ژیاننامەی فەرمیی تەواو دواتر لەلایەن
-        نووسینگەوە دادەنرێت.
-      </p>
+      <% if (biography.note) { %>
+      <p class="t-meta max-w-xl"><%= biography.note %></p>
+      <% } %>
       <div class="mt-3.5 flex flex-wrap gap-2">
         <a href="/archive" class="btn btn-secondary btn-sm">ئەرشیفی نووسینەکان</a>
         <% if (booksCount) { %>

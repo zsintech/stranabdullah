@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# local admin uploads (seed mode)
+/public/uploads/
+!/public/uploads/.gitkeep
+
 # local captures / scratch
 /shots/
 /person.png

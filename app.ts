@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import adminRouter from "./routes/admin";
 import archiveRouter from "./routes/archive";
 import contactRouter from "./routes/contact";
 import pagesRouter from "./routes/pages";
@@ -30,6 +31,7 @@ import { archiveLabels } from "./src/lib/archive-labels";
 import { SITE_EMAIL, SITE_NAME, SITE_NAME_SHORT, SITE_DESCRIPTION } from "./src/lib/constants";
 import { withContentRepo } from "./src/repositories/index";
 import { getServerEnv } from "./src/lib/env";
+import { readArchiveCountCache, writeArchiveCountCache } from "./src/lib/public-cache";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "public");
@@ -81,17 +83,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookieSecret));
 
-let archiveCountCache = { n: 0, at: 0 };
-
 app.use(async (_req, res, next) => {
   try {
+    const cache = readArchiveCountCache();
     const now = Date.now();
-    if (now - archiveCountCache.at > 60_000) {
+    if (now - cache.at > 60_000) {
       const { items } = await withContentRepo((repo) => repo.listPublished({ limit: 1000 }));
-      archiveCountCache = { n: items.length, at: now };
+      writeArchiveCountCache(items.length);
     }
-    res.locals.archiveCount = archiveCountCache.n;
-    res.locals.archiveCountDisplay = kuDigits(archiveCountCache.n);
+    const latest = readArchiveCountCache();
+    res.locals.archiveCount = latest.n;
+    res.locals.archiveCountDisplay = kuDigits(latest.n);
     res.locals.copyrightYear = new Date().getFullYear();
   } catch {
     res.locals.archiveCount = 0;
@@ -117,6 +119,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/admin", adminRouter);
 app.use(pagesRouter);
 app.use(archiveRouter);
 app.use(contactRouter);

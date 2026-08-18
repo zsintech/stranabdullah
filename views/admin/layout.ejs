@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl" class="font-vazir">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title><%= pageTitle ? pageTitle + " · بەڕێوەبەر" : "بەڕێوەبەر" %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles/app.css?v=20260818b" />
+    <link rel="stylesheet" href="/css/admin.css?v=20260818a" />
+    <style>
+      :root { --font-vazir: "Vazirmatn", sans-serif; }
+      html { font-family: var(--font-vazir); }
+    </style>
+  </head>
+  <body class="admin-body">
+    <% if (typeof adminUser !== "undefined" && adminUser) { %>
+    <header class="admin-top">
+      <a href="/admin" class="admin-brand">بەڕێوەبەر</a>
+      <nav class="admin-nav">
+        <a href="/admin">سەرەکی</a>
+        <a href="/admin/items">تۆمارەکان</a>
+        <a href="/admin/items/new">نوێ</a>
+        <a href="/admin/biography">ژیاننامە</a>
+        <a href="/" target="_blank" rel="noopener">ماڵپەڕ</a>
+      </nav>
+      <form method="post" action="/admin/logout" class="admin-logout">
+        <input type="hidden" name="_csrf" value="<%= csrf %>" />
+        <button type="submit" class="btn btn-sm btn-secondary">دەرچوون</button>
+      </form>
+    </header>
+    <% } %>
+    <main class="admin-main">
+      <% if (typeof flash !== "undefined" && flash) { %>
+      <p class="admin-flash admin-flash--<%= flash.type %>"><%= flash.message %></p>
+      <% } %>
+      <% if (typeof seedMode !== "undefined" && seedMode && typeof adminUser !== "undefined" && adminUser) { %>
+      <p class="admin-flash admin-flash--error">ئێستا لەسەر ناوەڕۆکی ناوخۆیی (seed) دەنووسیت — گۆڕانکارییەکان دوای ڕیستارتی سێرڤەر نامێنن. بۆ بەرهەم CONTENT_SOURCE=firestore دابنێ.</p>
+      <% } %>
+      <%- body %>
+    </main>
+  </body>
+</html>

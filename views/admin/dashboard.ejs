@@ -1,0 +1,32 @@
+<section>
+  <h1 class="t-h2">بەڕێوەبەر</h1>
+  <p class="t-body mt-2">دەستکاری ژیاننامە، بڵاوکردنەوە، و شاردنەوەی تۆمارەکان.</p>
+
+  <ul class="admin-stats">
+    <li><span><%= kuDigits(counts.all) %></span> گشتی</li>
+    <li><span><%= kuDigits(counts.published) %></span> بڵاوکراوە</li>
+    <li><span><%= kuDigits(counts.draft) %></span> ڕەشنووس</li>
+    <li><span><%= kuDigits(counts.archived) %></span> شاردراوەتەوە</li>
+    <li><span><%= kuDigits(counts.featured) %></span> تایبەت</li>
+  </ul>
+
+  <div class="admin-actions">
+    <a class="btn btn-primary" href="/admin/items/new">تۆماری نوێ</a>
+    <a class="btn btn-secondary" href="/admin/biography">دەستکاری ژیاننامە</a>
+    <a class="btn btn-secondary" href="/admin/items">هەموو تۆمارەکان</a>
+  </div>
+
+  <h2 class="t-h3 mt-10">دوایین گۆڕانکاری</h2>
+  <% if (!recent.length) { %>
+  <p class="t-meta mt-3">تۆمار نییە.</p>
+  <% } else { %>
+  <ul class="admin-list">
+    <% recent.forEach(function (item) { %>
+    <li>
+      <a href="/admin/items/<%= item.id %>"><%= item.title %></a>
+      <span class="t-meta"><%= statusLabels[item.status] %> · <%= contentTypeLabels[item.contentType] %></span>
+    </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</section>

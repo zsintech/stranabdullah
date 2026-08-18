@@ -1,12 +1,12 @@
 import { createFirestoreContentRepository } from "@/repositories/firestore-content-repository";
 import { createSeedContentRepository } from "@/repositories/seed-content-repository";
-import type { ContentRepository } from "@/repositories/content-repository";
+import type { AdminContentRepository, ContentRepository } from "@/repositories/content-repository";
 import { isUsingEmulators } from "@/lib/env";
 
-let cached: ContentRepository | null = null;
+let cached: AdminContentRepository | null = null;
 let usingSeedFallback = false;
 
-const FIRESTORE_TIMEOUT_MS = 2500;
+const FIRESTORE_TIMEOUT_MS = 8000;
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -24,18 +24,26 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
+function preferSeed(): boolean {
+  return process.env.CONTENT_SOURCE === "seed" || process.env.CONTENT_SOURCE === "demo";
+}
+
+function requireFirestore(): boolean {
+  return process.env.CONTENT_SOURCE === "firestore";
+}
+
 export function isUsingSeedFallback(): boolean {
   return usingSeedFallback;
 }
 
 export function getContentRepository(): ContentRepository {
+  return getAdminContentRepository();
+}
+
+export function getAdminContentRepository(): AdminContentRepository {
   if (cached) return cached;
 
-  const preferSeed =
-    process.env.CONTENT_SOURCE === "seed" ||
-    process.env.CONTENT_SOURCE === "demo";
-
-  if (preferSeed) {
+  if (preferSeed()) {
     cached = createSeedContentRepository();
     usingSeedFallback = true;
     return cached;
@@ -48,14 +56,15 @@ export function getContentRepository(): ContentRepository {
     cached = createFirestoreContentRepository();
     usingSeedFallback = false;
     return cached;
-  } catch {
+  } catch (error) {
+    console.error("Firestore init failed; serving seed content until credentials are available.", error);
     cached = createSeedContentRepository();
     usingSeedFallback = true;
     return cached;
   }
 }
 
-/** Prefer Firestore; on query failure or timeout fall back to seed. */
+/** Prefer Firestore; on query failure or timeout fall back to seed — unless CONTENT_SOURCE=firestore. */
 export async function withContentRepo<T>(
   fn: (repo: ContentRepository) => Promise<T>,
 ): Promise<T> {
@@ -66,7 +75,8 @@ export async function withContentRepo<T>(
 
   try {
     return await withTimeout(fn(primary), FIRESTORE_TIMEOUT_MS);
-  } catch {
+  } catch (error) {
+    if (requireFirestore()) throw error;
     usingSeedFallback = true;
     cached = createSeedContentRepository();
     return fn(cached);

@@ -6,8 +6,9 @@ import { sourceOutletLabel } from "@/lib/content-labels";
 import { kuDigits } from "@/lib/format";
 import { countBy, pickUnused } from "@/lib/home";
 import { renderPage } from "@/lib/render-page";
-import { withContentRepo } from "@/repositories";
+import { getAdminContentRepository, withContentRepo } from "@/repositories";
 import type { ContentItem } from "@/types/content";
+import { DEFAULT_BIOGRAPHY } from "@/types/biography";
 
 const router = Router();
 
@@ -73,9 +74,17 @@ router.get(
     const span =
       years.length > 0 ? `${years[years.length - 1].display}–${years[0].display}` : undefined;
 
+    let biography = DEFAULT_BIOGRAPHY;
+    try {
+      biography = await getAdminContentRepository().getBiography();
+    } catch {
+      biography = DEFAULT_BIOGRAPHY;
+    }
+
     await renderPage(res, "biography", {
       pageTitle: "ژیاننامە",
       pageDescription: "ژیاننامە و تۆماری کاری بڵاوکراوەی هەڤاڵ ستران عەبدوڵڵا.",
+      biography,
       years,
       languages,
       outlets,

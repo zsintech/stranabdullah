@@ -9,7 +9,9 @@
     "lint": "tsc --noEmit",
     "import:outlets": "node scripts/import-outlet-articles.mjs",
     "import:pukmedia": "node scripts/import-pukmedia.mjs",
-    "seed:publications": "node scripts/seed-publications.mjs"
+    "seed:publications": "node scripts/seed-publications.mjs",
+    "migrate:firestore": "tsx scripts/migrate-seed-to-firestore.ts",
+    "admin:create-user": "tsx scripts/create-admin-user.ts"
   },
   "engines": {
     "node": ">=20"
@@ -21,6 +23,7 @@
     "express": "^4.21.2",
     "firebase": "^12.17.1",
     "firebase-admin": "^14.2.0",
+    "multer": "^2.0.2",
     "tsx": "^4.23.11",
     "zod": "^4.4.3"
   },
@@ -28,6 +31,7 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/ejs": "^3.1.5",
     "@types/express": "^4.17.23",
+    "@types/multer": "^1.4.13",
     "@types/node": "^20",
     "firebase-tools": "^15.26.0",
     "prettier": "^3.9.6",
