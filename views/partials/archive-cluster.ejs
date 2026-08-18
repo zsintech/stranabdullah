@@ -1,0 +1,10 @@
+<ul class="archive-lane__cluster archive-lane__cluster--<%= tone %>">
+  <% facets.forEach(function (facet) { %>
+  <li>
+    <a href="<%= facet.href %>" class="archive-lane__link group" aria-label="<%= facet.display %>، <%= kuDigits(facet.count) %> تۆمار">
+      <span class="archive-lane__name link-underline"><%= facet.display %></span>
+      <span class="archive-lane__count" aria-hidden><%= kuDigits(facet.count) %></span>
+    </a>
+  </li>
+  <% }); %>
+</ul>

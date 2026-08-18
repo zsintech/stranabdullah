@@ -1,0 +1,108 @@
+<div class="bg-cream-100">
+  <section class="bio-intro page-masthead page-masthead--forest editorial-field-forest" aria-labelledby="bio-heading">
+    <div class="site-container bio-intro__grid">
+      <div class="bio-intro__copy">
+        <p class="t-eyebrow page-masthead__eyebrow--on-dark">ژیاننامە</p>
+        <h1 id="bio-heading" class="t-h1 mt-2 page-masthead__title--on-dark">هەڤاڵ ستران عەبدوڵڵا</h1>
+        <%- include("partials/gold-rule", { extraClass: "mt-6 max-w-[16rem]" }) %>
+        <p class="t-lead mt-6 w-full max-w-2xl page-masthead__lead--on-dark">
+          نووسەر و ڕۆژنامەنووس. لە کەرکوک لەدایکبوو (١٩٦٩)؛ لە ١٩٩٣ەوە لە میدیای
+          کوردستانی دەنووسێت. سەرنووسەری کوردستانی نوێ و ئاسۆ بووە؛ لە ٢٠١٩ەوە
+          ئەندامی سەرکردایەتی یەکێتیی نیشتمانیی کوردستانە.
+        </p>
+        <p class="t-body mt-4 w-full max-w-2xl page-masthead__lead--on-dark">
+          نووسینەکانی لە ژیان، المرصد، PUKmedia و کتێبخانە گشتییەکاندا بڵاوکراونەتەوە.
+          ئەم پەڕەیە تۆماری ئەرشیف و کەتەلۆگی کتێبەکان کۆدەکاتەوە؛ وردەکاریی تەواوی
+          پۆست و ژیاننامە دواتر لەلایەن نووسینگەوە دەسەلمێندرێت.
+        </p>
+      </div>
+
+      <figure class="bio-intro__figure">
+        <div class="bio-intro__plate" aria-hidden="true"></div>
+        <img
+          class="bio-intro__portrait"
+          src="/brand/portrait-cutout.png"
+          alt="وێنەی ناسنامەیی هەڤاڵ ستران عەبدوڵڵا"
+          width="1024"
+          height="1024"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <div class="site-container site-container--body bio-body">
+    <section aria-labelledby="record-heading">
+      <%- include("partials/section-heading", { headingId: "record-heading", headingTitle: "تۆماری کاری بڵاوکراوە", description: "ئەم ژمارانە ڕاستەوخۆ لە ئەرشیفەکەوە وەرگیراون." }) %>
+      <dl class="bio-stats float-saucer float-saucer--pill float-saucer--lift-sm">
+        <div>
+          <dt class="t-meta">نووسینی تۆمارکراو</dt>
+          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><%= totalDisplay %></dd>
+        </div>
+        <% if (span) { %>
+        <div>
+          <dt class="t-meta">ماوەی نووسین</dt>
+          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><span dir="ltr"><%= span %></span></dd>
+        </div>
+        <% } %>
+        <div>
+          <dt class="t-meta">زمانەکان</dt>
+          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><%= languageList %></dd>
+        </div>
+        <% if (booksCount) { %>
+        <div>
+          <dt class="t-meta">کتێبی تۆمارکراو</dt>
+          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950">
+            <a href="/books" class="no-underline text-inherit hover:text-gold-700"><%= booksDisplay %></a>
+          </dd>
+        </div>
+        <% } %>
+      </dl>
+    </section>
+
+    <% if (outlets.length) { %>
+    <section aria-labelledby="outlets-heading" class="mt-14">
+      <%- include("partials/section-heading", { headingId: "outlets-heading", headingTitle: "شوێنی بڵاوکردنەوە" }) %>
+      <ul class="border-t border-forest-950/12">
+        <% outlets.forEach(function (row) { %>
+        <li class="flex items-baseline gap-5 border-b border-forest-950/12 py-3.5">
+          <span class="font-display text-lg font-bold text-forest-950"><%= row.outlet %></span>
+          <span class="h-px flex-1 bg-forest-950/10" aria-hidden></span>
+          <span class="t-meta shrink-0"><%= row.countDisplay %> نووسین</span>
+        </li>
+        <% }); %>
+      </ul>
+    </section>
+    <% } %>
+
+    <% if (years.length) { %>
+    <section aria-labelledby="years-heading" class="mt-14">
+      <%- include("partials/section-heading", { headingId: "years-heading", headingTitle: "بەپێی ساڵ", href: "/archive", linkLabel: "بڕوانە ئەرشیف" }) %>
+      <ul class="bio-year-rail">
+        <% years.forEach(function (year) { %>
+        <li>
+          <a href="<%= year.href %>" class="float-saucer float-saucer--pill float-saucer--chip bio-year-chip group no-underline">
+            <span class="bio-year-chip__year"><%= year.display %></span>
+            <span class="bio-year-chip__count t-meta"><%= kuDigits(year.count) %></span>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+    </section>
+    <% } %>
+
+    <section class="float-saucer float-saucer--rounded float-saucer--lift-sm bio-note-saucer measure mt-14">
+      <p class="t-meta max-w-xl">
+        سەرچاوەکانی «دەربارە»: پرۆفایلی گشتی KurdCollect، کەتەلۆگی کتێبخانەی ژین،
+        هەواڵنامە، و ئاگادارییەکانی PUKmedia. ژیاننامەی فەرمیی تەواو دواتر لەلایەن
+        نووسینگەوە دادەنرێت.
+      </p>
+      <div class="mt-3.5 flex flex-wrap gap-2">
+        <a href="/archive" class="btn btn-secondary btn-sm">ئەرشیفی نووسینەکان</a>
+        <% if (booksCount) { %>
+        <a href="/books" class="btn btn-secondary btn-sm">کتێبەکان</a>
+        <% } %>
+      </div>
+    </section>
+  </div>
+</div>

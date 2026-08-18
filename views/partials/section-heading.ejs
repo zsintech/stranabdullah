@@ -1,0 +1,18 @@
+<header class="section-head">
+  <div class="section-head__row">
+    <h2<% if (typeof headingId !== "undefined" && headingId) { %> id="<%= headingId %>"<% } %> class="section-head__title">
+      <%= headingTitle %>
+      <% if (typeof count !== "undefined" && count) { %><span class="section-head__count"><%= count %></span><% } %>
+    </h2>
+    <% if (typeof href !== "undefined" && href) { %>
+    <a href="<%= href %>" class="section-head__link group">
+      <span class="link-underline"><%= typeof linkLabel !== "undefined" && linkLabel ? linkLabel : archiveLabels.seeAll %></span>
+      <span class="arrow-slide" aria-hidden>←</span>
+    </a>
+    <% } %>
+  </div>
+  <%- include("gold-rule", { extraClass: "section-head__rule" }) %>
+  <% if (typeof description !== "undefined" && description) { %>
+  <p class="t-small mt-2.5 w-full text-ink-muted"><%= description %></p>
+  <% } %>
+</header>

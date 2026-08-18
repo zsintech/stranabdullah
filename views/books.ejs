@@ -1,0 +1,52 @@
+<div class="bg-cream-100">
+  <%- include("partials/masthead", {
+    tone: "forest",
+    eyebrow: "بڵاوکراوەکان",
+    title: "کتێبەکان",
+    description: "کتێب و کتێبی دەنگی، وەک پێڕستێکی بڵاوکراوە.",
+    ghostSrc: "/brand/banner.png"
+  }) %>
+
+  <div class="site-container site-container--body">
+    <% if (empty) { %>
+    <%- include("partials/empty-state", {
+      emptyTitle: "هێشتا کتێبێک تۆمار نەکراوە",
+      emptyNote: "ئەم بەشە ئامادە کراوە بۆ کاتێک کتێبەکان کاتالۆگ دەکرێن. لە ئێستادا نووسینەکان لە ئەرشیفی وتاردان."
+    }) %>
+    <% } else { %>
+    <div class="space-y-20">
+      <% if (books.length) { %>
+      <section aria-labelledby="books-heading">
+        <%- include("partials/section-heading", { headingId: "books-heading", headingTitle: "کتێب", count: booksCount }) %>
+        <div class="space-y-4">
+          <% books.forEach(function (item, index) { %>
+          <%- include("partials/book-entry", { item: item, flip: index % 2 === 1 }) %>
+          <% }); %>
+        </div>
+      </section>
+      <% } %>
+
+      <% if (audiobooks.length) { %>
+      <section aria-labelledby="audio-heading">
+        <%- include("partials/section-heading", { headingId: "audio-heading", headingTitle: "کتێبی دەنگی", count: audioCount }) %>
+        <ul class="content-list float-saucer float-saucer--rounded float-saucer--lift-sm">
+          <% audiobooks.forEach(function (item) { %>
+          <li>
+            <a href="/archive/<%= item.slug %>" class="content-list__link group">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-full border border-forest-950/25 text-forest-950 transition-colors group-hover:border-wheat group-hover:text-wheat" aria-hidden>
+                <svg viewBox="0 0 24 24" class="size-4" aria-hidden focusable="false"><path d="M9 6.5v11l9-5.5-9-5.5Z" fill="currentColor" /></svg>
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="link-underline block font-display text-lg font-bold text-forest-950"><%= item.title %></span>
+                <% if (item.year) { %><span class="t-meta mt-1 block"><%= kuDigits(item.year) %></span><% } %>
+              </span>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% } %>
+    </div>
+    <% } %>
+  </div>
+</div>

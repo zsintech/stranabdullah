@@ -1,0 +1,28 @@
+<% if (items.length) { %>
+<% const lead = items[0]; const restItems = items.slice(1, 8); %>
+<div class="lang-spread" lang="ar" dir="rtl">
+  <article class="lang-spread__lead float-saucer float-saucer--rounded float-saucer--lift-sm">
+    <%- include("item-meta", { item: lead, metaOptions: { dateStyle: "numeric", typeLabel: "عربي" } }) %>
+    <h3 class="lang-spread__lead-title">
+      <a href="/archive/<%= lead.slug %>" class="link-underline text-forest-950"><%= lead.title %></a>
+    </h3>
+    <% if (isUsefulExcerpt(lead)) { %>
+    <p class="lang-spread__lead-excerpt"><%= lead.summary %></p>
+    <% } %>
+  </article>
+  <% if (restItems.length) { %>
+  <ul class="lang-spread__list float-saucer float-saucer--rounded float-saucer--lift-sm">
+    <% restItems.forEach(function (entry) { %>
+    <li>
+      <a href="/archive/<%= entry.slug %>" class="lang-spread__item">
+        <span class="lang-spread__item-title link-underline"><%= entry.title %></span>
+        <% if (entry.year) { %>
+        <span class="lang-spread__item-year"><%= kuDigits(entry.year) %></span>
+        <% } %>
+      </a>
+    </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</div>
+<% } %>

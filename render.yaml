@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: stran-archive
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CONTENT_SOURCE
+        value: seed
+      - key: NEXT_PUBLIC_USE_FIREBASE_EMULATORS
+        value: "false"
+      - key: COOKIE_SIGNATURE_SECRET
+        generateValue: true

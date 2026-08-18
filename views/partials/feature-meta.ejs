@@ -1,0 +1,15 @@
+<p class="t-meta flex flex-wrap items-center gap-x-2 gap-y-1">
+  <span class="font-semibold text-leaf-600"><%= contentTypeLabels[item.contentType] %></span>
+  <% if (date) { %>
+  <span class="text-wheat" aria-hidden>·</span>
+  <span><%= date %></span>
+  <% } %>
+  <% if (item.source && item.source.platform) { %>
+  <span class="text-wheat" aria-hidden>·</span>
+  <span><%= item.source.platform %></span>
+  <% } %>
+  <% if (item.language !== "ku") { %>
+  <span class="text-wheat" aria-hidden>·</span>
+  <span><%= languageLabels[item.language] %></span>
+  <% } %>
+</p>

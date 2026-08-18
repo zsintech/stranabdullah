@@ -1,0 +1,38 @@
+<section class="hero" aria-labelledby="hero-name">
+  <img
+    class="hero__art"
+    src="/brand/hero3.png"
+    alt=""
+    width="1672"
+    height="941"
+    decoding="async"
+    fetchpriority="high"
+  />
+
+  <div class="hero__grid">
+    <div class="hero__visual" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <h1 id="hero-name" class="hero__title"><%= SITE_NAME_SHORT %></h1>
+
+      <div class="hero__divider" aria-hidden="true">
+        <span class="hero__divider-line"></span>
+        <span class="hero__divider-gem"></span>
+        <span class="hero__divider-line hero__divider-line--short"></span>
+      </div>
+
+      <p class="hero__description"><%= SITE_DESCRIPTION %></p>
+
+      <div class="hero__actions">
+        <a href="/archive" class="hero__btn hero__btn--primary">
+          <span><%= archiveLabels.short %></span>
+          <span class="hero__btn-icon" aria-hidden="true">‹</span>
+        </a>
+        <a href="/biography" class="hero__btn hero__btn--secondary">
+          <span class="hero__btn-icon hero__btn-icon--lead" aria-hidden="true">◎</span>
+          <span>ژیاننامە</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

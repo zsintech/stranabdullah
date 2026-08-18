@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl" data-scroll-behavior="smooth" class="font-vazir">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%= pageTitle ? pageTitle + " · ستران عەبدوڵڵا" : SITE_NAME %></title>
+    <meta name="description" content="<%= typeof pageDescription !== 'undefined' && pageDescription ? pageDescription : SITE_DESCRIPTION %>" />
+    <% if (typeof canonical !== "undefined" && canonical) { %>
+    <link rel="canonical" href="<%= canonical %>" />
+    <% } %>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles/app.css" />
+    <% if (onHome) { %>
+    <link rel="stylesheet" href="/css/home.css?v=20260328a" />
+    <link rel="preload" as="image" href="/brand/hero3.png" />
+    <% } %>
+    <style>
+      :root { --font-vazir: "Vazirmatn", sans-serif; }
+      html { font-family: var(--font-vazir); }
+    </style>
+  </head>
+  <body class="min-h-screen bg-cream-100 text-ink antialiased">
+    <a href="#main" class="skip-link">بچۆ بۆ ناوەڕۆک</a>
+    <%- include("partials/header") %>
+    <main id="main"><%- body %></main>
+    <%- include("partials/footer") %>
+    <script src="/js/header.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<div class="bg-cream-100">
+  <div class="relative">
+    <% if (latestYearDisplay) { %>
+    <span aria-hidden class="decorative-year decorative-year--xl pointer-events-none absolute -top-4 end-[var(--gutter)] z-0 hidden opacity-80 sm:block"><%= latestYearDisplay %></span>
+    <% } %>
+    <%- include("partials/masthead", {
+      tone: "forest",
+      eyebrow: "تۆماری سەرەکی",
+      title: "ئەرشیف",
+      description: "هەموو نووسین و بڵاوکراوەکان، ڕێکخراو بەپێی ساڵ.",
+      ghostSrc: "/brand/poster.png",
+      showTulip: true,
+      mastheadInner: `<p class="t-meta mt-4">${totalDisplay} تۆمار</p>`
+    }) %>
+  </div>
+
+  <div class="site-container site-container--body archive-body">
+    <%- include("partials/archive-filters") %>
+    <div class="mt-7 lg:mt-10">
+      <% if (!groups.length) { %>
+      <%- include("partials/empty-state", {
+        emptyTitle: "هیچ تۆمارێک نەدۆزرایەوە",
+        emptyNote: "هەوڵبدە بە وشەیەکی تر یان فلتەرەکان لاببە.",
+        actionHref: "/archive",
+        actionLabel: "هەموو ئەرشیف"
+      }) %>
+      <% } else { %>
+      <%- include("partials/archive-timeline") %>
+      <% } %>
+    </div>
+    <% if (typeof nextHref !== "undefined" && nextHref) { %>
+    <div class="archive-more mt-10">
+      <div class="float-saucer float-saucer--pill float-saucer--lift-sm archive-more__dock">
+        <a href="<%= nextHref %>" class="btn btn-secondary btn-sm">تۆماری زیاتر</a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>

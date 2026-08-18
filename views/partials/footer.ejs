@@ -1,0 +1,22 @@
+<footer class="site-footer">
+  <div class="site-footer__art" aria-hidden></div>
+  <div class="site-container site-footer__inner">
+    <div class="site-footer__row">
+      <div class="site-footer__brand">
+        <p class="site-footer__eyebrow">نووسینگەی تایبەتی</p>
+        <p class="site-footer__name">هەڤاڵ ستران عەبدوڵڵا</p>
+      </div>
+      <div class="site-footer__contact">
+        <p class="site-footer__tagline">ماڵپەڕی فەرمی و ئەرشیفی دیجیتاڵی.</p>
+        <a href="mailto:<%= SITE_EMAIL %>" class="footer-link site-footer__email">
+          <span class="link-underline"><%= SITE_EMAIL %></span>
+        </a>
+      </div>
+    </div>
+    <%- include("gold-rule", { extraClass: "site-footer__rule" }) %>
+    <div class="site-footer__meta">
+      <p>© <%= copyrightYear %> نووسینگەی تایبەتی هەڤاڵ ستران عەبدوڵڵا</p>
+      <p><%= archiveCountDisplay %> تۆمار لە ئەرشیفدا</p>
+    </div>
+  </div>
+</footer>

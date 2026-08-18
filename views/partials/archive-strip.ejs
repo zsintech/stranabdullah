@@ -1,0 +1,24 @@
+<%
+  const typeGateways = types.slice(0, 6);
+  const yearGateways = years.slice(0, 4);
+  const hasAnything = typeGateways.length > 0 || languages.length > 0 || yearGateways.length > 0;
+%>
+<% if (hasAnything) { %>
+<nav aria-label="ڕێگاکانی ئەرشیف" class="archive-lane">
+  <div class="site-container">
+    <div class="strip-scroll archive-lane__flow">
+      <% if (typeGateways.length) { %>
+      <%- include("archive-cluster", { facets: typeGateways, tone: "label" }) %>
+      <% } %>
+      <% if (languages.length) { %>
+      <% if (typeGateways.length) { %><span class="archive-lane__sep" aria-hidden></span><% } %>
+      <%- include("archive-cluster", { facets: languages, tone: "label" }) %>
+      <% } %>
+      <% if (yearGateways.length) { %>
+      <% if (typeGateways.length || languages.length) { %><span class="archive-lane__sep" aria-hidden></span><% } %>
+      <%- include("archive-cluster", { facets: yearGateways, tone: "year" }) %>
+      <% } %>
+    </div>
+  </div>
+</nav>
+<% } %>

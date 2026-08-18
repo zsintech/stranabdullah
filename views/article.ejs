@@ -1,0 +1,133 @@
+<div class="bg-cream-100">
+  <article>
+    <header class="border-b border-forest-950/12 bg-paper">
+      <div class="site-container pb-12 pt-10 lg:pb-16 lg:pt-14">
+        <div class="measure mx-auto">
+          <nav aria-label="ڕێڕەو" class="t-meta">
+            <a href="/archive" class="text-forest-900 no-underline"><span class="link-underline">ئەرشیف</span></a>
+            <% if (yearDisplay) { %>
+            <span class="mx-2 text-wheat" aria-hidden>·</span>
+            <a href="/archive?year=<%= item.year %>" class="text-forest-900 no-underline">
+              <span class="link-underline"><%= yearDisplay %></span>
+            </a>
+            <% } %>
+          </nav>
+          <div class="mt-6">
+            <%- include("partials/item-meta", { item: item, metaOptions: { dateStyle: "full", after: minutes || undefined } }) %>
+            <h1 class="t-h1 mt-5"><%= item.title %></h1>
+            <% if (item.subtitle) { %>
+            <p class="t-lead measure mt-5 text-ink-muted"><%= item.subtitle %></p>
+            <% } %>
+            <%- include("partials/gold-rule", { extraClass: "mt-8 max-w-[18rem]" }) %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="site-container pb-20 pt-12 lg:pb-28 lg:pt-16">
+      <% if (paragraphs.length) { %>
+      <div class="measure prose mx-auto">
+        <% paragraphs.forEach(function (paragraph) { %>
+        <p><%= paragraph %></p>
+        <% }); %>
+      </div>
+      <% } else { %>
+      <div class="measure mx-auto">
+        <div class="float-saucer float-saucer--rounded float-saucer--lift-sm article-missing">
+          <p class="t-h3">دەقی تەواو بەردەست نییە</p>
+          <% if (item.source && item.source.externalUrl) { %>
+          <a href="<%= item.source.externalUrl %>" class="btn btn-secondary mt-6" rel="noopener noreferrer" target="_blank">
+            خوێندنەوە لە <%= outlet || "سەرچاوە" %>
+          </a>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
+
+      <% if ((item.source && item.source.externalUrl) || (item.topics && item.topics.length)) { %>
+      <footer class="measure mx-auto mt-14">
+        <div class="float-saucer float-saucer--rounded float-saucer--lift-sm article-footer-saucer">
+          <% if (item.source && item.source.externalUrl) { %>
+          <p class="t-meta">
+            یەکەم جار بڵاوکراوەتەوە لە
+            <a href="<%= item.source.externalUrl %>" class="font-semibold text-forest-900" rel="noopener noreferrer" target="_blank"><%= outlet || "سەرچاوە" %></a>.
+          </p>
+          <% } %>
+          <% if (item.topics && item.topics.length) { %>
+          <ul class="article-topic-rail<%= item.source && item.source.externalUrl ? ' mt-4' : '' %>">
+            <% item.topics.forEach(function (topic) { %>
+            <li>
+              <a href="/archive?topic=<%= encodeURIComponent(topic) %>" class="float-saucer float-saucer--pill float-saucer--chip archive-entry__topic"><%= topic %></a>
+            </li>
+            <% }); %>
+          </ul>
+          <% } %>
+        </div>
+      </footer>
+      <% } %>
+
+      <% if (newer || older) { %>
+      <nav aria-label="گەڕان بە ڕیزبەندی" class="article-nav measure mx-auto mt-12">
+        <div class="float-saucer float-saucer--rounded float-saucer--lift-sm article-nav__dock">
+          <div class="article-nav__grid<%= (newer && older) ? ' article-nav__grid--split' : '' %>">
+            <% if (older) { %>
+            <a href="/archive/<%= older.slug %>" class="article-nav__link group no-underline">
+              <span class="t-meta">پێشتر</span>
+              <span class="link-underline font-display text-base font-bold leading-snug text-forest-950"><%= older.title %></span>
+            </a>
+            <% } %>
+            <% if (newer) { %>
+            <a href="/archive/<%= newer.slug %>" class="article-nav__link article-nav__link--next group no-underline">
+              <span class="t-meta">دواتر</span>
+              <span class="link-underline font-display text-base font-bold leading-snug text-forest-950"><%= newer.title %></span>
+            </a>
+            <% } %>
+          </div>
+        </div>
+      </nav>
+      <% } %>
+    </div>
+
+    <% if (related.length) { %>
+    <div class="border-t border-forest-950/12 bg-paper">
+      <div class="site-container section-pad">
+        <div class="measure mx-auto">
+          <h2 class="t-h3">لە هەمان بەشی ئەرشیف</h2>
+          <%- include("partials/gold-rule", { extraClass: "mt-4 max-w-[14rem]" }) %>
+          <ul class="article-related float-saucer float-saucer--rounded float-saucer--lift-sm mt-8">
+            <% related.forEach(function (entry) { %>
+            <li>
+              <a href="/archive/<%= entry.slug %>" class="article-related__link group">
+                <span class="t-meta shrink-0 tabular-nums"><%= entry.year ? kuDigits(entry.year) : "" %></span>
+                <span class="link-underline min-w-0 flex-1 font-display font-bold leading-snug text-forest-950"><%= entry.title %></span>
+                <span class="arrow-slide t-meta shrink-0 text-forest-900" aria-hidden>←</span>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <% if (recentItems && recentItems.length) { %>
+    <div class="border-t border-forest-950/12">
+      <div class="site-container section-pad">
+        <div class="measure mx-auto">
+          <h2 class="t-h3">دواتر بینراو</h2>
+          <%- include("partials/gold-rule", { extraClass: "mt-4 max-w-[14rem]" }) %>
+          <ul class="article-related float-saucer float-saucer--rounded float-saucer--lift-sm mt-8">
+            <% recentItems.forEach(function (entry) { %>
+            <li>
+              <a href="/archive/<%= entry.slug %>" class="article-related__link group">
+                <span class="link-underline min-w-0 flex-1 font-display font-bold leading-snug text-forest-950"><%= entry.title %></span>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </article>
+</div>

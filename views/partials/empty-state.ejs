@@ -1,0 +1,12 @@
+<div class="float-saucer float-saucer--rounded float-saucer--lift-sm empty-state-saucer">
+  <div class="empty-state-saucer__inner">
+    <%- include("wheat-mark", { extraClass: "hidden h-14 w-auto shrink-0 text-wheat/55 sm:block" }) %>
+    <div>
+      <p class="t-h3"><%= emptyTitle %></p>
+      <p class="t-meta mt-3 w-full"><%= emptyNote %></p>
+      <a href="<%= typeof actionHref !== 'undefined' && actionHref ? actionHref : '/archive' %>" class="btn btn-secondary mt-7">
+        <%= typeof actionLabel !== "undefined" && actionLabel ? actionLabel : "گەڕان لە ئەرشیف" %>
+      </a>
+    </div>
+  </div>
+</div>

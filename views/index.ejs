@@ -1,0 +1,78 @@
+<div class="home-opening">
+  <%- include("partials/hero") %>
+</div>
+
+<% const typeGateways = types.slice(0, 1); const yearGateways = years.slice(0, 6); const hasMeta = typeGateways.length || languages.length || yearGateways.length; %>
+<% if (hasMeta) { %>
+<nav class="home-meta" aria-label="ڕێگاکانی ئەرشیف">
+  <div class="home-meta__inner float-saucer float-saucer--pill float-saucer--animate float-saucer--lift-md">
+    <% if (typeGateways.length) { %>
+    <div class="home-meta__group home-meta__group--types">
+      <span class="home-meta__icon" aria-hidden="true">◷</span>
+      <% typeGateways.forEach(function (facet, index) { %>
+      <a href="<%= facet.href %>" class="home-meta__chip">
+        <span class="home-meta__chip-label"><%= facet.display %></span>
+        <span class="home-meta__chip-count"><%= kuDigits(facet.count) %></span>
+      </a>
+      <% if (index < typeGateways.length - 1) { %><span class="home-meta__sep" aria-hidden="true"></span><% } %>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <% if (languages.length) { %>
+    <div class="home-meta__group home-meta__group--languages">
+      <span class="home-meta__icon" aria-hidden="true">◉</span>
+      <span class="home-meta__heading">زمان</span>
+      <% languages.forEach(function (facet, index) { %>
+      <a href="<%= facet.href %>" class="home-meta__chip">
+        <span class="home-meta__chip-label"><%= facet.display %></span>
+        <span class="home-meta__chip-count"><%= kuDigits(facet.count) %></span>
+      </a>
+      <% if (index < languages.length - 1) { %><span class="home-meta__sep" aria-hidden="true"></span><% } %>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <% if (yearGateways.length) { %>
+    <div class="home-meta__group home-meta__group--years">
+      <span class="home-meta__icon" aria-hidden="true">◷</span>
+      <span class="home-meta__heading">ساڵ</span>
+      <% yearGateways.forEach(function (facet, index) { %>
+      <a href="<%= facet.href %>" class="home-meta__year"><%= facet.display %></a>
+      <% if (index < yearGateways.length - 1) { %><span class="home-meta__dot" aria-hidden="true">·</span><% } %>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+</nav>
+<% } %>
+
+<% if (featured) { %>
+<div class="site-container site-container--tight home-feed">
+  <section aria-labelledby="latest-heading">
+    <%- include("partials/section-heading", { headingId: "latest-heading", headingTitle: "دوایین لە ئەرشیف", href: "/archive", linkLabel: archiveLabels.all }) %>
+    <%- include("partials/feature-story", { item: featured }) %>
+    <div class="recent-field">
+      <%- include("partials/article-index", { items: latest, columns: true }) %>
+    </div>
+  </section>
+</div>
+<% } %>
+
+<% if (kurdish.length) { %>
+<div class="site-container site-container--section essay-band">
+  <section aria-labelledby="kurdish-heading">
+    <%- include("partials/section-heading", { headingId: "kurdish-heading", headingTitle: "وتار و بۆچوون", count: kurdishCount, href: "/archive?language=ku" }) %>
+    <%- include("partials/essay-spread", { items: kurdish }) %>
+  </section>
+</div>
+<% } %>
+
+<% if (arabic.length) { %>
+<div class="site-container site-container--section essay-band">
+  <section aria-labelledby="arabic-heading">
+    <%- include("partials/section-heading", { headingId: "arabic-heading", headingTitle: "بە عەرەبی", count: arabicCount, href: "/archive?language=ar" }) %>
+    <%- include("partials/arabic-spread", { items: arabic }) %>
+  </section>
+</div>
+<% } %>

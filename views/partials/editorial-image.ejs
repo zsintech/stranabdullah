@@ -1,0 +1,38 @@
+<%
+  const tone = typeof imgTone !== "undefined" ? imgTone : "documentary";
+  const mask = typeof imgMask !== "undefined" ? imgMask : "none";
+  const fill = typeof imgFill !== "undefined" ? imgFill : false;
+  const mediaClass = typeof mediaClassName !== "undefined" ? mediaClassName : "";
+  const extra = typeof imgClass !== "undefined" ? imgClass : "";
+  const strength = typeof ghostStrength !== "undefined" ? ghostStrength : "default";
+  const toneClass = {
+    documentary: "image-documentary",
+    forest: "image-forest-tone",
+    ink: "image-ink-tone",
+    ghost: "image-ghost",
+    cutout: "image-cutout",
+  }[tone] || "image-documentary";
+  const maskClass = {
+    none: "mask-none",
+    "inline-start": "mask-fade-inline-start",
+    "inline-end": "mask-fade-inline-end",
+    "toward-copy": "mask-fade-toward-copy",
+    top: "mask-fade-top",
+    bottom: "mask-fade-bottom",
+    radial: "mask-radial",
+    "soft-edge": "mask-soft-edge",
+    "plate-bottom": "mask-plate-bottom",
+    "archival-hero": "mask-archival-hero",
+    "archival-fade": "mask-archival-fade",
+    "cutout-soft": "mask-cutout-soft",
+  }[mask] || "mask-none";
+  const ghostMod = tone === "ghost"
+    ? strength === "soft" ? " image-ghost--soft" : strength === "strong" ? " image-ghost--strong" : ""
+    : "";
+%>
+<span class="ed-image <%= toneClass %><%= ghostMod %> <%= maskClass %><%= fill ? ' ed-image--fill' : '' %> <%= extra %>">
+  <img src="<%= imgSrc %>" alt="<%= typeof imgAlt !== 'undefined' ? imgAlt : '' %>" class="ed-image__media <%= mediaClass %>" />
+  <% if (tone === "forest" || tone === "ink") { %>
+  <span class="ed-image__tint" aria-hidden></span>
+  <% } %>
+</span>

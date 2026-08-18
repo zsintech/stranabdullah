@@ -1,0 +1,68 @@
+<%
+  const showType = availableTypes.length > 1;
+  const showLanguage = availableLanguages.length > 1;
+%>
+<div class="archive-filters">
+  <div class="float-saucer float-saucer--rounded float-saucer--lift-md archive-filters__panel">
+  <form class="archive-filters__form" action="/archive" method="GET">
+    <div class="archive-filters__field archive-filters__field--search">
+      <label class="field-label" for="filter-q">گەڕان</label>
+      <input id="filter-q" name="q" value="<%= filters.q || '' %>" class="field" placeholder="ناونیشان، بابەت…" />
+    </div>
+
+    <% if (showType) { %>
+    <div class="archive-filters__field">
+      <label class="field-label" for="filter-type">جۆر</label>
+      <select id="filter-type" name="type" class="field">
+        <option value="">هەموو</option>
+        <% availableTypes.forEach(function (type) { %>
+        <option value="<%= type %>"<%= filters.type === type ? " selected" : "" %>><%= contentTypeLabels[type] %></option>
+        <% }); %>
+      </select>
+    </div>
+    <% } %>
+
+    <div class="archive-filters__field">
+      <label class="field-label" for="filter-year">ساڵ</label>
+      <select id="filter-year" name="year" class="field">
+        <option value="">هەموو</option>
+        <% years.forEach(function (year) { %>
+        <option value="<%= year.label %>"<%= String(filters.year || "") === String(year.label) ? " selected" : "" %>><%= year.display %></option>
+        <% }); %>
+      </select>
+    </div>
+
+    <% if (showLanguage) { %>
+    <div class="archive-filters__field">
+      <label class="field-label" for="filter-language">زمان</label>
+      <select id="filter-language" name="language" class="field">
+        <option value="">هەموو</option>
+        <% if (availableLanguages.includes("ku")) { %><option value="ku"<%= filters.language === "ku" ? " selected" : "" %>>کوردی</option><% } %>
+        <% if (availableLanguages.includes("ar")) { %><option value="ar"<%= filters.language === "ar" ? " selected" : "" %>>عەرەبی</option><% } %>
+        <% if (availableLanguages.includes("en")) { %><option value="en"<%= filters.language === "en" ? " selected" : "" %>>ئینگلیزی</option><% } %>
+      </select>
+    </div>
+    <% } %>
+
+    <% if (filters.topic) { %>
+    <input type="hidden" name="topic" value="<%= filters.topic %>" />
+    <% } %>
+
+    <button type="submit" class="btn btn-primary archive-filters__submit">فلتەر</button>
+  </form>
+
+  <% if (activeFilters.length) { %>
+  <div class="archive-filters__active">
+    <% if (typeof resultCount === "number") { %>
+    <span class="t-meta"><%= resultCountDisplay %> ئەنجام بۆ</span>
+    <% } %>
+    <% activeFilters.forEach(function (filter) { %>
+    <span class="float-saucer float-saucer--pill float-saucer--chip archive-filters__chip t-meta font-semibold text-forest-950"><%= filter.label %></span>
+    <% }); %>
+    <a href="/archive" class="t-meta text-forest-900">
+      <span class="link-underline"><%= archiveLabels.clearFilters %></span>
+    </a>
+  </div>
+  <% } %>
+  </div>
+</div>

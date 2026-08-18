@@ -1,0 +1,8 @@
+<% const parts = itemMetaParts(item, typeof metaOptions !== "undefined" ? metaOptions : {}); %>
+<% if (parts.length) { %>
+<ul class="item-meta<%= typeof extraClass !== 'undefined' && extraClass ? ' ' + extraClass : '' %>">
+  <% parts.forEach(function (part) { %>
+  <li class="item-meta__part<%= part.emphasis ? ' item-meta__part--emphasis' : '' %>"><%= part.text %></li>
+  <% }); %>
+</ul>
+<% } %>

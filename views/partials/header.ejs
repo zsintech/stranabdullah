@@ -1,0 +1,81 @@
+<header
+  class="site-header site-header--atmosphere sticky top-0 z-50<%= headerOverHero ? ' site-header--over-hero' : '' %>"
+  data-home="<%= onHome ? 'true' : 'false' %>"
+  data-over-hero="<%= headerOverHero ? 'true' : 'false' %>"
+>
+  <div data-header-shell class="shell flex items-center gap-3 transition-[height,padding,gap] duration-300 sm:gap-5">
+    <a href="/" class="masthead-lockup group" aria-label="نووسینگەی تایبەتی هەڤاڵ ستران عەبدوڵڵا">
+      <span class="masthead-flora" aria-hidden>
+        <img src="/brand/tulip.png" alt="" class="masthead-flora__bloom" />
+      </span>
+      <span class="masthead-brand">
+        <span class="masthead-wordmark">هەڤاڵ ستران عەبدوڵڵا</span>
+      </span>
+    </a>
+
+    <nav aria-label="ڕێنیشاندەری سەرەکی" class="masthead-nav">
+      <% navLinks.forEach(function (link) { const active = isActivePath(path, link.href); %>
+      <a
+        href="<%= link.href %>"
+        <% if (active) { %>aria-current="page"<% } %>
+        class="masthead-link<%= active ? ' is-active' : '' %>"
+      ><%= link.label %></a>
+      <% }); %>
+    </nav>
+
+    <div class="ms-auto flex shrink-0 items-center gap-2 md:ms-0">
+      <a href="/archive" class="masthead-search hidden items-center gap-1.5 no-underline sm:inline-flex">
+        <%- include("search-glyph") %>
+        <span class="link-underline font-semibold">گەڕان</span>
+      </a>
+
+      <button
+        type="button"
+        class="masthead-toggle -me-1 inline-flex size-11 items-center justify-center lg:hidden"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span class="sr-only" data-menu-label>کردنەوەی مێنو</span>
+        <span aria-hidden class="relative block h-3 w-6">
+          <span data-bar-top class="absolute inset-x-0 top-0 h-px bg-current transition-transform duration-300"></span>
+          <span data-bar-bottom class="absolute inset-x-0 top-3 h-px bg-current transition-transform duration-300"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="fixed inset-0 top-0 z-50 bg-forest-950/40 lg:hidden hidden" hidden data-menu-close>
+    <nav aria-label="مێنوی مۆبایل" class="ms-auto flex h-full w-[min(88%,20.5rem)] flex-col bg-paper px-6 py-5" onclick="event.stopPropagation()">
+      <div class="flex items-start justify-between border-b border-forest-950/12 pb-5">
+        <div>
+          <p class="t-eyebrow">نووسینگەی تایبەتی</p>
+          <p class="mt-1 font-display text-lg font-bold text-forest-950">هەڤاڵ ستران عەبدوڵڵا</p>
+        </div>
+        <button type="button" class="-me-2 -mt-1 inline-flex size-11 items-center justify-center text-2xl text-forest-950" data-menu-close>
+          <span class="sr-only">داخستنی مێنو</span>
+          <span aria-hidden>×</span>
+        </button>
+      </div>
+
+      <div class="mt-1 flex flex-col">
+        <% navLinks.forEach(function (link) { const active = isActivePath(path, link.href); %>
+        <a
+          href="<%= link.href %>"
+          data-menu-close
+          <% if (active) { %>aria-current="page"<% } %>
+          class="flex min-h-[3.1rem] items-center gap-3 border-b border-forest-950/8 font-display text-base no-underline <%= active ? 'font-bold text-forest-950' : 'text-ink' %>"
+        >
+          <% if (active) { %><span class="size-1.5 rounded-full bg-wheat" aria-hidden></span><% } %>
+          <%= link.label %>
+        </a>
+        <% }); %>
+      </div>
+
+      <a href="/archive" class="btn btn-primary mt-8 w-full" data-menu-close>
+        <%- include("search-glyph") %>
+        گەڕان لە ئەرشیف
+      </a>
+    </nav>
+  </div>
+</header>

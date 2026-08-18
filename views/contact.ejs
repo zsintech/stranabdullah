@@ -1,0 +1,53 @@
+<div class="bg-cream-100">
+  <%- include("partials/masthead", {
+    tone: "forest",
+    eyebrow: "نووسینگە",
+    title: "پەیوەندی",
+    description: "بۆ پرسیار دەربارەی ئەرشیف، دووبارە بڵاوکردنەوە، یان داواکاری میدیا."
+  }) %>
+
+  <div class="site-container site-container--tight">
+    <% if (flash) { %>
+    <%- include("contact-success") %>
+    <% } %>
+
+    <dl class="mt-4 max-w-2xl border-t border-forest-950/12">
+      <div class="flex flex-wrap items-baseline gap-x-6 gap-y-1 border-b border-forest-950/12 py-5">
+        <dt class="t-meta w-24 shrink-0">ئیمەیڵ</dt>
+        <dd>
+          <a href="mailto:<%= email %>" class="break-all font-display text-lg font-bold text-forest-950 no-underline">
+            <span class="link-underline"><%= email %></span>
+          </a>
+        </dd>
+      </div>
+      <div class="flex flex-wrap items-baseline gap-x-6 gap-y-1 border-b border-forest-950/12 py-5">
+        <dt class="t-meta w-24 shrink-0">تۆڕەکان</dt>
+        <dd class="t-meta">لینکە فەرمییەکان دواتر دادەنرێن.</dd>
+      </div>
+    </dl>
+
+    <form action="/contact" method="POST" class="mt-10 max-w-2xl">
+      <p class="t-h3">نامە بنێرە</p>
+      <%- include("partials/gold-rule", { extraClass: "mt-4 max-w-[10rem]" }) %>
+
+      <div class="mt-8 grid gap-5">
+        <div>
+          <label class="field-label" for="contact-name">ناو</label>
+          <input id="contact-name" name="name" class="field mt-1 w-full" value="<%= values.name %>" required />
+          <% if (errors.name) { %><p class="t-meta mt-1 text-tulip"><%= errors.name %></p><% } %>
+        </div>
+        <div>
+          <label class="field-label" for="contact-email">ئیمەیڵ</label>
+          <input id="contact-email" name="email" type="email" class="field mt-1 w-full" value="<%= values.email %>" required />
+          <% if (errors.email) { %><p class="t-meta mt-1 text-tulip"><%= errors.email %></p><% } %>
+        </div>
+        <div>
+          <label class="field-label" for="contact-message">پەیام</label>
+          <textarea id="contact-message" name="message" class="field mt-1 w-full min-h-[8rem]" required><%= values.message %></textarea>
+          <% if (errors.message) { %><p class="t-meta mt-1 text-tulip"><%= errors.message %></p><% } %>
+        </div>
+        <button type="submit" class="btn btn-primary">ناردن</button>
+      </div>
+    </form>
+  </div>
+</div>

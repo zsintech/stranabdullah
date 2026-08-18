@@ -1,0 +1,39 @@
+<%
+  const day = formatKuDayMonth(item.publishedAt);
+  const outlet = sourceAttribution(item);
+%>
+<article class="archive-entry float-saucer float-saucer--rounded float-saucer--lift-sm group">
+  <p class="archive-entry__meta t-meta">
+    <% if (day) { %><span class="archive-entry__day"><%= day %></span><% } %>
+    <span class="archive-entry__type"><%= contentTypeLabels[item.contentType] %></span>
+    <% if (outlet) { %>
+    <span class="archive-entry__dot" aria-hidden>·</span>
+    <span><%= outlet %></span>
+    <% } %>
+    <% if (item.language !== "ku") { %>
+    <span class="archive-entry__dot" aria-hidden>·</span>
+    <span><%= languageLabels[item.language] %></span>
+    <% } %>
+  </p>
+
+  <h3 class="archive-entry__title">
+    <a href="/archive/<%= item.slug %>" class="archive-entry__link">
+      <span class="link-underline"><%= item.title %></span>
+      <span class="arrow-slide" aria-hidden>←</span>
+    </a>
+  </h3>
+
+  <% if (item.summary) { %>
+  <p class="archive-entry__summary"><%= item.summary %></p>
+  <% } %>
+
+  <% if (item.topics && item.topics.length) { %>
+  <ul class="archive-entry__topics">
+    <% item.topics.forEach(function (topic) { %>
+    <li>
+      <a href="/archive?topic=<%= encodeURIComponent(topic) %>" class="float-saucer float-saucer--pill float-saucer--chip archive-entry__topic"><%= topic %></a>
+    </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</article>

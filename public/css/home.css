@@ -1,0 +1,479 @@
+/* Home masthead + layered hero — scoped to homepage only */
+
+:root {
+  /* Shared with globals --field-deep (hero / header / footer) */
+  --hero-field: var(--field-deep, #011a15);
+  --hero-green-950: var(--field-deep, #011a15);
+  --hero-green-900: var(--field-deep-900, #02221c);
+  --hero-green-850: #032a23;
+  --hero-green-800: var(--field-deep-800, #05342b);
+  --hero-gold: #c9a966;
+  --hero-gold-soft: #d7bb82;
+  --hero-ivory: #f4f0e8;
+  --hero-ivory-muted: rgba(244, 240, 232, 0.74);
+}
+
+/* ── Home shell: header + hero share one emerald field ── */
+
+.home-opening {
+  position: relative;
+  isolation: isolate;
+  /* Match site-header shell heights (4 / 4.75 / 5.5) */
+  margin-block-start: -4rem;
+  padding-block-start: 4rem;
+  background: var(--hero-field);
+  color: var(--hero-ivory);
+}
+
+@media (min-width: 768px) {
+  .home-opening {
+    margin-block-start: -4.75rem;
+    padding-block-start: 4.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-opening {
+    margin-block-start: -5.5rem;
+    padding-block-start: 5.5rem;
+  }
+}
+
+/* ── Hero section ── */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  min-height: clamp(26rem, 58vw, 38rem);
+  background-color: var(--hero-field);
+}
+
+/* Height-fill + auto width keeps the full portrait (face) visible in all browsers.
+   Use physical left — hero art is composed LTR (portrait on the left). */
+img.hero__art {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: auto;
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  min-height: inherit;
+  margin-inline: 0;
+  /* Glass bleeds to hero top / bottom / right; portrait keeps a left gutter */
+  padding-block: 0;
+  padding-inline-start: clamp(0.65rem, 1.8vw, 1.1rem);
+  padding-inline-end: 0;
+  box-sizing: border-box;
+  direction: ltr;
+  line-height: normal;
+}
+
+.hero__visual {
+  min-height: 0;
+  pointer-events: none;
+}
+
+/* Single glass panel — fills the hero’s right half to the outer edges */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+  text-align: start;
+  width: 100%;
+  max-width: none;
+  min-height: 100%;
+  justify-self: stretch;
+  align-self: stretch;
+  box-sizing: border-box;
+  padding-block: clamp(1.35rem, 3vw, 2.25rem);
+  padding-inline: clamp(1.25rem, 3.5vw, 3rem) clamp(1.1rem, 3vw, 2.5rem);
+  /* Round only toward the portrait; flush to hero top / bottom / right */
+  border-radius: 1.35rem 0 0 1.35rem;
+  background: linear-gradient(
+    118deg,
+    rgba(1, 26, 21, 0.38) 0%,
+    rgba(1, 26, 21, 0.62) 55%,
+    rgba(1, 26, 21, 0.72) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  backdrop-filter: blur(20px) saturate(1.25);
+  border: 1px solid rgba(201, 169, 102, 0.22);
+  border-inline-end: 0;
+  border-block: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(244, 240, 232, 0.1),
+    -12px 0 36px rgba(1, 26, 21, 0.22);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hero__content {
+    background: linear-gradient(
+      118deg,
+      rgba(1, 26, 21, 0.72) 0%,
+      rgba(1, 26, 21, 0.88) 100%
+    );
+  }
+}
+
+.hero__title {
+  margin: 0;
+  font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+  font-size: clamp(2.65rem, 4.8vw, 5.4rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--hero-ivory);
+  text-wrap: balance;
+}
+
+.hero__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-block: clamp(0.85rem, 1.8vw, 1.25rem) clamp(0.75rem, 1.5vw, 1rem);
+  max-width: min(100%, 18rem);
+}
+
+.hero__divider-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(to left, var(--hero-gold), rgba(201, 169, 102, 0.25));
+}
+
+.hero__divider-line--short {
+  flex: 0 0 2.5rem;
+  background: rgba(201, 169, 102, 0.35);
+}
+
+.hero__divider-gem {
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--hero-gold);
+  transform: rotate(45deg);
+}
+
+.hero__description {
+  margin: 0;
+  max-width: 38rem;
+  font-size: clamp(0.98rem, 0.92rem + 0.35vw, 1.15rem);
+  line-height: 1.85;
+  color: var(--hero-ivory-muted);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block-start: auto;
+  padding-block-start: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.65rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 4px;
+  font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease), transform 180ms var(--ease);
+}
+
+.hero__btn--primary {
+  background: var(--hero-gold-soft);
+  border: 1px solid rgba(201, 169, 102, 0.85);
+  color: var(--hero-green-950);
+}
+
+.hero__btn--secondary {
+  background: rgba(1, 26, 21, 0.35);
+  border: 1px solid rgba(201, 169, 102, 0.55);
+  color: var(--hero-ivory);
+}
+
+.hero__btn-icon {
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__btn--primary:hover {
+    background: #e8d4a8;
+    border-color: var(--hero-gold);
+    transform: translateY(-1px);
+  }
+
+  .hero__btn--secondary:hover {
+    background: rgba(11, 74, 61, 0.55);
+    border-color: var(--hero-gold-soft);
+    color: var(--hero-ivory);
+    transform: translateY(-1px);
+  }
+}
+
+/* ── Archive gateway rail: floating saucer bridge ── */
+
+.home-meta {
+  position: relative;
+  z-index: 3;
+  /* Pull into the hero field so the saucer clearly floats over emerald */
+  margin-block-start: -1.75rem;
+  margin-block-end: 1.35rem;
+  padding-inline: var(--gutter);
+  padding-block-end: 0.55rem; /* room for ground ellipse */
+  background: transparent;
+  pointer-events: none;
+}
+
+.home-meta__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem 1.1rem;
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  padding: 0.8rem 1.45rem;
+  direction: rtl;
+  color: var(--hero-field);
+  pointer-events: auto;
+  isolation: isolate;
+}
+
+.home-meta__group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.55rem;
+}
+
+.home-meta__icon {
+  font-size: 0.72rem;
+  color: color-mix(in srgb, var(--hero-field) 55%, var(--hero-gold));
+  opacity: 0.9;
+}
+
+.home-meta__heading {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--hero-field) 62%, transparent);
+}
+
+.home-meta__chip,
+.home-meta__year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--hero-field);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 160ms var(--ease);
+}
+
+.home-meta__chip-count {
+  font-size: 0.72rem;
+  color: color-mix(in srgb, var(--hero-field) 55%, var(--hero-gold));
+}
+
+.home-meta__sep,
+.home-meta__dot {
+  color: color-mix(in srgb, var(--hero-field) 28%, transparent);
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.home-meta__sep {
+  width: 1px;
+  height: 0.85rem;
+  background: color-mix(in srgb, var(--hero-field) 18%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-meta__chip:hover,
+  .home-meta__year:hover {
+    color: color-mix(in srgb, var(--hero-field) 70%, var(--hero-gold));
+  }
+}
+
+.home-feed {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(1.25rem, 2.2vw, 1.85rem) clamp(0.5rem, 1.2vw, 1rem);
+}
+
+/* ── Transition into cream body ── */
+
+.home-opening + .home-meta + .home-feed,
+.home-opening + .home-feed {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Tablet & below: no edge bleed — glass stays inset ── */
+
+@media (max-width: 1023px) {
+  .home-opening {
+    overflow-x: clip;
+  }
+
+  .hero {
+    min-height: clamp(22rem, 62vw, 32rem);
+  }
+
+  .hero__grid {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: var(--container, 87.5rem);
+    margin-inline: auto;
+    padding-block: clamp(0.85rem, 2vw, 1.15rem);
+    padding-inline: clamp(0.85rem, 3vw, 1.5rem);
+    box-sizing: border-box;
+  }
+
+  .hero__content {
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    height: 100%;
+    padding-block: clamp(1rem, 2.2vw, 1.35rem);
+    padding-inline: clamp(0.95rem, 2.5vw, 1.35rem);
+    border-radius: 1.15rem;
+    border: 1px solid rgba(201, 169, 102, 0.22);
+    border-block: 1px solid rgba(201, 169, 102, 0.22);
+    border-inline-end: 1px solid rgba(201, 169, 102, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(244, 240, 232, 0.1),
+      0 8px 22px rgba(1, 26, 21, 0.28);
+  }
+
+  .hero__title {
+    font-size: clamp(1.85rem, 4vw, 3.25rem);
+  }
+
+  .hero__description {
+    font-size: clamp(0.92rem, 0.88rem + 0.4vw, 1.05rem);
+  }
+
+  .home-meta {
+    margin-block-start: -1.35rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .home-meta__inner {
+    width: min(100%, 56rem);
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* ── Mobile ── */
+
+@media (max-width: 639px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .hero__grid {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding-block: 0.85rem 1.1rem;
+    padding-inline: 0.85rem;
+    direction: rtl;
+  }
+
+  .hero__visual {
+    display: none;
+  }
+
+  .hero__content {
+    justify-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    height: fit-content;
+    padding-block: 1rem;
+    padding-inline: 1rem;
+    border-radius: 1.1rem;
+  }
+
+  .hero__actions {
+    margin-block-start: clamp(0.95rem, 1.7vw, 1.35rem);
+    padding-block-start: 0;
+  }
+
+  .hero__title {
+    font-size: clamp(1.85rem, 8.5vw, 2.55rem);
+    overflow-wrap: anywhere;
+  }
+
+  .hero__description {
+    overflow-wrap: break-word;
+  }
+
+  .home-meta {
+    margin-block-start: -1.15rem;
+    margin-block-end: 1.1rem;
+  }
+
+  .home-meta__inner {
+    border-radius: 1.65rem;
+    justify-content: flex-start;
+  }
+
+  .home-meta__chip,
+  .home-meta__year {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero__grid {
+    padding-inline: 0.75rem;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__btn {
+    width: 100%;
+  }
+
+  .home-meta__inner {
+    gap: 0.5rem 0.75rem;
+    padding: 0.65rem 0.85rem;
+  }
+}
