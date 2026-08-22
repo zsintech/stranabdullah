@@ -5,7 +5,12 @@ import { consumeAdminFlash, setAdminFlash, setAdminSession, clearAdminSession, i
 import { assertCsrf, CsrfError, issueCsrf, readCsrf } from "@/lib/csrf";
 import { AuthError, signInWithPassword } from "@/lib/firebase-password";
 import { storeAdminUpload } from "@/lib/admin-upload";
+import { renderPage } from "@/lib/render-page";
 import { renderAdmin } from "@/lib/render-admin";
+import { coverOf } from "@/lib/view-helpers";
+import { articleBodyHtml } from "@/lib/markdown";
+import { kuDigits, readingTime } from "@/lib/format";
+import { sourceOutletLabel } from "@/lib/content-labels";
 import { requireAdmin } from "@/middleware/require-admin";
 import { getAdminContentRepository, isUsingSeedFallback } from "@/repositories";
 import { splitList } from "@/lib/slug";
@@ -16,8 +21,13 @@ import type { ContentDraftInput } from "@/repositories/content-repository";
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 40 * 1024 * 1024 },
 });
+
+const itemUpload = upload.fields([
+  { name: "cover", maxCount: 1 },
+  { name: "document", maxCount: 1 },
+]);
 
 const router = Router();
 
@@ -27,14 +37,24 @@ const statusLabels: Record<ContentStatus, string> = {
   archived: "شاردراوەتەوە",
 };
 
+const statusHints: Record<ContentStatus, string> = {
+  draft: "تەنها لە بەڕێوەبەر دەردەکەوێت — لە ماڵپەڕدا نییە",
+  published: "لە ماڵپەڕدا دەردەکەوێت",
+  archived: "شاردراوەتەوە — لە ماڵپەڕدا نییە",
+};
+
 function text(body: Record<string, unknown>, key: string): string {
   const value = body[key];
   return typeof value === "string" ? value.trim() : "";
 }
 
-function draftFromBody(body: Record<string, unknown>, coverUrl?: string): ContentDraftInput {
+function draftFromBody(
+  body: Record<string, unknown>,
+  files?: { coverUrl?: string; documentUrl?: string },
+): ContentDraftInput {
   const publishedDate = text(body, "publishedAt");
   const yearRaw = text(body, "year");
+  const documentFromBody = text(body, "documentUrl") || undefined;
   return {
     slug: text(body, "slug") || undefined,
     title: text(body, "title"),
@@ -51,15 +71,27 @@ function draftFromBody(body: Record<string, unknown>, coverUrl?: string): Conten
     topics: splitList(text(body, "topics")),
     tags: splitList(text(body, "tags")),
     featured: body.featured === "on" || body.featured === "true",
-    coverUrl,
+    coverUrl: files?.coverUrl,
+    coverAlt: text(body, "coverAlt") || undefined,
     videoUrl: text(body, "videoUrl") || undefined,
     audioUrl: text(body, "audioUrl") || undefined,
-    documentUrl: text(body, "documentUrl") || undefined,
+    documentUrl: files?.documentUrl || documentFromBody,
     outlet: text(body, "outlet") || undefined,
     author: text(body, "author") || undefined,
     publisher: text(body, "publisher") || undefined,
     isbn: text(body, "isbn") || undefined,
   };
+}
+
+async function mediaFromRequest(
+  body: Record<string, unknown>,
+  files?: { cover?: Express.Multer.File[]; document?: Express.Multer.File[] },
+): Promise<{ coverUrl?: string; documentUrl?: string }> {
+  let coverUrl = text(body, "coverUrl") || undefined;
+  let documentUrl = text(body, "documentUrl") || undefined;
+  if (files?.cover?.[0]) coverUrl = await storeAdminUpload(files.cover[0]);
+  if (files?.document?.[0]) documentUrl = await storeAdminUpload(files.document[0]);
+  return { coverUrl, documentUrl };
 }
 
 function safeNext(value: unknown): string {
@@ -146,6 +178,7 @@ router.use((req, res, next) => {
   res.locals.flash = consumeAdminFlash(req, res);
   res.locals.seedMode = isUsingSeedFallback();
   res.locals.statusLabels = statusLabels;
+  res.locals.statusHints = statusHints;
   res.locals.contentTypeLabels = contentTypeLabels;
   next();
 });
@@ -203,14 +236,14 @@ router.get(
 
 router.post(
   "/items",
-  upload.single("cover"),
+  itemUpload,
   asyncHandler(async (req, res) => {
     try {
       assertCsrf(req);
       const body = req.body as Record<string, unknown>;
-      let coverUrl = text(body, "coverUrl") || undefined;
-      if (req.file) coverUrl = await storeAdminUpload(req.file);
-      const item = await getAdminContentRepository().create(draftFromBody(body, coverUrl), req.adminUser!.email);
+      const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
+      const media = await mediaFromRequest(body, files);
+      const item = await getAdminContentRepository().create(draftFromBody(body, media), req.adminUser!.email);
       setAdminFlash(res, { type: "ok", message: "تۆمارەکە پاشەکەوت کرا." });
       res.redirect(`/admin/items/${item.id}`);
     } catch (error) {
@@ -244,15 +277,15 @@ router.get(
 
 router.post(
   "/items/:id",
-  upload.single("cover"),
+  itemUpload,
   asyncHandler(async (req, res) => {
     const id = req.params.id;
     try {
       assertCsrf(req);
       const body = req.body as Record<string, unknown>;
-      let coverUrl = text(body, "coverUrl") || undefined;
-      if (req.file) coverUrl = await storeAdminUpload(req.file);
-      await getAdminContentRepository().update(id, draftFromBody(body, coverUrl), req.adminUser!.email);
+      const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
+      const media = await mediaFromRequest(body, files);
+      await getAdminContentRepository().update(id, draftFromBody(body, media), req.adminUser!.email);
       setAdminFlash(res, { type: "ok", message: "گۆڕانکارییەکان پاشەکەوت کران." });
       res.redirect(`/admin/items/${id}`);
     } catch (error) {
@@ -294,6 +327,67 @@ router.post(
       setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "گۆڕینی تایبەت سەرکەوتوو نەبوو." });
     }
     res.redirect(`/admin/items/${req.params.id}`);
+  }),
+);
+
+router.post(
+  "/upload",
+  upload.single("file"),
+  asyncHandler(async (req, res) => {
+    try {
+      assertCsrf(req);
+      if (!req.file) {
+        res.status(400).json({ error: "فایل نییە." });
+        return;
+      }
+      const url = await storeAdminUpload(req.file);
+      res.json({ url });
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : "بارکردن سەرکەوتوو نەبوو." });
+    }
+  }),
+);
+
+router.get(
+  "/items/:id/preview",
+  asyncHandler(async (req, res) => {
+    const item = await getAdminContentRepository().getById(req.params.id);
+    if (!item) {
+      setAdminFlash(res, { type: "error", message: "تۆمار نەدۆزرایەوە." });
+      res.redirect("/admin/items");
+      return;
+    }
+    const bodyHtml = articleBodyHtml(item.body, item.bodyFormat);
+    const coverUrl = coverOf(item);
+    await renderPage(res, "article", {
+      pageTitle: `[پێشبینین] ${item.title}`,
+      pageDescription: item.summary,
+      item,
+      bodyHtml,
+      coverUrl,
+      coverAlt: item.media.coverImage?.alt || item.title,
+      documentUrl: item.media.documentUrl,
+      isBook: item.contentType === "book" || item.contentType === "audiobook",
+      minutes: readingTime(item.body),
+      outlet: sourceOutletLabel(item),
+      yearDisplay: item.year ? kuDigits(item.year) : undefined,
+      isPreview: true,
+    });
+  }),
+);
+
+router.post(
+  "/items/:id/delete",
+  asyncHandler(async (req, res) => {
+    try {
+      assertCsrf(req);
+      await getAdminContentRepository().delete(req.params.id);
+      setAdminFlash(res, { type: "ok", message: "تۆمار سڕایەوە." });
+      res.redirect("/admin/items");
+    } catch (error) {
+      setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "سڕینەوە سەرکەوتوو نەبوو." });
+      res.redirect(`/admin/items/${req.params.id}`);
+    }
   }),
 );
 

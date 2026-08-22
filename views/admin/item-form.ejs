@@ -1,141 +1,225 @@
 <%
   const publishedDate = item && item.publishedAt ? String(item.publishedAt).slice(0, 10) : "";
   const cover = item ? (item.media.coverImage && (item.media.coverImage.cachedUrl || item.media.coverImage.remoteUrl)) : "";
+  const coverAlt = item && item.media.coverImage && item.media.coverImage.alt ? item.media.coverImage.alt : "";
+  const documentUrl = item && item.media && item.media.documentUrl ? item.media.documentUrl : "";
+  const currentStatus = item ? item.status : "draft";
+  const isBookType = item ? (item.contentType === "book" || item.contentType === "audiobook") : false;
 %>
-<section>
-  <h1 class="t-h2"><%= item ? "دەستکاری تۆمار" : "تۆماری نوێ" %></h1>
+<section class="admin-editor-page">
+  <header class="admin-editor-header">
+    <div>
+      <p class="admin-kicker"><%= item ? "دەستکاری" : "نوێ" %></p>
+      <h1 class="t-h2"><%= item ? item.title : "تۆماری نوێ" %></h1>
+    </div>
+    <div class="admin-editor-header__actions">
+      <% if (item) { %>
+      <a class="btn btn-light btn-sm" href="/admin/items/<%= item.id %>/preview" target="_blank" rel="noopener">پێشبینین</a>
+      <% if (item.status === "published") { %>
+      <a class="btn btn-light btn-sm" href="/archive/<%= item.slug %>" target="_blank" rel="noopener">بینینی گشتی</a>
+      <% } %>
+      <% } %>
+      <button class="btn btn-primary btn-sm" type="submit" form="item-form">پاشەکەوت</button>
+    </div>
+  </header>
 
-  <form method="post" action="<%= item ? "/admin/items/" + item.id : "/admin/items" %>" enctype="multipart/form-data" class="admin-form">
+  <form
+    id="item-form"
+    method="post"
+    action="<%= item ? "/admin/items/" + item.id : "/admin/items" %>"
+    enctype="multipart/form-data"
+    class="admin-editor"
+    data-admin-editor
+    data-is-new="<%= item ? "false" : "true" %>"
+  >
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
-    <div>
-      <label class="field-label" for="title">ناونیشان</label>
-      <input class="field" id="title" name="title" required value="<%= item ? item.title : "" %>" />
-    </div>
-    <div>
-      <label class="field-label" for="subtitle">ژێرناونیشان</label>
-      <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" />
-    </div>
-    <div class="admin-grid">
-      <div>
-        <label class="field-label" for="contentType">جۆر</label>
-        <select class="field" id="contentType" name="contentType">
-          <% contentTypes.forEach(function (type) { %>
-          <option value="<%= type %>" <%= item && item.contentType === type ? "selected" : (!item && type === "article" ? "selected" : "") %>><%= contentTypeLabels[type] %></option>
+    <aside class="admin-editor-sidebar">
+      <div class="admin-card">
+        <h2 class="admin-card__title">دۆخ</h2>
+        <div class="admin-status-picker">
+          <% ["draft", "published", "archived"].forEach(function (status) { %>
+          <label class="admin-status-option admin-status-option--<%= status %>">
+            <input type="radio" name="status" value="<%= status %>" <%= currentStatus === status ? "checked" : "" %> />
+            <span class="admin-status-option__label"><%= statusLabels[status] %></span>
+            <span class="admin-status-option__hint"><%= statusHints[status] %></span>
+          </label>
           <% }); %>
-        </select>
+        </div>
       </div>
-      <div>
-        <label class="field-label" for="language">زمان</label>
-        <select class="field" id="language" name="language">
-          <option value="ku" <%= !item || item.language === "ku" ? "selected" : "" %>>کوردی</option>
-          <option value="ar" <%= item && item.language === "ar" ? "selected" : "" %>>عەرەبی</option>
-          <option value="en" <%= item && item.language === "en" ? "selected" : "" %>>ئینگلیزی</option>
-        </select>
+
+      <div class="admin-card">
+        <h2 class="admin-card__title">وردەکاری</h2>
+        <div class="admin-field-stack">
+          <div>
+            <label class="field-label" for="contentType">جۆر</label>
+            <select class="field" id="contentType" name="contentType">
+              <% contentTypes.forEach(function (type) { %>
+              <option value="<%= type %>" <%= item && item.contentType === type ? "selected" : (!item && type === "article" ? "selected" : "") %>><%= contentTypeLabels[type] %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="language">زمان</label>
+            <select class="field" id="language" name="language">
+              <option value="ku" <%= !item || item.language === "ku" ? "selected" : "" %>>کوردی</option>
+              <option value="ar" <%= item && item.language === "ar" ? "selected" : "" %>>عەرەبی</option>
+              <option value="en" <%= item && item.language === "en" ? "selected" : "" %>>ئینگلیزی</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="publishedAt">بەرواری بڵاوکردنەوە</label>
+            <input class="field" id="publishedAt" name="publishedAt" type="date" value="<%= publishedDate %>" />
+          </div>
+          <div>
+            <label class="field-label" for="year">ساڵ</label>
+            <input class="field" id="year" name="year" type="number" value="<%= item && item.year ? item.year : "" %>" />
+          </div>
+          <label class="admin-check admin-check--card">
+            <input type="checkbox" name="featured" <%= item && item.featured ? "checked" : "" %> />
+            <span>تایبەت لە سەرەکی</span>
+          </label>
+        </div>
       </div>
-      <div>
-        <label class="field-label" for="status">دۆخ</label>
-        <select class="field" id="status" name="status">
-          <option value="draft" <%= item && item.status === "draft" ? "selected" : "" %>>ڕەشنووس</option>
-          <option value="published" <%= item && item.status === "published" ? "selected" : "" %>>بڵاوکراوە</option>
-          <option value="archived" <%= item && item.status === "archived" ? "selected" : "" %>>شاردراوەتەوە</option>
-        </select>
+
+      <div class="admin-card">
+        <h2 class="admin-card__title">وێنەی بەرگ</h2>
+        <div class="admin-cover-drop" data-cover-drop>
+          <input id="cover" name="cover" type="file" accept="image/*" hidden />
+          <p class="admin-cover-drop__text">کلیک بکە یان وێنە بکێشە</p>
+          <p class="admin-cover-drop__hint">JPEG, PNG, WebP · تا ٨ مێگابایت</p>
+        </div>
+        <div class="admin-cover-preview" data-cover-preview <%= cover ? "" : "hidden" %>>
+          <img src="<%= cover || "" %>" alt="" />
+        </div>
+        <div class="admin-field-stack mt-4">
+          <div>
+            <label class="field-label" for="coverUrl">یان URL</label>
+            <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" placeholder="https://..." />
+          </div>
+          <div>
+            <label class="field-label" for="coverAlt">جێگرتەوەی وێنە</label>
+            <input class="field" id="coverAlt" name="coverAlt" value="<%= coverAlt %>" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card admin-pdf-card" data-pdf-admin>
+        <h2 class="admin-card__title">PDF · کتێب</h2>
+        <p class="admin-card__hint">بۆ کتێبەکان — خوێنەر دەتوانێت لە ماڵپەڕدا بخوێنێت یان داگری بکات. PDFی پەستکراو باشترە بۆ شوێن.</p>
+        <div class="admin-pdf-drop" data-pdf-drop>
+          <input id="document" name="document" type="file" accept="application/pdf,.pdf" hidden />
+          <p class="admin-cover-drop__text">PDF باربکە</p>
+          <p class="admin-cover-drop__hint">تا ٤٠ مێگابایت</p>
+        </div>
+        <div class="admin-pdf-current" data-pdf-current <%= documentUrl ? "" : "hidden" %>>
+          <span class="admin-pdf-current__icon" aria-hidden>PDF</span>
+          <a href="<%= documentUrl || "#" %>" target="_blank" rel="noopener" dir="ltr" data-pdf-link><%= documentUrl ? "فایلی ئێستا" : "" %></a>
+        </div>
+        <div class="admin-field-stack mt-4">
+          <div>
+            <label class="field-label" for="documentUrl">یان URL</label>
+            <input class="field" id="documentUrl" name="documentUrl" dir="ltr" value="<%= documentUrl %>" placeholder="https://..." data-pdf-url />
+          </div>
+          <div>
+            <label class="field-label" for="publisher">بڵاوکەرەوە</label>
+            <input class="field" id="publisher" name="publisher" value="<%= item && item.extras && item.extras.publisher ? item.extras.publisher : "" %>" />
+          </div>
+          <div>
+            <label class="field-label" for="isbn">ISBN</label>
+            <input class="field" id="isbn" name="isbn" dir="ltr" value="<%= item && item.extras && item.extras.isbn ? item.extras.isbn : "" %>" />
+          </div>
+        </div>
+      </div>
+
+      <% if (item) { %>
+      <div class="admin-card admin-card--muted">
+        <p class="t-meta">دوایین گۆڕانکاری: <%= item.audit.updatedAt ? item.audit.updatedAt.slice(0, 10) : "" %></p>
+        <button class="btn btn-sm admin-btn-danger" type="submit" form="delete-item-form">سڕینەوەی تۆمار</button>
+      </div>
+      <% } %>
+    </aside>
+
+    <div class="admin-editor-main">
+      <div class="admin-card admin-card--flat">
+        <div class="admin-field-stack">
+          <div>
+            <label class="field-label" for="title">ناونیشان</label>
+            <input class="field field--title" id="title" name="title" required value="<%= item ? item.title : "" %>" placeholder="ناونیشانی نووسین..." />
+          </div>
+          <div>
+            <label class="field-label" for="subtitle">ژێرناونیشان</label>
+            <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" />
+          </div>
+          <div>
+            <label class="field-label" for="slug">لینک (slug)</label>
+            <input class="field" id="slug" name="slug" dir="ltr" value="<%= item ? item.slug : "" %>" placeholder="auto-from-title" />
+          </div>
+          <div>
+            <label class="field-label" for="summary">کورتە</label>
+            <textarea class="field admin-textarea" id="summary" name="summary" rows="3" placeholder="کورتەیەک بۆ لیست و گەڕان..."><%= item ? item.summary : "" %></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card admin-card--flat">
+        <div class="admin-editor-tabs">
+          <button type="button" class="admin-editor-tab is-active" data-editor-tab="write">نووسین</button>
+          <button type="button" class="admin-editor-tab" data-editor-tab="preview">پێشبینین</button>
+          <button type="button" class="btn btn-secondary btn-sm admin-editor-upload" data-upload-inline>وێنە باربکە</button>
+        </div>
+        <div data-write-panel>
+          <textarea class="field admin-textarea admin-textarea--editor" id="body" name="body" placeholder="دەقی نووسین... Markdown پشتیوانی دەکرێت.&#10;&#10;![وێنە](url)&#10;**قەڵەو** *لار*"><%= item ? item.body : "" %></textarea>
+        </div>
+        <div class="admin-preview prose" data-preview-panel hidden></div>
+        <input type="hidden" name="bodyFormat" value="markdown" />
+      </div>
+
+      <details class="admin-card admin-card--flat admin-details">
+        <summary class="admin-details__summary">زیاتر — تاگ، سەرچاوە، میدیا</summary>
+        <div class="admin-field-stack mt-4">
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="topics">بابەتەکان</label>
+              <input class="field" id="topics" name="topics" value="<%= item ? item.topics.join("، ") : "" %>" placeholder="بە کۆما جیا بکەوە" />
+            </div>
+            <div>
+              <label class="field-label" for="tags">تاگ</label>
+              <input class="field" id="tags" name="tags" value="<%= item ? item.tags.join("، ") : "" %>" />
+            </div>
+          </div>
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="outlet">شوێنی بڵاوکردنەوە</label>
+              <input class="field" id="outlet" name="outlet" value="<%= item && item.extras && item.extras.outlet ? item.extras.outlet : "" %>" />
+            </div>
+            <div>
+              <label class="field-label" for="author">نووسەر</label>
+              <input class="field" id="author" name="author" value="<%= item && item.extras && item.extras.author ? item.extras.author : "" %>" />
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="videoUrl">لینکی ڤیدیۆ</label>
+            <input class="field" id="videoUrl" name="videoUrl" dir="ltr" value="<%= item && item.media && item.media.videoUrl ? item.media.videoUrl : "" %>" />
+          </div>
+          <div>
+            <label class="field-label" for="audioUrl">لینکی دەنگ</label>
+            <input class="field" id="audioUrl" name="audioUrl" dir="ltr" value="<%= item && item.media && item.media.audioUrl ? item.media.audioUrl : "" %>" />
+          </div>
+        </div>
+      </details>
+
+      <div class="admin-form-footer">
+        <button class="btn btn-primary" type="submit">پاشەکەوت</button>
+        <a class="btn btn-secondary" href="/admin/items">گەڕانەوە</a>
       </div>
     </div>
-    <div class="admin-grid">
-      <div>
-        <label class="field-label" for="publishedAt">بەرواری بڵاوکردنەوە</label>
-        <input class="field" id="publishedAt" name="publishedAt" type="date" value="<%= publishedDate %>" />
-      </div>
-      <div>
-        <label class="field-label" for="year">ساڵ</label>
-        <input class="field" id="year" name="year" type="number" value="<%= item && item.year ? item.year : "" %>" />
-      </div>
-      <div>
-        <label class="field-label" for="slug">لینک (slug)</label>
-        <input class="field" id="slug" name="slug" dir="ltr" value="<%= item ? item.slug : "" %>" />
-      </div>
-    </div>
-    <div>
-      <label class="field-label" for="summary">کورتە</label>
-      <textarea class="field admin-textarea" id="summary" name="summary"><%= item ? item.summary : "" %></textarea>
-    </div>
-    <div>
-      <label class="field-label" for="body">دەق</label>
-      <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body"><%= item ? item.body : "" %></textarea>
-    </div>
-    <div>
-      <label class="field-label" for="bodyFormat">فۆرماتی دەق</label>
-      <select class="field" id="bodyFormat" name="bodyFormat">
-        <option value="markdown" <%= !item || item.bodyFormat !== "plain" ? "selected" : "" %>>Markdown</option>
-        <option value="plain" <%= item && item.bodyFormat === "plain" ? "selected" : "" %>>دەقی ئاسایی</option>
-      </select>
-    </div>
-    <div>
-      <label class="field-label" for="topics">بابەتەکان (بە کۆما جیا بکەوە)</label>
-      <input class="field" id="topics" name="topics" value="<%= item ? item.topics.join("، ") : "" %>" />
-    </div>
-    <div>
-      <label class="field-label" for="tags">تاگ</label>
-      <input class="field" id="tags" name="tags" value="<%= item ? item.tags.join("، ") : "" %>" />
-    </div>
-    <div class="admin-grid">
-      <div>
-        <label class="field-label" for="outlet">شوێنی بڵاوکردنەوە</label>
-        <input class="field" id="outlet" name="outlet" value="<%= item && item.extras && item.extras.outlet ? item.extras.outlet : "" %>" />
-      </div>
-      <div>
-        <label class="field-label" for="author">نووسەر</label>
-        <input class="field" id="author" name="author" value="<%= item && item.extras && item.extras.author ? item.extras.author : "" %>" />
-      </div>
-    </div>
-    <div>
-      <label class="field-label" for="coverUrl">وێنەی بەرگ (URL)</label>
-      <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" />
-    </div>
-    <div>
-      <label class="field-label" for="cover">یان فایلێک باربکە</label>
-      <input id="cover" name="cover" type="file" accept="image/*" />
-    </div>
-    <% if (cover) { %>
-    <img class="admin-cover-preview" src="<%= cover %>" alt="" />
-    <% } %>
-    <label class="admin-check">
-      <input type="checkbox" name="featured" <%= item && item.featured ? "checked" : "" %> />
-      تایبەت لە سەرەکی
-    </label>
-    <button class="btn btn-primary" type="submit">پاشەکەوت</button>
   </form>
 
   <% if (item) { %>
-  <div class="admin-actions mt-8">
-    <% if (item.status !== "published") { %>
-    <form method="post" action="/admin/items/<%= item.id %>/status">
-      <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <input type="hidden" name="status" value="published" />
-      <button class="btn btn-primary" type="submit">بڵاوکردنەوە</button>
-    </form>
-    <% } %>
-    <% if (item.status === "published") { %>
-    <form method="post" action="/admin/items/<%= item.id %>/status">
-      <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <input type="hidden" name="status" value="draft" />
-      <button class="btn btn-secondary" type="submit">بیکە ڕەشنووس</button>
-    </form>
-    <form method="post" action="/admin/items/<%= item.id %>/status">
-      <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <input type="hidden" name="status" value="archived" />
-      <button class="btn btn-secondary" type="submit">شاردنەوە</button>
-    </form>
-    <% } %>
-    <form method="post" action="/admin/items/<%= item.id %>/featured">
-      <input type="hidden" name="_csrf" value="<%= csrf %>" />
-      <input type="hidden" name="featured" value="<%= item.featured ? "false" : "true" %>" />
-      <button class="btn btn-secondary" type="submit"><%= item.featured ? "لابردنی تایبەت" : "بیکە تایبەت" %></button>
-    </form>
-    <% if (item.status === "published") { %>
-    <a class="btn btn-light" href="/archive/<%= item.slug %>" target="_blank" rel="noopener">بینینی گشتی</a>
-    <% } %>
-  </div>
+  <form id="delete-item-form" method="post" action="/admin/items/<%= item.id %>/delete" onsubmit="return confirm('دڵنیایت لە سڕینەوەی ئەم تۆمارە؟');">
+    <input type="hidden" name="_csrf" value="<%= csrf %>" />
+  </form>
   <% } %>
 </section>
+<script src="/js/admin-editor.js?v=20260822b" defer></script>

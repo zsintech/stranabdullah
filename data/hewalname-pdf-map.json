@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "book-be-bianuy-bele-2026",
+    "title": "بە بیانووی (بلە)وە",
+    "postUrl": "https://www.hewalname.com/ku/?p=16470",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2026/04/423.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-be-bianuy-bele-2026.pdf"
+  },
+  {
+    "slug": "book-jadal-kurdistani-2023",
+    "title": "جدل کردستاني على ضفاف دجلة",
+    "postUrl": "https://www.hewalname.com/ku/?p=13923",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/268.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-jadal-kurdistani-2023.pdf"
+  },
+  {
+    "slug": "book-tiri-rojgar-2020",
+    "title": "تیری رۆژگار",
+    "postUrl": "https://www.hewalname.com/ku/?p=13916",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/266.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-tiri-rojgar-2020.pdf"
+  },
+  {
+    "slug": "book-chetri-bizutnewe-2020",
+    "title": "چەتری بزووتنەوەی رزگاریخوازی گەلی کوردستان",
+    "postUrl": "https://www.hewalname.com/ku/?p=13909",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/264.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-chetri-bizutnewe-2020.pdf"
+  },
+  {
+    "slug": "book-tebinyekani-huzeyran-2017",
+    "title": "تێبینییەکانی حوزەیران — خەم لە یەکێتی … خەم لە یەکێتییەکان",
+    "postUrl": "https://www.hewalname.com/ku/?p=13897",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/265.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-tebinyekani-huzeyran-2017.pdf"
+  },
+  {
+    "slug": "book-rastkirdinewey-rerrew-2023",
+    "title": "راستکردنەوەی رێڕەو — ژانی ژیاندنەوەی حزبایەتی",
+    "postUrl": "https://www.hewalname.com/ku/?p=13886",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/263.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-rastkirdinewey-rerrew-2023.pdf"
+  },
+  {
+    "slug": "book-bo-away-nebet-2023",
+    "title": "بۆ ئەوەی نەبێتە زەمی پاشەملە",
+    "postUrl": "https://www.hewalname.com/ku/?p=13879",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/262.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-bo-away-nebet-2023.pdf"
+  },
+  {
+    "slug": "book-manshetakan-2018",
+    "title": "مانشێتە مەزنەکان — ئەلبوومی رۆژگاری مانشێتی کاغەزی",
+    "postUrl": "https://www.hewalname.com/ku/?p=13872",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/261.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-manshetakan-2018.pdf"
+  },
+  {
+    "slug": "book-le-roma-2013",
+    "title": "لە ڕۆما کەوتە بەر چاوم — کوردستانی عوسمانی و تورکیا",
+    "postUrl": "https://www.hewalname.com/ku/?p=13864",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/259.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-le-roma-2013.pdf"
+  },
+  {
+    "slug": "book-le-ghazetewe-2019",
+    "title": "لە غەزەتەوە بۆ غەزای سۆشیال میدیا",
+    "postUrl": "https://www.hewalname.com/ku/?p=13847",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/258-1.pdf",
+    "volumes": [
+      {
+        "key": "1",
+        "label": "بەرگی یەکەم",
+        "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/258-1.pdf"
+      },
+      {
+        "key": "2",
+        "label": "بەرگی دووەم",
+        "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/258-2.pdf"
+      },
+      {
+        "key": "3",
+        "label": "بەرگی سێیەم",
+        "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/258-3.pdf"
+      }
+    ],
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-le-ghazetewe-2019.pdf"
+  },
+  {
+    "slug": "book-meseley-tutineke-2011",
+    "title": "مەسەلەی توتنەکە",
+    "postUrl": "https://www.hewalname.com/ku/?p=13828",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/253.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-meseley-tutineke-2011.pdf"
+  },
+  {
+    "slug": "book-meseley-tutineke-5-2019",
+    "title": "مەسەلەی توتنەکە ٥ — کۆتایی ناوی قۆناغەکان بنێن",
+    "postUrl": "https://www.hewalname.com/ku/?p=13828",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/06/257.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-meseley-tutineke-5-2019.pdf"
+  },
+  {
+    "slug": "book-mikhak-2013",
+    "title": "مێخەک کەمێک دوور لە سیاسەت",
+    "postUrl": "https://www.hewalname.com/ku/?p=13755",
+    "pdfUrl": "http://www.hewalname.com/ku/wp-content/uploads/2024/05/242.pdf",
+    "localFile": "D:\\Stran\\data\\book-pdfs\\book-mikhak-2013.pdf"
+  }
+]

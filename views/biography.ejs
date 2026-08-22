@@ -30,7 +30,7 @@
   <div class="site-container site-container--body bio-body">
     <section aria-labelledby="record-heading">
       <%- include("partials/section-heading", { headingId: "record-heading", headingTitle: "تۆماری کاری بڵاوکراوە", description: "ئەم ژمارانە ڕاستەوخۆ لە ئەرشیفەکەوە وەرگیراون." }) %>
-      <dl class="bio-stats float-saucer float-saucer--pill float-saucer--lift-sm">
+      <dl class="bio-stats float-saucer float-saucer--rounded float-saucer--lift-sm">
         <div>
           <dt class="t-meta">نووسینی تۆمارکراو</dt>
           <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><%= totalDisplay %></dd>
@@ -77,7 +77,7 @@
       <ul class="bio-year-rail">
         <% years.forEach(function (year) { %>
         <li>
-          <a href="<%= year.href %>" class="float-saucer float-saucer--pill float-saucer--chip bio-year-chip group no-underline">
+          <a href="<%= year.href %>" class="float-saucer bio-year-chip group">
             <span class="bio-year-chip__year"><%= year.display %></span>
             <span class="bio-year-chip__count t-meta"><%= kuDigits(year.count) %></span>
           </a>

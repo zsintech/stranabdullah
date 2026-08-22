@@ -5,7 +5,10 @@ import { archiveLabels } from "@/lib/archive-labels";
 import { contentTypeLabels, sourceOutletLabel } from "@/lib/content-labels";
 import { pushRecentSlug, recentItemsFrom } from "@/lib/cookies";
 import { kuDigits, readingTime } from "@/lib/format";
+import { articleBodyHtml } from "@/lib/markdown";
 import { renderPage } from "@/lib/render-page";
+import { proxyPdfUrl, volumesForSlug } from "@/lib/pdf-map";
+import { coverOf } from "@/lib/view-helpers";
 import { withContentRepo } from "@/repositories";
 import { ArchiveFiltersSchema, contentTypes } from "@/types/content";
 
@@ -148,17 +151,26 @@ router.get(
       .filter((entry) => entry.id !== item.id && entry.language === item.language)
       .slice(0, 4);
 
-    const paragraphs = item.body
-      .split(/\n{2,}/)
-      .map((paragraph) => paragraph.trim())
-      .filter(Boolean);
+    const bodyHtml = articleBodyHtml(item.body, item.bodyFormat);
+    const coverUrl = coverOf(item);
+    const pdfVolumes = volumesForSlug(item.slug);
+    const documentUrl =
+      item.media.documentUrl ||
+      (pdfVolumes.length ? pdfVolumes[0]?.url : undefined) ||
+      proxyPdfUrl(item.slug);
+    const isBook = item.contentType === "book" || item.contentType === "audiobook";
 
     await renderPage(res, "article", {
       pageTitle: item.seo?.metaTitle ?? item.title,
       pageDescription: item.seo?.metaDescription ?? item.summary,
       canonical: item.source?.externalUrl,
       item,
-      paragraphs,
+      bodyHtml,
+      coverUrl,
+      coverAlt: item.media.coverImage?.alt || item.title,
+      documentUrl,
+      pdfVolumes: pdfVolumes.length > 1 ? pdfVolumes : undefined,
+      isBook,
       minutes: readingTime(item.body),
       newer,
       older,

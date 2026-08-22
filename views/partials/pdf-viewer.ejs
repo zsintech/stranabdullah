@@ -1,0 +1,32 @@
+<section class="pdf-reader float-saucer float-saucer--rounded float-saucer--lift-sm" data-pdf-reader data-src="<%= documentUrl %>" aria-label="خوێندنەوەی PDF">
+  <% if (typeof pdfVolumes !== "undefined" && pdfVolumes && pdfVolumes.length > 1) { %>
+  <div class="pdf-reader__volumes" role="tablist" aria-label="بەرگەکان">
+    <% pdfVolumes.forEach(function (vol, index) { %>
+    <button type="button" class="pdf-reader__volume<%= index === 0 ? " is-active" : "" %>" role="tab" data-pdf-volume="<%= vol.url %>" aria-selected="<%= index === 0 ? "true" : "false" %>"><%= vol.label %></button>
+    <% }); %>
+  </div>
+  <% } %>
+  <div class="pdf-reader__chrome">
+    <div class="pdf-reader__toolbar">
+      <div class="pdf-reader__nav">
+        <button type="button" class="pdf-reader__btn" data-pdf-prev aria-label="لاپەڕەی پێشوو">→</button>
+        <span class="pdf-reader__page" data-pdf-page>—</span>
+        <button type="button" class="pdf-reader__btn" data-pdf-next aria-label="لاپەڕەی دواتر">←</button>
+      </div>
+      <div class="pdf-reader__tools">
+        <button type="button" class="pdf-reader__btn pdf-reader__btn--ghost" data-pdf-zoom-out aria-label="بچووکتر">−</button>
+        <button type="button" class="pdf-reader__btn pdf-reader__btn--ghost" data-pdf-fit aria-label="گونجاندن">100%</button>
+        <button type="button" class="pdf-reader__btn pdf-reader__btn--ghost" data-pdf-zoom-in aria-label="گەورетەر">+</button>
+        <a class="btn btn-secondary btn-sm pdf-reader__download" href="<%= documentUrl %>" download rel="noopener" data-pdf-download>داگرتن</a>
+      </div>
+    </div>
+    <div class="pdf-reader__stage" data-pdf-stage>
+      <div class="pdf-reader__loading" data-pdf-loading>PDF بار دەکرێت…</div>
+      <canvas class="pdf-reader__canvas" data-pdf-canvas hidden></canvas>
+    </div>
+    <p class="pdf-reader__hint t-meta">کلیلەکانی ← → بۆ گۆڕینی لاپەڕە · scroll بۆ zoom لەسەر touchpad</p>
+  </div>
+</section>
+<link rel="stylesheet" href="/css/pdf-viewer.css?v=20260822b" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+<script src="/js/pdf-viewer.js?v=20260822b" defer></script>

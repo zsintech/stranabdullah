@@ -30,6 +30,7 @@ export type ContentDraftInput = {
   people?: string[];
   featured?: boolean;
   coverUrl?: string;
+  coverAlt?: string;
   videoUrl?: string;
   audioUrl?: string;
   documentUrl?: string;
@@ -54,6 +55,7 @@ export type AdminContentRepository = ContentRepository & {
   update(id: string, input: ContentDraftInput, actorEmail: string): Promise<ContentItem>;
   setStatus(id: string, status: ContentStatus, actorEmail: string): Promise<ContentItem>;
   setFeatured(id: string, featured: boolean, actorEmail: string): Promise<ContentItem>;
+  delete(id: string): Promise<void>;
   getBiography(): Promise<BiographySettings>;
   saveBiography(data: BiographySettings): Promise<BiographySettings>;
 };

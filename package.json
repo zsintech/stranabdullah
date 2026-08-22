@@ -11,6 +11,10 @@
     "import:pukmedia": "node scripts/import-pukmedia.mjs",
     "seed:publications": "node scripts/seed-publications.mjs",
     "migrate:firestore": "tsx scripts/migrate-seed-to-firestore.ts",
+    "upload:book-pdfs": "tsx scripts/upload-book-pdfs.ts",
+    "import:hewalname-pdfs": "tsx scripts/import-hewalname-pdfs.ts",
+    "sync:hewalname-pdfs": "tsx scripts/sync-hewalname-to-firestore.ts",
+    "download:map-pdfs": "tsx scripts/download-map-pdfs.ts",
     "admin:create-user": "tsx scripts/create-admin-user.ts"
   },
   "engines": {
@@ -23,6 +27,7 @@
     "express": "^4.21.2",
     "firebase": "^12.17.1",
     "firebase-admin": "^14.2.0",
+    "marked": "^15.0.12",
     "multer": "^2.0.2",
     "tsx": "^4.23.11",
     "zod": "^4.4.3"
@@ -34,6 +39,7 @@
     "@types/multer": "^1.4.13",
     "@types/node": "^20",
     "firebase-tools": "^15.26.0",
+    "playwright": "^1.62.1",
     "prettier": "^3.9.6",
     "typescript": "^5"
   }

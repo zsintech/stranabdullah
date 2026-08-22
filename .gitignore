@@ -33,6 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Firebase service account keys (never commit)
+*firebase-adminsdk*.json
+stran-abdullah-*.json
+service-account.json
+
 # vercel
 .vercel
 
@@ -43,6 +48,9 @@ next-env.d.ts
 # local admin uploads (seed mode)
 /public/uploads/
 !/public/uploads/.gitkeep
+
+# book PDFs for batch upload (large files — keep local)
+/data/book-pdfs/*.pdf
 
 # local captures / scratch
 /shots/

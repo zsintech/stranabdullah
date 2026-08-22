@@ -178,6 +178,12 @@ export function createSeedContentRepository(): AdminContentRepository {
       );
     },
 
+    async delete(id: string) {
+      const index = items.findIndex((item) => item.id === id);
+      if (index < 0) throw new Error("تۆمار نەدۆزرایەوە.");
+      items.splice(index, 1);
+    },
+
     async getBiography() {
       return biography;
     },

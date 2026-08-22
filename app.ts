@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import adminRouter from "./routes/admin";
 import archiveRouter from "./routes/archive";
 import contactRouter from "./routes/contact";
+import mediaRouter from "./routes/media";
 import pagesRouter from "./routes/pages";
 import { kuDigits } from "./src/lib/format";
 import { viewsDir, renderPage } from "./src/lib/render-page";
@@ -120,6 +121,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/admin", adminRouter);
+app.use("/media", mediaRouter);
 app.use(pagesRouter);
 app.use(archiveRouter);
 app.use(contactRouter);

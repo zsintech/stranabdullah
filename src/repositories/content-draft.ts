@@ -21,6 +21,7 @@ export function applyDraft(
     (publishedAt ? new Date(publishedAt).getFullYear() : undefined);
   const slug = slugify(input.slug || current?.slug || input.title);
   const coverUrl = input.coverUrl?.trim();
+  const coverAlt = input.coverAlt?.trim() || input.title.trim();
   const existingCover = current?.media?.coverImage;
 
   return ContentItemSchema.parse({
@@ -45,8 +46,10 @@ export function applyDraft(
     source: current?.source,
     media: {
       coverImage: coverUrl
-        ? { remoteUrl: coverUrl, alt: input.title.trim() }
-        : existingCover,
+        ? { remoteUrl: coverUrl, alt: coverAlt }
+        : existingCover
+          ? { ...existingCover, alt: input.coverAlt?.trim() || existingCover.alt || input.title.trim() }
+          : undefined,
       images: current?.media?.images ?? [],
       videoUrl: input.videoUrl?.trim() || current?.media?.videoUrl,
       audioUrl: input.audioUrl?.trim() || current?.media?.audioUrl,

@@ -1,10 +1,20 @@
 <div class="bg-cream-100">
+  <% if (typeof isPreview !== "undefined" && isPreview) { %>
+  <div class="admin-preview-banner">
+    ئەمە پێشبینینی بەڕێوەبەرە — <%= item.status === "published" ? "لە ماڵپەڕدا دەردەکەوێت" : "لە ماڵپەڕدا نیشان نادرێت" %>
+    · <a href="/admin/items/<%= item.id %>">گەڕانەوە بۆ دەستکاری</a>
+  </div>
+  <% } %>
   <article>
     <header class="border-b border-forest-950/12 bg-paper">
       <div class="site-container pb-12 pt-10 lg:pb-16 lg:pt-14">
         <div class="measure mx-auto">
           <nav aria-label="ڕێڕەو" class="t-meta">
+            <% if (typeof isBook !== "undefined" && isBook) { %>
+            <a href="/books" class="text-forest-900 no-underline"><span class="link-underline">کتێبەکان</span></a>
+            <% } else { %>
             <a href="/archive" class="text-forest-900 no-underline"><span class="link-underline">ئەرشیف</span></a>
+            <% } %>
             <% if (yearDisplay) { %>
             <span class="mx-2 text-wheat" aria-hidden>·</span>
             <a href="/archive?year=<%= item.year %>" class="text-forest-900 no-underline">
@@ -24,13 +34,24 @@
       </div>
     </header>
 
+    <% if (typeof coverUrl !== "undefined" && coverUrl) { %>
+    <div class="site-container -mt-2 pb-0 pt-0 lg:-mt-4">
+      <figure class="measure mx-auto">
+        <img src="<%= coverUrl %>" alt="<%= typeof coverAlt !== "undefined" ? coverAlt : item.title %>" class="article-cover" loading="lazy" />
+      </figure>
+    </div>
+    <% } %>
+
     <div class="site-container pb-20 pt-12 lg:pb-28 lg:pt-16">
-      <% if (paragraphs.length) { %>
-      <div class="measure prose mx-auto">
-        <% paragraphs.forEach(function (paragraph) { %>
-        <p><%= paragraph %></p>
-        <% }); %>
+      <% if (typeof documentUrl !== "undefined" && documentUrl) { %>
+      <div class="measure mx-auto book-pdf-section">
+        <%- include("partials/pdf-viewer", { documentUrl: documentUrl, pdfVolumes: typeof pdfVolumes !== "undefined" ? pdfVolumes : undefined }) %>
       </div>
+      <% if (typeof bodyHtml !== "undefined" && bodyHtml) { %>
+      <div class="measure prose mx-auto article-body mt-14"><%- bodyHtml %></div>
+      <% } %>
+      <% } else if (typeof bodyHtml !== "undefined" && bodyHtml) { %>
+      <div class="measure prose mx-auto article-body"><%- bodyHtml %></div>
       <% } else { %>
       <div class="measure mx-auto">
         <div class="float-saucer float-saucer--rounded float-saucer--lift-sm article-missing">

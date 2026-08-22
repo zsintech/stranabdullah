@@ -1,32 +1,78 @@
-<section>
-  <h1 class="t-h2">بەڕێوەبەر</h1>
-  <p class="t-body mt-2">دەستکاری ژیاننامە، بڵاوکردنەوە، و شاردنەوەی تۆمارەکان.</p>
+<section class="admin-dashboard">
+  <header class="admin-page-header">
+    <div>
+      <h1 class="t-h2">بەڕێوەبەر</h1>
+      <p class="t-body admin-lead">نووسین زیاد بکە، دەستکاری بکە، و بڵاوی بکەوە — گۆڕانکارییەکان ڕاستەوخۆ لە ماڵپەڕدا دەردەکەون.</p>
+    </div>
+    <a class="btn btn-primary" href="/admin/items/new">+ تۆماری نوێ</a>
+  </header>
 
-  <ul class="admin-stats">
-    <li><span><%= kuDigits(counts.all) %></span> گشتی</li>
-    <li><span><%= kuDigits(counts.published) %></span> بڵاوکراوە</li>
-    <li><span><%= kuDigits(counts.draft) %></span> ڕەشنووس</li>
-    <li><span><%= kuDigits(counts.archived) %></span> شاردراوەتەوە</li>
-    <li><span><%= kuDigits(counts.featured) %></span> تایبەت</li>
-  </ul>
-
-  <div class="admin-actions">
-    <a class="btn btn-primary" href="/admin/items/new">تۆماری نوێ</a>
-    <a class="btn btn-secondary" href="/admin/biography">دەستکاری ژیاننامە</a>
-    <a class="btn btn-secondary" href="/admin/items">هەموو تۆمارەکان</a>
+  <div class="admin-stat-grid">
+    <a class="admin-stat-card" href="/admin/items">
+      <span class="admin-stat-card__value"><%= kuDigits(counts.all) %></span>
+      <span class="admin-stat-card__label">گشتی</span>
+    </a>
+    <a class="admin-stat-card admin-stat-card--published" href="/admin/items?status=published">
+      <span class="admin-stat-card__value"><%= kuDigits(counts.published) %></span>
+      <span class="admin-stat-card__label">بڵاوکراوە</span>
+    </a>
+    <a class="admin-stat-card admin-stat-card--draft" href="/admin/items?status=draft">
+      <span class="admin-stat-card__value"><%= kuDigits(counts.draft) %></span>
+      <span class="admin-stat-card__label">ڕەشنووس</span>
+    </a>
+    <a class="admin-stat-card admin-stat-card--archived" href="/admin/items?status=archived">
+      <span class="admin-stat-card__value"><%= kuDigits(counts.archived) %></span>
+      <span class="admin-stat-card__label">شاردراوەتەوە</span>
+    </a>
   </div>
 
-  <h2 class="t-h3 mt-10">دوایین گۆڕانکاری</h2>
-  <% if (!recent.length) { %>
-  <p class="t-meta mt-3">تۆمار نییە.</p>
-  <% } else { %>
-  <ul class="admin-list">
-    <% recent.forEach(function (item) { %>
-    <li>
-      <a href="/admin/items/<%= item.id %>"><%= item.title %></a>
-      <span class="t-meta"><%= statusLabels[item.status] %> · <%= contentTypeLabels[item.contentType] %></span>
-    </li>
-    <% }); %>
-  </ul>
-  <% } %>
+  <div class="admin-quick-actions">
+    <a class="admin-quick-action" href="/admin/items/new">
+      <strong>نووسینی نوێ</strong>
+      <span>وتار، لێدوان، چاوپێکەوتن...</span>
+    </a>
+    <a class="admin-quick-action" href="/admin/biography">
+      <strong>ژیاننامە</strong>
+      <span>دەق و وێنەی پەڕەی ژیاننامە</span>
+    </a>
+    <a class="admin-quick-action" href="/admin/items?status=draft">
+      <strong>ڕەشنووسەکان</strong>
+      <span><%= kuDigits(counts.draft) %> تۆمار چاوەڕێی بڵاوکردنەوە</span>
+    </a>
+  </div>
+
+  <section class="admin-section">
+    <div class="admin-section__head">
+      <h2 class="t-h3">دوایین گۆڕانکاری</h2>
+      <a class="t-meta admin-link" href="/admin/items">هەموو تۆمارەکان ←</a>
+    </div>
+    <% if (!recent.length) { %>
+    <div class="admin-empty">
+      <p>هێشتا تۆمار نییە.</p>
+      <a class="btn btn-primary btn-sm" href="/admin/items/new">یەکەم تۆمار دروست بکە</a>
+    </div>
+    <% } else { %>
+    <ul class="admin-recent-grid">
+      <% recent.forEach(function (entry) { %>
+      <% const thumb = entry.media.coverImage && (entry.media.coverImage.cachedUrl || entry.media.coverImage.remoteUrl); %>
+      <li>
+        <a class="admin-recent-card" href="/admin/items/<%= entry.id %>">
+          <div class="admin-recent-card__media">
+            <% if (thumb) { %>
+            <img src="<%= thumb %>" alt="" loading="lazy" />
+            <% } else { %>
+            <span class="admin-recent-card__placeholder"><%= contentTypeLabels[entry.contentType].slice(0, 1) %></span>
+            <% } %>
+          </div>
+          <div class="admin-recent-card__body">
+            <span class="admin-badge admin-badge--<%= entry.status %>"><%= statusLabels[entry.status] %></span>
+            <h3><%= entry.title %></h3>
+            <p class="t-meta"><%= contentTypeLabels[entry.contentType] %></p>
+          </div>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
+  </section>
 </section>

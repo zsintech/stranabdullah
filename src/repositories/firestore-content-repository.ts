@@ -208,6 +208,13 @@ export function createFirestoreContentRepository(): AdminContentRepository {
       return next;
     },
 
+    async delete(id: string) {
+      const doc = await col.doc(id).get();
+      if (!doc.exists) throw new Error("تۆمار نەدۆزرایەوە.");
+      await col.doc(id).delete();
+      invalidateArchiveCountCache();
+    },
+
     async getBiography() {
       const snap = await bioRef.get();
       if (!snap.exists) return { ...DEFAULT_BIOGRAPHY };

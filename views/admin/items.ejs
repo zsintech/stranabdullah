@@ -1,11 +1,14 @@
-<section>
-  <div class="admin-toolbar">
-    <h1 class="t-h2">تۆمارەکان</h1>
-    <a class="btn btn-primary btn-sm" href="/admin/items/new">نوێ</a>
-  </div>
+<section class="admin-items-page">
+  <header class="admin-page-header">
+    <div>
+      <h1 class="t-h2">تۆمارەکان</h1>
+      <p class="t-meta"><%= kuDigits(items.length) %> تۆمار</p>
+    </div>
+    <a class="btn btn-primary" href="/admin/items/new">+ نوێ</a>
+  </header>
 
-  <form method="get" action="/admin/items" class="admin-filters">
-    <input class="field" name="q" value="<%= filters.q %>" placeholder="گەڕان" />
+  <form method="get" action="/admin/items" class="admin-filters admin-filters--bar">
+    <input class="field" name="q" value="<%= filters.q %>" placeholder="گەڕان بە ناونیشان..." />
     <select class="field" name="status">
       <option value="">هەموو دۆخەکان</option>
       <option value="published" <%= filters.status === "published" ? "selected" : "" %>>بڵاوکراوە</option>
@@ -22,47 +25,54 @@
   </form>
 
   <% if (!items.length) { %>
-  <p class="t-meta mt-6">هیچ تۆمارێک نەدۆزرایەوە.</p>
+  <div class="admin-empty">
+    <p>هیچ تۆمارێک نەدۆزرایەوە.</p>
+    <a class="btn btn-primary btn-sm" href="/admin/items/new">تۆماری نوێ</a>
+  </div>
   <% } else { %>
-  <table class="admin-table">
-    <thead>
-      <tr>
-        <th>ناونیشان</th>
-        <th>جۆر</th>
-        <th>دۆخ</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% items.forEach(function (item) { %>
-      <tr>
-        <td>
-          <a href="/admin/items/<%= item.id %>"><%= item.title %></a>
-          <% if (item.featured) { %><span class="admin-pill">تایبەت</span><% } %>
-        </td>
-        <td><%= contentTypeLabels[item.contentType] %></td>
-        <td><%= statusLabels[item.status] %></td>
-        <td class="admin-row-actions">
-          <% if (item.status !== "published") { %>
-          <form method="post" action="/admin/items/<%= item.id %>/status">
-            <input type="hidden" name="_csrf" value="<%= csrf %>" />
-            <input type="hidden" name="status" value="published" />
-            <input type="hidden" name="back" value="/admin/items" />
-            <button class="btn btn-sm btn-primary" type="submit">بڵاوکردنەوە</button>
-          </form>
-          <% } %>
-          <% if (item.status === "published") { %>
-          <form method="post" action="/admin/items/<%= item.id %>/status">
-            <input type="hidden" name="_csrf" value="<%= csrf %>" />
-            <input type="hidden" name="status" value="archived" />
-            <input type="hidden" name="back" value="/admin/items" />
-            <button class="btn btn-sm btn-secondary" type="submit">شاردنەوە</button>
-          </form>
-          <% } %>
-        </td>
-      </tr>
-      <% }); %>
-    </tbody>
-  </table>
+  <div class="admin-item-list">
+    <% items.forEach(function (entry) { %>
+    <% const thumb = entry.media.coverImage && (entry.media.coverImage.cachedUrl || entry.media.coverImage.remoteUrl); %>
+    <article class="admin-item-row">
+      <a class="admin-item-row__thumb" href="/admin/items/<%= entry.id %>">
+        <% if (thumb) { %>
+        <img src="<%= thumb %>" alt="" loading="lazy" />
+        <% } else { %>
+        <span><%= contentTypeLabels[entry.contentType].slice(0, 1) %></span>
+        <% } %>
+      </a>
+      <div class="admin-item-row__main">
+        <div class="admin-item-row__head">
+          <a class="admin-item-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
+          <% if (entry.featured) { %><span class="admin-badge admin-badge--featured">تایبەت</span><% } %>
+        </div>
+        <p class="t-meta admin-item-row__meta">
+          <span class="admin-badge admin-badge--<%= entry.status %>"><%= statusLabels[entry.status] %></span>
+          · <%= contentTypeLabels[entry.contentType] %>
+          <% if (entry.year) { %> · <%= kuDigits(entry.year) %><% } %>
+        </p>
+      </div>
+      <div class="admin-item-row__actions">
+        <% if (entry.status !== "published") { %>
+        <form method="post" action="/admin/items/<%= entry.id %>/status">
+          <input type="hidden" name="_csrf" value="<%= csrf %>" />
+          <input type="hidden" name="status" value="published" />
+          <input type="hidden" name="back" value="/admin/items" />
+          <button class="btn btn-sm btn-primary" type="submit">بڵاوکردنەوە</button>
+        </form>
+        <% } else { %>
+        <a class="btn btn-sm btn-light" href="/archive/<%= entry.slug %>" target="_blank" rel="noopener">بینین</a>
+        <form method="post" action="/admin/items/<%= entry.id %>/status">
+          <input type="hidden" name="_csrf" value="<%= csrf %>" />
+          <input type="hidden" name="status" value="draft" />
+          <input type="hidden" name="back" value="/admin/items" />
+          <button class="btn btn-sm btn-secondary" type="submit">ڕەشنووس</button>
+        </form>
+        <% } %>
+        <a class="btn btn-sm btn-secondary" href="/admin/items/<%= entry.id %>">دەستکاری</a>
+      </div>
+    </article>
+    <% }); %>
+  </div>
   <% } %>
 </section>
