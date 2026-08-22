@@ -3606,7 +3606,28 @@
   }
 
   .bio-note-saucer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
     padding: clamp(1.15rem, 2.5vw, 1.65rem);
+  }
+
+  .bio-note-saucer__text {
+    flex: 1 1 16rem;
+    min-width: 0;
+    margin: 0;
+    max-width: 36rem;
+  }
+
+  .bio-note-saucer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    flex: 0 0 auto;
   }
 
   .archive-more {

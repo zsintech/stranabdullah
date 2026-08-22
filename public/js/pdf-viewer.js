@@ -1,4 +1,8 @@
 (function () {
+  const PDFJS_VER = "3.11.174";
+  const PDFJS_CDN = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VER}`;
+  const PDFJS_FONTS = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VER}`;
+
   const root = document.querySelector("[data-pdf-reader]");
   if (!root) return;
 
@@ -22,6 +26,7 @@
   let scale = 1;
   let rendering = false;
   let pendingPage = null;
+  let renderTask = null;
 
   function waitForPdfJs() {
     return new Promise((resolve, reject) => {
@@ -45,13 +50,18 @@
   function fitScale(page) {
     if (!stage) return 1;
     const padding = 32;
-    const maxWidth = stage.clientWidth - padding;
+    const maxWidth = Math.max(280, stage.clientWidth - padding);
+    const maxHeight = Math.max(420, stage.clientHeight - padding);
     const viewport = page.getViewport({ scale: 1 });
-    return Math.min(2.2, Math.max(0.6, maxWidth / viewport.width));
+    const scaleW = maxWidth / viewport.width;
+    const scaleH = maxHeight / viewport.height;
+    // Fit entire page in the stage (not just width) so title pages aren't a blank white crop.
+    return Math.min(2.2, Math.max(0.35, Math.min(scaleW, scaleH)));
   }
 
   function updatePageLabel() {
     if (!pageLabel || !pdfDoc) return;
+    // Keep numerals LTR inside the RTL page (avoids "227 / 1" looking swapped).
     pageLabel.textContent = `${pageNum} / ${pdfDoc.numPages}`;
   }
 
@@ -65,22 +75,52 @@
   async function renderPage(num) {
     if (!pdfDoc || !canvas) return;
     rendering = true;
-    const page = await pdfDoc.getPage(num);
-    if (scale <= 0) scale = fitScale(page);
-    const viewport = page.getViewport({ scale });
-    const context = canvas.getContext("2d");
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    canvas.hidden = false;
-    if (loading) loading.hidden = true;
-    await page.render({ canvasContext: context, viewport }).promise;
-    rendering = false;
-    updatePageLabel();
-    if (fitBtn) fitBtn.textContent = `${Math.round(scale * 100)}%`;
-    if (pendingPage !== null) {
-      const next = pendingPage;
-      pendingPage = null;
-      await renderPage(next);
+    try {
+      if (renderTask) {
+        try {
+          renderTask.cancel();
+        } catch {
+          /* ignore */
+        }
+        renderTask = null;
+      }
+
+      const page = await pdfDoc.getPage(num);
+      if (scale <= 0) scale = fitScale(page);
+
+      const outputScale = window.devicePixelRatio || 1;
+      const viewport = page.getViewport({ scale });
+      const context = canvas.getContext("2d", { alpha: false });
+      if (!context) return;
+
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = `${Math.floor(viewport.width)}px`;
+      canvas.style.height = `${Math.floor(viewport.height)}px`;
+      canvas.hidden = false;
+      if (loading) loading.hidden = true;
+
+      context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, viewport.width, viewport.height);
+
+      renderTask = page.render({ canvasContext: context, viewport });
+      await renderTask.promise;
+      renderTask = null;
+
+      updatePageLabel();
+      if (fitBtn) fitBtn.textContent = `${Math.round(scale * 100)}%`;
+    } catch (error) {
+      if (error?.name === "RenderingCancelledException") return;
+      console.error("PDF render failed", error);
+      showLoading("بارکردنی لاپەڕە سەرکەوتوو نەبوو.");
+    } finally {
+      rendering = false;
+      if (pendingPage !== null) {
+        const next = pendingPage;
+        pendingPage = null;
+        await renderPage(next);
+      }
     }
   }
 
@@ -110,9 +150,15 @@
     pageNum = 1;
     scale = 0;
     const pdfjsLib = await waitForPdfJs();
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    pdfDoc = await pdfjsLib.getDocument({ url, withCredentials: false }).promise;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `${PDFJS_CDN}/pdf.worker.min.js`;
+    pdfDoc = await pdfjsLib.getDocument({
+      url,
+      withCredentials: false,
+      // Required for Arabic/Kurdish (and most non-Latin) text PDFs.
+      cMapUrl: `${PDFJS_CDN}/cmaps/`,
+      cMapPacked: true,
+      standardFontDataUrl: `${PDFJS_FONTS}/standard_fonts/`,
+    }).promise;
     await renderPage(pageNum);
   }
 
@@ -147,13 +193,15 @@
       });
       try {
         await loadPdf(src);
-      } catch {
+      } catch (error) {
+        console.error("PDF load failed", error);
         showLoading("بارکردنی PDF سەرکەوتوو نەبوو. فایلەکە داگرە.");
       }
     });
   });
 
   window.addEventListener("keydown", (event) => {
+    if (event.target && /input|textarea|select/i.test(event.target.tagName)) return;
     if (event.key === "ArrowLeft") goNext();
     if (event.key === "ArrowRight") goPrev();
   });
@@ -169,7 +217,8 @@
     }, 180);
   });
 
-  loadPdf(src).catch(() => {
+  loadPdf(src).catch((error) => {
+    console.error("PDF load failed", error);
     showLoading("بارکردنی PDF سەرکەوتوو نەبوو. فایلەکە داگرە.");
   });
 })();

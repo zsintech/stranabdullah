@@ -2,14 +2,17 @@
   margin-block: 0 2rem;
   overflow: hidden;
   background: color-mix(in srgb, var(--paper, #faf7f0) 90%, white);
+  /* Isolate from site RTL so canvas / page numbers render correctly. */
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
-.pdf-reader__chrome {
-  display: flex;
-  flex-direction: column;
+.pdf-reader__volumes {
+  direction: rtl;
 }
 
 .pdf-reader__toolbar {
+  direction: rtl;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -66,10 +69,13 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--forest-900);
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .pdf-reader__stage {
   position: relative;
+  height: min(75vh, 52rem);
   min-height: 28rem;
   padding: 1.25rem 1rem 1.5rem;
   display: flex;
@@ -82,7 +88,9 @@
 }
 
 .pdf-reader__canvas {
+  display: block;
   max-width: 100%;
+  width: auto;
   height: auto;
   box-shadow:
     0 2px 0 color-mix(in srgb, var(--forest-950) 8%, transparent),
