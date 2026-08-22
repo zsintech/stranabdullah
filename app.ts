@@ -75,6 +75,11 @@ app.use((req, _res, next) => {
   next();
 });
 
+// Lightweight health check — must not touch Firestore (Render rejects deploys if this times out).
+app.get("/health", (_req, res) => {
+  res.status(200).type("text").send("ok");
+});
+
 app.use(express.static(publicDir));
 app.get("/styles/app.css", (_req, res) => {
   res.type("text/css").sendFile(stylesFile);
@@ -84,7 +89,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookieSecret));
 
-app.use(async (_req, res, next) => {
+app.use(async (req, res, next) => {
+  if (req.path === "/health") {
+    next();
+    return;
+  }
   try {
     const cache = readArchiveCountCache();
     const now = Date.now();
