@@ -32,7 +32,7 @@
   <% } else { %>
   <div class="admin-item-list">
     <% items.forEach(function (entry) { %>
-    <% const thumb = entry.media.coverImage && (entry.media.coverImage.cachedUrl || entry.media.coverImage.remoteUrl); %>
+    <% const thumb = visualOf(entry); %>
     <article class="admin-item-row">
       <a class="admin-item-row__thumb" href="/admin/items/<%= entry.id %>">
         <% if (thumb) { %>
@@ -45,6 +45,7 @@
         <div class="admin-item-row__head">
           <a class="admin-item-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
           <% if (entry.featured) { %><span class="admin-badge admin-badge--featured">تایبەت</span><% } %>
+          <% if (entry.extras && entry.extras.homeGallery) { %><span class="admin-badge admin-badge--gallery">سەرەکی · وێنە</span><% } %>
         </div>
         <p class="t-meta admin-item-row__meta">
           <span class="admin-badge admin-badge--<%= entry.status %>"><%= statusLabels[entry.status] %></span>

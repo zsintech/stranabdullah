@@ -38,6 +38,9 @@ export type ContentDraftInput = {
   author?: string;
   publisher?: string;
   isbn?: string;
+  homeGallery?: boolean;
+  homeGalleryOrder?: number;
+  homeGalleryWide?: boolean;
 };
 
 export type ContentRepository = {

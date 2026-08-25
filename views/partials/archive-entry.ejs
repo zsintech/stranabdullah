@@ -1,8 +1,15 @@
 <%
   const day = formatKuDayMonth(item.publishedAt);
   const outlet = sourceAttribution(item);
+  const cover = coverOf(item);
 %>
-<article class="archive-entry float-saucer float-saucer--rounded float-saucer--lift-sm group">
+<article class="archive-entry float-saucer float-saucer--rounded float-saucer--lift-sm group<%= cover ? ' archive-entry--media' : '' %>">
+  <% if (cover) { %>
+  <a href="/archive/<%= item.slug %>" class="archive-entry__media" tabindex="-1" aria-hidden="true">
+    <img src="<%= cover %>" alt="" loading="lazy" decoding="async" />
+  </a>
+  <% } %>
+  <div class="archive-entry__copy">
   <p class="archive-entry__meta t-meta">
     <% if (day) { %><span class="archive-entry__day"><%= day %></span><% } %>
     <span class="archive-entry__type"><%= contentTypeLabels[item.contentType] %></span>
@@ -36,4 +43,5 @@
     <% }); %>
   </ul>
   <% } %>
+  </div>
 </article>

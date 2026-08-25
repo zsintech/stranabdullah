@@ -54,7 +54,7 @@
     <% } else { %>
     <ul class="admin-recent-grid">
       <% recent.forEach(function (entry) { %>
-      <% const thumb = entry.media.coverImage && (entry.media.coverImage.cachedUrl || entry.media.coverImage.remoteUrl); %>
+      <% const thumb = visualOf(entry); %>
       <li>
         <a class="admin-recent-card" href="/admin/items/<%= entry.id %>">
           <div class="admin-recent-card__media">

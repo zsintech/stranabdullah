@@ -24,6 +24,11 @@ export function applyDraft(
   const coverAlt = input.coverAlt?.trim() || input.title.trim();
   const existingCover = current?.media?.coverImage;
 
+  function coverFromUrl(url: string, alt: string) {
+    if (/^https?:\/\//i.test(url)) return { remoteUrl: url, alt };
+    return { cachedUrl: url, alt };
+  }
+
   return ContentItemSchema.parse({
     id,
     slug,
@@ -46,7 +51,7 @@ export function applyDraft(
     source: current?.source,
     media: {
       coverImage: coverUrl
-        ? { remoteUrl: coverUrl, alt: coverAlt }
+        ? coverFromUrl(coverUrl, coverAlt)
         : existingCover
           ? { ...existingCover, alt: input.coverAlt?.trim() || existingCover.alt || input.title.trim() }
           : undefined,
@@ -69,6 +74,11 @@ export function applyDraft(
       outlet: input.outlet?.trim() || current?.extras?.outlet,
       publisher: input.publisher?.trim() || current?.extras?.publisher,
       isbn: input.isbn?.trim() || current?.extras?.isbn,
+      homeGallery: input.homeGallery ?? current?.extras?.homeGallery ?? false,
+      homeGalleryOrder:
+        input.homeGalleryOrder ??
+        (typeof current?.extras?.homeGalleryOrder === "number" ? current.extras.homeGalleryOrder : undefined),
+      homeGalleryWide: input.homeGalleryWide ?? current?.extras?.homeGalleryWide ?? false,
     },
   });
 }

@@ -1,17 +1,22 @@
 <% if (items.length) { %>
-<ul class="<%= typeof columns !== 'undefined' && columns ? 'grid border-t border-forest-950/12 md:grid-cols-2 md:gap-x-10' : 'border-t border-forest-950/12' %>">
-  <% items.forEach(function (entry) { %>
-  <li class="border-b border-forest-950/12">
-    <a href="/archive/<%= entry.slug %>" class="group grid gap-x-5 gap-y-0.5 no-underline <%= typeof columns !== 'undefined' && columns ? 'py-3.5' : 'py-4 sm:grid-cols-[7rem_1fr_auto] sm:items-baseline' %>">
-      <span class="t-meta shrink-0 tabular-nums"><%= formatKuNumeric(entry.publishedAt) %></span>
-      <span class="min-w-0">
+<ul class="<%= typeof columns !== 'undefined' && columns ? 'article-index article-index--cols' : 'article-index' %>">
+  <% items.forEach(function (entry) { const thumb = coverOf(entry); %>
+  <li>
+    <a href="/archive/<%= entry.slug %>" class="article-index__row group">
+      <% if (thumb) { %>
+      <span class="article-index__thumb">
+        <img src="<%= thumb %>" alt="" loading="lazy" decoding="async" />
+      </span>
+      <% } %>
+      <span class="article-index__date t-meta tabular-nums"><%= formatKuNumeric(entry.publishedAt) %></span>
+      <span class="article-index__copy min-w-0">
         <span class="link-underline font-display text-[1.05rem] font-bold leading-snug text-forest-950 sm:text-[1.2rem]"><%= entry.title %></span>
         <% if (typeof excerpt !== "undefined" && excerpt && isUsefulExcerpt(entry)) { %>
         <span class="t-small mt-1 block line-clamp-2 text-ink-muted"><%= entry.summary %></span>
         <% } %>
       </span>
       <% if (!(typeof columns !== "undefined" && columns)) { %>
-      <span class="t-meta hidden shrink-0 items-center gap-3 sm:flex">
+      <span class="article-index__meta t-meta hidden sm:flex">
         <% if (entry.language !== "ku") { %>
         <span><%= languageLabels[entry.language] %></span>
         <% } else { %>

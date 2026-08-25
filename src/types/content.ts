@@ -84,6 +84,9 @@ export const ContentExtrasSchema = z
     photographer: z.string().optional(),
     historicalNotes: z.string().optional(),
     isDemo: z.boolean().optional(),
+    homeGallery: z.boolean().optional(),
+    homeGalleryOrder: z.number().optional(),
+    homeGalleryWide: z.boolean().optional(),
   })
   .passthrough();
 

@@ -30,10 +30,10 @@
     --aspect-video: 16 / 9;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    --default-font-family: var(--font-sans);
+    --default-font-family: "Amiri", "Noto Naskh Arabic", serif;
     --default-mono-font-family: var(--font-mono);
-    --font-display: var(--font-vazir);
-    --font-body: var(--font-vazir);
+    --font-display: "Amiri", "Noto Naskh Arabic", serif;
+    --font-body: "Amiri", "Noto Naskh Arabic", serif;
   }
 }
 @layer base {
@@ -47,7 +47,7 @@
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
-    font-family: var(--default-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-family: "Amiri", "Noto Naskh Arabic", serif;
     font-feature-settings: var(--default-font-feature-settings, normal);
     font-variation-settings: var(--default-font-variation-settings, normal);
     -webkit-tap-highlight-color: transparent;
@@ -761,7 +761,7 @@
     text-align: center;
   }
   .font-display {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
   }
   .text-2xl {
     font-size: var(--text-2xl);
@@ -1122,8 +1122,8 @@
   --field-deep-900: #02221c;
   --field-deep-800: #05342b;
   --sage: #a8be92;
-  --paper: #f8f5ec;
-  --cream: #efe9d9;
+  --paper: #fbf8f1;
+  --cream: #f8f5ee;
   --ink: #14231c;
   --muted: #68736b;
   --red: #e5232d;
@@ -1137,6 +1137,11 @@
   --ink-muted: var(--muted);
   --tulip: var(--red);
   --wheat: var(--gold);
+  --font-arabic: "Amiri", "Noto Naskh Arabic", serif;
+  --font-vazir: "Amiri", "Noto Naskh Arabic", serif;
+  --font-ui: "Amiri", "Noto Naskh Arabic", serif;
+  --font-display: var(--font-arabic);
+  --font-body: var(--font-arabic);
   --background: var(--cream);
   --foreground: var(--ink);
   --rule: rgba(4, 59, 43, 0.12);
@@ -1167,6 +1172,19 @@
   --pad-masthead: clamp(2rem, 4vw, 3.5rem) clamp(2rem, 4vw, 3rem);
   --pad-tight: clamp(0.5rem, 1.2vw, 0.85rem) clamp(1.15rem, 2.8vw, 2.5rem);
 }
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+.font-amiri,
+.font-vazir,
+.font-display {
+  font-family: "Amiri", "Noto Naskh Arabic", serif;
+}
+
 @layer base {
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -1186,9 +1204,10 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.85;
+    font-family: var(--font-body), "Amiri", "Noto Naskh Arabic", serif;
+    font-size: 1.0625rem;
+    font-weight: 400;
+    line-height: 1.9;
     font-feature-settings: "kern";
     overflow-x: clip;
   }
@@ -1209,10 +1228,11 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-weight: 700;
     color: var(--forest-950);
-    line-height: 1.15;
+    line-height: 1.12;
+    letter-spacing: 0;
     text-wrap: balance;
     overflow: visible;
     padding-block-end: 0.06em;
@@ -1304,7 +1324,7 @@
   }
   .section-head__title {
     margin: 0;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.5rem, 2.5vw, 2.25rem);
     font-weight: 700;
     line-height: 1.2;
@@ -1314,7 +1334,7 @@
   }
   .section-head__count {
     margin-inline-start: 0.55rem;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -1327,7 +1347,7 @@
     align-items: center;
     gap: 0.4rem;
     text-decoration: none;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--forest);
@@ -1348,7 +1368,7 @@
     border-top: 1px solid var(--rule);
   }
   .t-display-hero {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(3rem, 4.8vw, 5.5rem);
     font-weight: 700;
     line-height: 1.05;
@@ -1358,37 +1378,39 @@
     text-wrap: balance;
   }
   .t-display-xl {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(3.5rem, 6vw, 6rem);
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.015em;
   }
   .t-display {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(2.8rem, 5vw, 5rem);
     font-weight: 700;
-    line-height: 1.05;
+    line-height: 1.12;
+    letter-spacing: 0;
     text-wrap: balance;
   }
   .t-h1 {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(2.8rem, 5vw, 5rem);
     font-weight: 700;
-    line-height: 1.08;
+    line-height: 1.12;
     max-inline-size: 100%;
+    letter-spacing: 0;
     text-wrap: balance;
   }
   .t-h2 {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(2rem, 3.5vw, 3.5rem);
     font-weight: 700;
     line-height: 1.12;
   }
   .t-h3 {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.5rem, 2.5vw, 2.25rem);
-    font-weight: 650;
+    font-weight: 700;
     line-height: 1.25;
   }
   .t-lead {
@@ -1406,7 +1428,7 @@
     line-height: 1.7;
   }
   .t-meta {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.55;
@@ -1420,7 +1442,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.5;
@@ -1443,7 +1465,7 @@
     color: var(--forest-900);
   }
   .t-eyebrow {
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.8125rem, 0.75rem + 0.2vw, 0.9375rem);
     font-weight: 500;
     letter-spacing: 0.06em;
@@ -1451,7 +1473,7 @@
     color: var(--green);
   }
   .t-year {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(3.25rem, 8vw, 6rem);
     font-weight: 700;
     line-height: 0.88;
@@ -1471,7 +1493,7 @@
     padding-inline: 1.35rem;
     border: 1px solid transparent;
     border-radius: var(--radius);
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -1751,7 +1773,7 @@
   }
   .site-footer__name {
     margin: 0.2rem 0 0;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.05rem, 1.5vw, 1.25rem);
     font-weight: 700;
     line-height: 1.25;
@@ -2131,7 +2153,7 @@
     }
   }
   .decorative-year {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-weight: 700;
     line-height: 0.82;
     letter-spacing: -0.02em;
@@ -2156,7 +2178,7 @@
     font-size: clamp(3.5rem, 10vw, 7rem);
   }
   .decorative-word {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-weight: 700;
     line-height: 0.9;
     color: var(--forest);
@@ -2261,7 +2283,7 @@
     width: 100%;
     max-inline-size: 100%;
     margin: 0;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.15rem, 0.98rem + 1.85cqi, 2.05rem);
     font-weight: 700;
     line-height: 1.38;
@@ -2350,7 +2372,7 @@
   .essay-spread__lead-title,
   .essay-spread__card-title {
     margin: 0;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-weight: 700;
     line-height: 1.35;
     color: var(--forest-950);
@@ -2594,7 +2616,7 @@
   }
   .essay-grid__date {
     margin: 0;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.6875rem;
     font-weight: 500;
     line-height: 1.4;
@@ -2606,7 +2628,7 @@
   }
   .essay-grid__title {
     margin: 0;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.95rem, 0.88rem + 0.32vw, 1.1rem);
     font-weight: 700;
     line-height: 1.45;
@@ -2623,7 +2645,7 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.8125rem;
     line-height: 1.65;
     color: var(--ink-muted);
@@ -2913,7 +2935,7 @@
   .masthead-eyebrow {
     display: block;
     overflow: hidden;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.625rem;
     font-weight: 500;
     letter-spacing: 0.02em;
@@ -2941,7 +2963,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-display), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.95rem, 0.88rem + 0.4vw, 1.2rem);
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -2975,7 +2997,7 @@
     min-height: 2.5rem;
     padding-block: 0.45rem;
     padding-inline: 0.55rem;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.8rem, 0.72rem + 0.25vw, 0.9rem);
     font-weight: 500;
     text-decoration: none;
@@ -3022,14 +3044,16 @@
   .masthead-search {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    min-height: 2rem;
-    padding: 0.35rem 0.7rem;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.05rem;
+    min-width: 6.35rem;
+    padding: 0.4rem 1.2rem;
     border: 1px solid rgba(201, 169, 102, 0.55);
     border-radius: 999px;
     background: rgba(1, 26, 21, 0.35);
     color: var(--header-ivory);
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     line-height: 1;
     text-decoration: none;
     box-shadow:
@@ -3045,6 +3069,8 @@
   .masthead-search svg {
     width: 0.85rem;
     height: 0.85rem;
+    flex-shrink: 0;
+    display: block;
   }
   .masthead-search:hover,
   .masthead-search:focus-visible {
@@ -3057,9 +3083,12 @@
       0 18px 32px rgba(1, 26, 21, 0.16);
   }
   .masthead-search .link-underline {
+    display: inline-block;
     text-decoration: none;
     font-size: inherit;
     font-weight: 600;
+    line-height: 1;
+    transform: translateY(0.04em);
   }
 
   .masthead-toggle {
@@ -3126,7 +3155,7 @@
 
   .archive-year__label {
     margin: 0;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.15rem, 1.8vw, 1.4rem);
     font-weight: 700;
     line-height: 1.2;
@@ -3168,6 +3197,25 @@
       border-color 180ms var(--ease);
   }
 
+  .archive-entry--media {
+    display: grid;
+    grid-template-columns: minmax(5.5rem, 7.5rem) minmax(0, 1fr);
+    gap: 0.9rem 1.1rem;
+    align-items: start;
+  }
+
+  .archive-entry__media {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    border-radius: 0.7rem;
+    background: color-mix(in srgb, var(--forest) 8%, white);
+  }
+
+  .archive-entry__copy {
+    min-width: 0;
+  }
+
   .archive-entry__meta {
     display: flex;
     flex-wrap: wrap;
@@ -3195,7 +3243,7 @@
 
   .archive-entry__link {
     display: inline;
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.2rem, 1.8vw, 1.55rem);
     font-weight: 700;
     line-height: 1.35;
@@ -3328,14 +3376,14 @@
     color: var(--forest-dark);
   }
   .archive-lane__name {
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.75rem, 0.7rem + 0.18vw, 0.875rem);
     font-weight: 500;
     line-height: 1.3;
     letter-spacing: 0.01em;
   }
   .archive-lane__count {
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.625rem;
     font-weight: 500;
     line-height: 1;
@@ -3347,7 +3395,7 @@
     transform: translateY(-0.1em);
   }
   .archive-lane__cluster--year .archive-lane__name {
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(0.75rem, 0.7rem + 0.18vw, 0.875rem);
     font-weight: 600;
     letter-spacing: 0.015em;
@@ -3376,7 +3424,7 @@
     flex-shrink: 0;
     white-space: nowrap;
     text-decoration: none;
-    font-family: var(--font-body), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.015em;
@@ -3585,7 +3633,7 @@
   }
 
   .bio-year-chip__year {
-    font-family: var(--font-vazir), "Vazirmatn", system-ui, sans-serif;
+    font-family: var(--font-arabic), "Amiri", "Noto Naskh Arabic", serif;
     font-size: 1.35rem;
     font-weight: 700;
     line-height: 1.2;
@@ -3636,11 +3684,26 @@
     padding-block: 0.35rem 0.75rem;
   }
 
-  .archive-more__dock {
+  .archive-more__link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.45rem 0.7rem;
+    min-height: 2.75rem;
+    padding: 0.45rem 1.45rem;
+    border: 1px solid color-mix(in srgb, var(--forest-950) 16%, transparent);
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, #ffffff 0%, #faf8f4 55%, #f3efe6 100%);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.95) inset,
+      0 8px 22px rgba(1, 26, 21, 0.1);
+    color: var(--forest-950);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .archive-more__link:hover {
+    border-color: color-mix(in srgb, var(--forest) 40%, transparent);
   }
 
   .media-feature.float-saucer {

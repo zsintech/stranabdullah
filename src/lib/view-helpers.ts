@@ -32,6 +32,13 @@ export function coverOf(item: ContentItem): string | undefined {
   );
 }
 
+export function visualOf(item: ContentItem): string | undefined {
+  return (
+    coverOf(item) ||
+    (item.contentType === "book" || item.contentType === "audiobook" ? "/brand/portrait.png" : undefined)
+  );
+}
+
 export function isUsefulExcerpt(item: ContentItem): boolean {
   const summary = item.summary.trim();
   if (summary.length < 40) return false;

@@ -1,4 +1,4 @@
-<% const cover = coverOf(item); const hasPdf = item.media && item.media.documentUrl; %>
+<% const cover = visualOf(item); const hasPdf = item.media && item.media.documentUrl; %>
 <article class="book-entry float-saucer float-saucer--rounded float-saucer--lift-sm<%= flip ? ' book-entry--flip' : '' %>">
   <% if (cover) { %>
   <div class="book-entry__media">

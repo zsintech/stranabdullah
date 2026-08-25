@@ -1,10 +1,15 @@
 <% if (items.length) { %>
-<% const lead = items[0]; const rest = items.slice(1); const supporting = rest.slice(0, 2); const more = rest.slice(2); %>
+<% const lead = items[0]; const rest = items.slice(1); const supporting = rest.slice(0, 2); const more = rest.slice(2); const leadCover = coverOf(lead); %>
 <div class="essay-spread">
   <div class="essay-spread__stage">
     <article class="essay-spread__lead float-saucer float-saucer--rounded float-saucer--lift-sm">
       <% if (lead.year) { %>
       <p class="essay-spread__rail" aria-hidden><%= kuDigits(lead.year) %></p>
+      <% } %>
+      <% if (leadCover) { %>
+      <a href="/archive/<%= lead.slug %>" class="essay-spread__lead-media" tabindex="-1" aria-hidden="true">
+        <img src="<%= leadCover %>" alt="" loading="lazy" decoding="async" />
+      </a>
       <% } %>
       <div class="essay-spread__lead-body">
         <%- include("item-meta", { item: lead, metaOptions: { dateStyle: "numeric" } }) %>
@@ -26,8 +31,13 @@
 
     <% if (supporting.length) { %>
     <div class="essay-spread__stack float-saucer float-saucer--rounded float-saucer--lift-sm">
-      <% supporting.forEach(function (entry) { %>
+      <% supporting.forEach(function (entry) { const cardCover = coverOf(entry); %>
       <article class="essay-spread__card">
+        <% if (cardCover) { %>
+        <a href="/archive/<%= entry.slug %>" class="essay-spread__card-media" tabindex="-1" aria-hidden="true">
+          <img src="<%= cardCover %>" alt="" loading="lazy" decoding="async" />
+        </a>
+        <% } %>
         <%- include("item-meta", { item: entry, metaOptions: { dateStyle: "numeric" } }) %>
         <h3 class="essay-spread__card-title">
           <a href="/archive/<%= entry.slug %>" class="link-underline text-forest-950"><%= entry.title %></a>

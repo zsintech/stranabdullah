@@ -5,6 +5,7 @@ import { archiveLabels } from "@/lib/archive-labels";
 import { sourceOutletLabel } from "@/lib/content-labels";
 import { kuDigits } from "@/lib/format";
 import { countBy, pickUnused } from "@/lib/home";
+import { coverOf } from "@/lib/view-helpers";
 import { renderPage } from "@/lib/render-page";
 import { getAdminContentRepository, withContentRepo } from "@/repositories";
 import type { ContentItem } from "@/types/content";
@@ -25,6 +26,15 @@ router.get(
 
     const featured = all.find((item) => item.featured) ?? all[0];
     const rest = all.filter((item) => item.id !== featured?.id);
+    const photos = all
+      .filter((item) => item.contentType === "photo" && coverOf(item) && item.extras?.homeGallery)
+      .sort((a, b) => {
+        const ao = typeof a.extras?.homeGalleryOrder === "number" ? a.extras.homeGalleryOrder : 999;
+        const bo = typeof b.extras?.homeGalleryOrder === "number" ? b.extras.homeGalleryOrder : 999;
+        if (ao !== bo) return ao - bo;
+        return (b.publishedAt ?? "").localeCompare(a.publishedAt ?? "");
+      })
+      .slice(0, 8);
 
     const latest = rest.slice(0, 8);
     const kurdish = pickUnused(rest, latest, (item) => item.language === "ku", 8);
@@ -36,6 +46,7 @@ router.get(
       latest,
       kurdish,
       arabic,
+      photos,
       years,
       languages,
       types,
@@ -83,7 +94,7 @@ router.get(
 
     await renderPage(res, "biography", {
       pageTitle: "ژیاننامە",
-      pageDescription: "ژیاننامە و تۆماری کاری بڵاوکراوەی هەڤاڵ ستران عەبدوڵڵا.",
+      pageDescription: "ژیاننامە و تۆماری کاری بڵاوکراوەی ستران عەبدوڵڵا.",
       biography,
       years,
       languages,

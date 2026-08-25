@@ -1,5 +1,140 @@
 [
   {
+    "id": "photo-iraq-opposition-nyc-1999",
+    "slug": "kongrey-opozisyoni-eraq-newyork-1999",
+    "title": "کۆنگرەی ئۆپۆزسێۆنی عیراق لە نیوۆرک",
+    "summary": "کۆنگرەی ئۆپۆزسێۆنی عیراق لە نیوۆرک، ساڵی ١٩٩٩.",
+    "body": "",
+    "bodyFormat": "markdown",
+    "contentType": "photo",
+    "language": "ku",
+    "status": "published",
+    "publishedAt": "1999-01-01T12:00:00.000Z",
+    "eventDate": "1999-01-01",
+    "year": 1999,
+    "topics": [
+      "مێژوو",
+      "سیاسەت"
+    ],
+    "tags": [
+      "archive-photo"
+    ],
+    "people": [
+      "ستران عەبدوڵڵا",
+      "جەلال تاڵەبانی"
+    ],
+    "featured": false,
+    "media": {
+      "coverImage": {
+        "cachedUrl": "/brand/archive/with-talabani.png",
+        "alt": "کۆنگرەی ئۆپۆزسێۆنی عیراق لە نیوۆرک"
+      },
+      "images": []
+    },
+    "audit": {
+      "createdAt": "2026-08-24T15:00:00.000Z",
+      "updatedAt": "2026-08-24T15:00:00.000Z",
+      "createdBy": "seed"
+    },
+    "extras": {
+      "author": "ستران عەبدوڵڵا",
+      "homeGallery": true,
+      "homeGalleryOrder": 1,
+      "homeGalleryWide": false,
+      "isDemo": false
+    },
+    "subtitle": "ساڵی ١٩٩٩"
+  },
+  {
+    "id": "photo-mosul-library-1995",
+    "slug": "ktebxaney-zankoy-mosul-1995",
+    "title": "بۆ یادگاری: کتێبخانەی زانکۆی مووسڵ…ڕۆژی دووشەمە ٤/٦/١٩٩٥",
+    "summary": "وێنەی یادگاری لە کتێبخانەی زانکۆی مووسڵ، ٤ حوزەیرانی ١٩٩٥.",
+    "body": "",
+    "bodyFormat": "markdown",
+    "contentType": "photo",
+    "language": "ku",
+    "status": "published",
+    "publishedAt": "1995-06-04T12:00:00.000Z",
+    "eventDate": "1995-06-04",
+    "year": 1995,
+    "topics": [
+      "مێژوو",
+      "خوێندن"
+    ],
+    "tags": [
+      "archive-photo"
+    ],
+    "people": [
+      "ستران عەبدوڵڵا"
+    ],
+    "featured": false,
+    "media": {
+      "coverImage": {
+        "cachedUrl": "/brand/archive/study-table.png",
+        "alt": "کتێبخانەی زانکۆی مووسڵ"
+      },
+      "images": []
+    },
+    "audit": {
+      "createdAt": "2026-08-24T15:00:00.000Z",
+      "updatedAt": "2026-08-24T15:00:00.000Z",
+      "createdBy": "seed"
+    },
+    "extras": {
+      "author": "ستران عەبدوڵڵا",
+      "homeGallery": true,
+      "homeGalleryOrder": 2,
+      "homeGalleryWide": true,
+      "isDemo": false
+    }
+  },
+  {
+    "id": "photo-youth-portrait-1996",
+    "slug": "weneger-jabbar-tahir-1996",
+    "title": "وێنەگر جبار طاهر ٢٧/٢/١٩٩٦",
+    "summary": "وێنەی ستران عەبدوڵڵا، وێنەگر جبار طاهر، ٢٧ی شوباتی ١٩٩٦.",
+    "body": "",
+    "bodyFormat": "markdown",
+    "contentType": "photo",
+    "language": "ku",
+    "status": "published",
+    "publishedAt": "1996-02-27T12:00:00.000Z",
+    "eventDate": "1996-02-27",
+    "year": 1996,
+    "topics": [
+      "مێژوو"
+    ],
+    "tags": [
+      "archive-photo"
+    ],
+    "people": [
+      "ستران عەبدوڵڵا",
+      "جبار طاهر"
+    ],
+    "featured": false,
+    "media": {
+      "coverImage": {
+        "cachedUrl": "/brand/archive/youth-portrait.png",
+        "alt": "وێنەگر جبار طاهر ٢٧/٢/١٩٩٦"
+      },
+      "images": []
+    },
+    "audit": {
+      "createdAt": "2026-08-24T15:00:00.000Z",
+      "updatedAt": "2026-08-24T15:00:00.000Z",
+      "createdBy": "seed"
+    },
+    "extras": {
+      "author": "ستران عەبدوڵڵا",
+      "photographer": "جبار طاهر",
+      "homeGallery": true,
+      "homeGalleryOrder": 3,
+      "homeGalleryWide": false,
+      "isDemo": false
+    }
+  },
+  {
     "id": "fb-article-kurdo-diwan-2026-08-09",
     "slug": "diwani-muhamad-kurdo-nazaneenek",
     "title": "دیوانی محەمەد کوردۆ: نازەنینێک هاتۆتە بەردەمی خەیاڵەکانم",
@@ -161,7 +296,7 @@
       "updatedAt": "2026-08-13T15:19:18.089Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "PUKmedia",
       "isDemo": true
     }
@@ -200,7 +335,7 @@
       "updatedAt": "2026-08-13T15:19:48.698Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "PUKmedia",
       "isDemo": true
     }
@@ -239,7 +374,7 @@
       "updatedAt": "2026-08-13T15:19:18.089Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "PUKmedia",
       "isDemo": true
     }
@@ -278,7 +413,7 @@
       "updatedAt": "2026-08-13T15:19:18.089Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "PUKmedia",
       "isDemo": true
     }
@@ -393,7 +528,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2026,
       "publisher": "دەزگای بژاردەی دەگمەن",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -434,7 +569,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2026,
       "publisher": "دەزگای بژاردەی دەگمەن",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -475,7 +610,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2026,
       "publisher": "دەزگای بژاردەی دەگمەن",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -516,7 +651,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2026,
       "publisher": "دیجیتاڵ دەگمەن",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -1089,7 +1224,7 @@
       "updatedAt": "2026-08-13T15:19:18.089Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "PUKmedia",
       "isDemo": true
     }
@@ -3217,7 +3352,7 @@
       "updatedAt": "2026-08-13T15:07:38.761Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3253,7 +3388,7 @@
       "updatedAt": "2026-08-13T15:07:38.126Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3289,7 +3424,7 @@
       "updatedAt": "2026-08-13T15:07:37.514Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3325,7 +3460,7 @@
       "updatedAt": "2026-08-13T15:07:36.790Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3361,7 +3496,7 @@
       "updatedAt": "2026-08-13T15:07:36.082Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3397,7 +3532,7 @@
       "updatedAt": "2026-08-13T15:07:35.491Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "outlet": "ژیان",
       "isDemo": true
     }
@@ -3436,7 +3571,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2023,
       "publisher": "مەکتەبی راگەیاندنی ی.ن.ک. / حەمدی — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3477,7 +3612,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2023,
       "publisher": "مطبعة کارو — السلیمانیة (برعاية مؤسسة المسرى)",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3518,7 +3653,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2023,
       "publisher": "حەمدی / کوردستانی نوێ — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3711,7 +3846,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2020,
       "publisher": "چاپخانەی کارۆ — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3752,7 +3887,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2020,
       "publisher": "چاپخانەی کارۆ — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3793,7 +3928,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2019,
       "publisher": "کارۆ — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3834,7 +3969,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2019,
       "publisher": "سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3875,7 +4010,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2018,
       "publisher": "لقی سلێمانی سەندیکای رۆژنامەنووسانی کوردستان",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3916,7 +4051,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2017,
       "publisher": "چاپخانەی کارۆ — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3957,7 +4092,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2013,
       "publisher": "یەکێتی نووسەرانی کورد — لقی کەرکوک",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -3998,7 +4133,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2013,
       "publisher": "شڤان — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4039,7 +4174,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2011,
       "publisher": "شەهید ئازاد هەورامی — کەرکووک",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4080,7 +4215,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2007,
       "publisher": "خەندان بۆ پەخش و وەشاندن",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4121,7 +4256,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 2004,
       "publisher": "شارەوانی سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4162,7 +4297,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 1999,
       "publisher": "روون — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4203,7 +4338,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 1999,
       "publisher": "دەزگای چاپ و پەخشی سەردەم — سلێمانی",
       "outlet": "کتێبخانە / کەتەلۆگ",
@@ -4244,7 +4379,7 @@
       "updatedAt": "2026-08-13T15:18:15.458Z"
     },
     "extras": {
-      "author": "هەڤاڵ ستران عەبدوڵڵا",
+      "author": "ستران عەبدوڵڵا",
       "publicationYear": 1995,
       "publisher": "وەزارەتی ڕۆشنبیری — هەولێر",
       "outlet": "کتێبخانە / کەتەلۆگ",

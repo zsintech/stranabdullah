@@ -9,6 +9,13 @@
 
 .pdf-reader__volumes {
   direction: rtl;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1rem 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--forest-950) 8%, transparent);
 }
 
 .pdf-reader__toolbar {
@@ -82,6 +89,7 @@
   align-items: flex-start;
   justify-content: center;
   overflow: auto;
+  touch-action: pan-y;
   background:
     radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--forest) 6%, transparent), transparent 55%),
     color-mix(in srgb, var(--ink) 3%, var(--cream-100, #f4efe4));
@@ -134,14 +142,6 @@
 
 .book-pdf-section .measure {
   max-width: min(52rem, 100%);
-}
-
-.pdf-reader__volumes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  padding: 0.85rem 1rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--forest-950) 8%, transparent);
 }
 
 .pdf-reader__volume {

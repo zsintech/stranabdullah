@@ -80,6 +80,9 @@ function draftFromBody(
     author: text(body, "author") || undefined,
     publisher: text(body, "publisher") || undefined,
     isbn: text(body, "isbn") || undefined,
+    homeGallery: body.homeGallery === "on" || body.homeGallery === "true",
+    homeGalleryOrder: text(body, "homeGalleryOrder") ? Number(text(body, "homeGalleryOrder")) : undefined,
+    homeGalleryWide: body.homeGalleryWide === "on" || body.homeGalleryWide === "true",
   };
 }
 

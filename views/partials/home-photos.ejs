@@ -1,0 +1,95 @@
+<%
+  const fallbacks = [
+    {
+      href: "/media",
+      src: "/brand/archive/with-talabani.png",
+      title: "کۆنگرەی ئۆپۆزسێۆنی عیراق لە نیوۆرک",
+      yearLabel: "ساڵی ١٩٩٩",
+      wide: false,
+    },
+    {
+      href: "/media",
+      src: "/brand/archive/study-table.png",
+      title: "بۆ یادگاری: کتێبخانەی زانکۆی مووسڵ…ڕۆژی دووشەمە ٤/٦/١٩٩٥",
+      yearLabel: "",
+      wide: true,
+    },
+    {
+      href: "/media",
+      src: "/brand/archive/youth-portrait.png",
+      title: "وێنەگر جبار طاهر ٢٧/٢/١٩٩٦",
+      yearLabel: "",
+      wide: false,
+    },
+  ];
+
+  const fromAdmin = (typeof photos !== "undefined" && photos ? photos : [])
+    .map(function (item) {
+      const src = coverOf(item);
+      if (!src) return null;
+      return {
+        href: "/archive/" + item.slug,
+        src: src,
+        title: item.title,
+        yearLabel: item.subtitle || "",
+        wide: Boolean(item.extras && item.extras.homeGalleryWide),
+      };
+    })
+    .filter(Boolean);
+
+  const gallery = fromAdmin.length ? fromAdmin : fallbacks;
+  const isSpread = gallery.length <= 3;
+%>
+<% if (gallery.length) { %>
+<section class="photo-lane<%= isSpread ? ' photo-lane--spread' : '' %>" aria-labelledby="photos-heading" data-photo-lane>
+  <div class="site-container">
+    <header class="photo-lane__head">
+      <div class="photo-lane__intro">
+        <p class="photo-lane__kicker">ئەرشیف</p>
+        <h2 id="photos-heading" class="photo-lane__title">وێنە</h2>
+      </div>
+      <a href="/media" class="photo-lane__all group">
+        <span class="link-underline">هەموو وێنەکان</span>
+        <span class="arrow-slide" aria-hidden="true">←</span>
+      </a>
+    </header>
+  </div>
+
+  <div class="photo-lane__viewport">
+    <% if (!isSpread) { %>
+    <div class="photo-lane__fade photo-lane__fade--start" aria-hidden="true"></div>
+    <div class="photo-lane__fade photo-lane__fade--end" aria-hidden="true"></div>
+    <% } %>
+    <div class="photo-lane__track" dir="rtl" data-photo-track tabindex="0" aria-label="وێنەی ئەرشیف">
+      <% gallery.forEach(function (shot, index) { %>
+      <a
+        href="<%= shot.href %>"
+        class="photo-lane__frame photo-lane__frame--<%= shot.wide ? 'wide' : 'tall' %>"
+        style="--i: <%= index %>"
+      >
+        <span class="photo-lane__media">
+          <img
+            src="<%= shot.src %>"
+            alt="<%= shot.title || 'وێنەی ئەرشیف' %>"
+            loading="eager"
+            decoding="async"
+          />
+          <% if (shot.title || shot.yearLabel) { %>
+          <span class="photo-lane__caption">
+            <span class="photo-lane__index"><%= kuDigits(index + 1) %></span>
+            <span class="photo-lane__caption-copy">
+              <% if (shot.title) { %><span class="photo-lane__caption-title"><%= shot.title %></span><% } %>
+              <% if (shot.yearLabel) { %><span class="photo-lane__year"><%= shot.yearLabel %></span><% } %>
+            </span>
+          </span>
+          <% } %>
+        </span>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% if (!isSpread) { %>
+<script src="/js/home-photos.js?v=20260824j" defer></script>
+<% } %>
+<% } %>

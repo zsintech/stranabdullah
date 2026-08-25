@@ -206,6 +206,32 @@
     if (event.key === "ArrowRight") goPrev();
   });
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+  stage?.addEventListener(
+    "touchstart",
+    (event) => {
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    },
+    { passive: true },
+  );
+  stage?.addEventListener(
+    "touchend",
+    (event) => {
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
+      if (dx < 0) goNext();
+      else goPrev();
+    },
+    { passive: true },
+  );
+
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);

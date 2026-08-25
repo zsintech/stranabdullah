@@ -1,6 +1,6 @@
 # stranabdullah
 
-Express + EJS archive site for هەڤاڵ ستران عەبدوڵڵا.
+Express + EJS archive site for ستران عەبدوڵڵا.
 
 ## Local
 

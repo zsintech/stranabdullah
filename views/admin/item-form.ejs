@@ -79,6 +79,27 @@
             <input type="checkbox" name="featured" <%= item && item.featured ? "checked" : "" %> />
             <span>تایبەت لە سەرەکی</span>
           </label>
+          <label class="admin-check admin-check--card">
+            <input type="checkbox" name="homeGallery" <%= item && item.extras && item.extras.homeGallery ? "checked" : "" %> />
+            <span>لە پەڕەی سەرەکی — وێنەی ئەرشیف</span>
+          </label>
+          <div>
+            <label class="field-label" for="homeGalleryOrder">ڕیزی وێنە لە سەرەکی</label>
+            <input
+              class="field"
+              id="homeGalleryOrder"
+              name="homeGalleryOrder"
+              type="number"
+              min="1"
+              dir="ltr"
+              value="<%= item && item.extras && item.extras.homeGalleryOrder ? item.extras.homeGalleryOrder : "" %>"
+              placeholder="1"
+            />
+          </div>
+          <label class="admin-check admin-check--card">
+            <input type="checkbox" name="homeGalleryWide" <%= item && item.extras && item.extras.homeGalleryWide ? "checked" : "" %> />
+            <span>وێنەی فراوان لە کارۆسێل</span>
+          </label>
         </div>
       </div>
 
@@ -148,8 +169,8 @@
             <input class="field field--title" id="title" name="title" required value="<%= item ? item.title : "" %>" placeholder="ناونیشانی نووسین..." />
           </div>
           <div>
-            <label class="field-label" for="subtitle">ژێرناونیشان</label>
-            <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" />
+            <label class="field-label" for="subtitle">ژێرناونیشان / هێڵی دووەمی سەردێڕی وێنە</label>
+            <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" placeholder="بۆ وێنە: بۆ نموونە ساڵی ١٩٩٩" />
           </div>
           <div>
             <label class="field-label" for="slug">لینک (slug)</label>

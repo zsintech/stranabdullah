@@ -13,6 +13,7 @@ import { kuDigits } from "./src/lib/format";
 import { viewsDir, renderPage } from "./src/lib/render-page";
 import {
   coverOf,
+  visualOf,
   isActivePath,
   isUsefulExcerpt,
   itemMetaParts,
@@ -51,6 +52,7 @@ app.set("views", viewsDir);
 app.locals.navLinks = navLinks;
 app.locals.isActivePath = isActivePath;
 app.locals.coverOf = coverOf;
+app.locals.visualOf = visualOf;
 app.locals.isUsefulExcerpt = isUsefulExcerpt;
 app.locals.itemMetaParts = itemMetaParts;
 app.locals.languageLabel = languageLabel;

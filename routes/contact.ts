@@ -33,7 +33,7 @@ router.get(
     const flash = consumeFlash(req, res);
     await renderPage(res, "contact", {
       pageTitle: "پەیوەندی",
-      pageDescription: "پەیوەندی لەگەڵ نووسینگەی تایبەتی هەڤاڵ ستران عەبدوڵڵا.",
+      pageDescription: "پەیوەندی لەگەڵ نووسینگەی تایبەتی ستران عەبدوڵڵا.",
       email: SITE_EMAIL,
       flash,
       errors: {},
@@ -51,7 +51,7 @@ router.post(
     if (Object.keys(errors).length > 0) {
       await renderPage(res, "contact", {
         pageTitle: "پەیوەندی",
-        pageDescription: "پەیوەندی لەگەڵ نووسینگەی تایبەتی هەڤاڵ ستران عەبدوڵڵا.",
+        pageDescription: "پەیوەندی لەگەڵ نووسینگەی تایبەتی ستران عەبدوڵڵا.",
         email: SITE_EMAIL,
         flash: undefined,
         errors,

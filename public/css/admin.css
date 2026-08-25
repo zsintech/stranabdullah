@@ -317,6 +317,12 @@
   color: var(--forest-950);
 }
 
+.admin-badge--gallery {
+  background: color-mix(in srgb, var(--forest-950) 10%, white);
+  color: var(--forest-950);
+  border: 1px solid color-mix(in srgb, var(--forest-950) 16%, transparent);
+}
+
 /* Items list */
 .admin-item-list {
   display: flex;
