@@ -1,38 +1,52 @@
-<section class="hero" aria-labelledby="hero-name">
+<section class="hero" aria-labelledby="hero-name" data-hero>
+  <div class="hero__field" aria-hidden="true"></div>
+  <div class="hero__atmosphere" aria-hidden="true"></div>
+
   <img
     class="hero__art"
-    src="/brand/hero3.png"
+    src="/brand/hero4.png"
     alt=""
-    width="1672"
-    height="941"
+    width="1024"
+    height="512"
     decoding="async"
     fetchpriority="high"
+    data-hero-art
   />
 
   <div class="hero__grid">
-    <div class="hero__visual" aria-hidden="true"></div>
+    <div class="hero__visual" aria-hidden="true">
+      <span class="hero__plate-glow" data-hero-glow></span>
+    </div>
 
     <div class="hero__content">
-      <h1 id="hero-name" class="hero__title"><%= SITE_NAME_SHORT %></h1>
+      <p class="hero__folio" style="--i: 0">
+        <span class="hero__folio-label">ئەرشیف</span>
+        <span class="hero__folio-sep" aria-hidden="true">·</span>
+        <span class="hero__folio-year"><%= kuDigits(new Date().getFullYear()) %></span>
+      </p>
 
-      <div class="hero__divider" aria-hidden="true">
+      <h1 id="hero-name" class="hero__title" style="--i: 1"><%= SITE_NAME_SHORT %></h1>
+
+      <div class="hero__divider" aria-hidden="true" style="--i: 3">
         <span class="hero__divider-line"></span>
         <span class="hero__divider-gem"></span>
         <span class="hero__divider-line hero__divider-line--short"></span>
       </div>
 
-      <p class="hero__description"><%= SITE_DESCRIPTION %></p>
+      <p class="hero__description" style="--i: 4"><%= SITE_DESCRIPTION %></p>
 
-      <div class="hero__actions">
-        <a href="/archive" class="hero__btn hero__btn--primary">
-          <span><%= archiveLabels.short %></span>
-          <span class="hero__btn-icon" aria-hidden="true">‹</span>
+      <div class="hero__actions" style="--i: 5">
+        <a href="/archive" class="hero__cta hero__cta--primary group">
+          <span class="link-underline"><%= archiveLabels.short %></span>
+          <span class="arrow-slide" aria-hidden="true">←</span>
         </a>
-        <a href="/biography" class="hero__btn hero__btn--secondary">
-          <span class="hero__btn-icon hero__btn-icon--lead" aria-hidden="true">◎</span>
-          <span>ژیاننامە</span>
+        <span class="hero__actions-rule" aria-hidden="true"></span>
+        <a href="/biography" class="hero__cta hero__cta--ghost group">
+          <span class="link-underline">ژیاننامە</span>
+          <span class="arrow-slide" aria-hidden="true">←</span>
         </a>
       </div>
     </div>
   </div>
 </section>
+<script src="/js/home-hero.js?v=20260825b" defer></script>

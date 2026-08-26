@@ -1,0 +1,71 @@
+<%
+  const bookItems = (typeof books !== "undefined" && books ? books : [])
+    .filter(function (item) {
+      return item.contentType === "book" || item.contentType === "audiobook";
+    })
+    .slice();
+
+  bookItems.sort(function (a, b) {
+    return (b.year || 0) - (a.year || 0) || String(b.publishedAt || "").localeCompare(String(a.publishedAt || ""));
+  });
+%>
+<% if (bookItems.length) { %>
+<section class="book-lane" aria-labelledby="books-heading" data-book-lane>
+  <div class="site-container">
+    <header class="book-lane__head">
+      <div class="book-lane__intro">
+        <p class="book-lane__kicker">ئەرشیف</p>
+        <h2 id="books-heading" class="book-lane__title">کتێبەکان</h2>
+      </div>
+      <a href="/books" class="book-lane__all group">
+        <span class="link-underline">هەموو کتێبەکان</span>
+        <span class="arrow-slide" aria-hidden="true">←</span>
+      </a>
+    </header>
+  </div>
+
+  <div class="book-lane__viewport">
+    <div class="book-lane__fade book-lane__fade--start" aria-hidden="true"></div>
+    <div class="book-lane__fade book-lane__fade--end" aria-hidden="true"></div>
+    <div class="book-lane__track" dir="rtl" data-book-track tabindex="0" aria-label="کتێبەکانی ئەرشیف">
+      <% bookItems.forEach(function (book, index) {
+        const cover = (coverOf(book) || "/brand/books/" + book.slug + ".png") + "?v=20260825d";
+        const yearLabel = book.year ? kuDigits(book.year) : "";
+      %>
+      <a
+        href="/archive/<%= book.slug %>"
+        class="book-lane__frame"
+        style="--i: <%= index %>"
+        draggable="false"
+      >
+        <span class="book-lane__media">
+          <span class="book-peel is-flat" data-book-peel dir="ltr">
+            <span class="peel-top">
+              <img
+                src="<%= cover %>"
+                alt="<%= book.title || 'بەرگی کتێب' %>"
+                loading="<%= index < 4 ? 'eager' : 'lazy' %>"
+                decoding="async"
+                draggable="false"
+              />
+            </span>
+            <span class="peel-back" aria-hidden="true"></span>
+            <span class="peel-bottom" aria-hidden="true"></span>
+          </span>
+        </span>
+        <span class="book-lane__caption">
+          <span class="book-lane__index"><%= kuDigits(index + 1) %></span>
+          <span class="book-lane__caption-copy">
+            <span class="book-lane__caption-title"><%= book.title %></span>
+            <% if (yearLabel) { %><span class="book-lane__year"><%= yearLabel %></span><% } %>
+          </span>
+        </span>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<script src="/js/home-books.js?v=20260826d" defer></script>
+<script src="/js/peel.js?v=20141224a" defer></script>
+<script src="/js/book-peel.js?v=20260825k" defer></script>
+<% } %>

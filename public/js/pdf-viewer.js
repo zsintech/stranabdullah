@@ -47,16 +47,70 @@
     });
   }
 
+  function overlayChrome() {
+    return Boolean(root.closest(".book-page__reader"));
+  }
+
+  function fitFrame() {
+    const frame = root.closest("[data-pdf-frame]");
+    if (frame instanceof HTMLElement && frame.clientHeight > 120) {
+      const toolbar = root.querySelector(".pdf-reader__toolbar");
+      const chrome = overlayChrome()
+        ? 8
+        : toolbar instanceof HTMLElement
+          ? toolbar.offsetHeight + 10
+          : 52;
+      return {
+        width: Math.max(240, frame.clientWidth - 12),
+        height: Math.max(280, frame.clientHeight - chrome),
+      };
+    }
+    const column = root.parentElement;
+    const width = Math.max(240, (column?.clientWidth || stage?.parentElement?.clientWidth || 720) - 8);
+    const height = Math.max(280, Math.min(window.innerHeight * 0.68, 36 * 16));
+    return { width, height };
+  }
+
   function fitScale(page) {
-    if (!stage) return 1;
-    const padding = 32;
-    const maxWidth = Math.max(280, stage.clientWidth - padding);
-    const maxHeight = Math.max(420, stage.clientHeight - padding);
+    const frame = fitFrame();
     const viewport = page.getViewport({ scale: 1 });
-    const scaleW = maxWidth / viewport.width;
-    const scaleH = maxHeight / viewport.height;
-    // Fit entire page in the stage (not just width) so title pages aren't a blank white crop.
-    return Math.min(2.2, Math.max(0.35, Math.min(scaleW, scaleH)));
+    const scaleW = frame.width / viewport.width;
+    const scaleH = frame.height / viewport.height;
+    return Math.min(2.2, Math.max(0.35, Math.min(scaleW, scaleH) * 0.98));
+  }
+
+  function hugCanvas() {
+    if (!stage || !canvas || canvas.hidden) return;
+    const wide = canvas.offsetWidth > canvas.offsetHeight * 1.08;
+    if (root) root.classList.toggle("is-landscape", wide);
+    if (stage.classList.contains("is-scrollable")) {
+      stage.style.width = "";
+      stage.style.height = "";
+      if (root) {
+        root.style.width = "";
+        root.style.height = "";
+      }
+      return;
+    }
+    const styles = window.getComputedStyle(stage);
+    const padX = (Number.parseFloat(styles.paddingLeft) || 0) + (Number.parseFloat(styles.paddingRight) || 0);
+    const padY = (Number.parseFloat(styles.paddingTop) || 0) + (Number.parseFloat(styles.paddingBottom) || 0);
+    const stageW = Math.ceil(canvas.offsetWidth + padX);
+    const stageH = Math.ceil(canvas.offsetHeight + padY);
+    stage.style.width = `${stageW}px`;
+    stage.style.height = `${stageH}px`;
+    if (!root) return;
+    const frameEl = root.closest("[data-pdf-frame]");
+    const maxW = frameEl instanceof HTMLElement ? frameEl.clientWidth : stageW;
+    const maxH = frameEl instanceof HTMLElement ? frameEl.clientHeight : stageH;
+    root.style.width = `${Math.min(stageW, Math.max(1, maxW))}px`;
+    root.style.height = `${Math.min(stageH, Math.max(1, maxH))}px`;
+  }
+
+  function syncStageOverflow(page) {
+    if (!stage || !page) return;
+    const fitted = fitScale(page);
+    stage.classList.toggle("is-scrollable", scale > fitted + 0.02);
   }
 
   function updatePageLabel() {
@@ -66,6 +120,7 @@
   }
 
   function showLoading(message) {
+    if (stage) stage.classList.add("is-loading");
     if (!loading) return;
     loading.hidden = false;
     loading.textContent = message || "PDF بار دەکرێت…";
@@ -99,6 +154,7 @@
       canvas.style.height = `${Math.floor(viewport.height)}px`;
       canvas.hidden = false;
       if (loading) loading.hidden = true;
+      if (stage) stage.classList.remove("is-loading");
 
       context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
       context.fillStyle = "#ffffff";
@@ -108,6 +164,8 @@
       await renderTask.promise;
       renderTask = null;
 
+      syncStageOverflow(page);
+      hugCanvas();
       updatePageLabel();
       if (fitBtn) fitBtn.textContent = `${Math.round(scale * 100)}%`;
     } catch (error) {
@@ -233,15 +291,23 @@
   );
 
   let resizeTimer;
-  window.addEventListener("resize", () => {
+  function refitPage() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(async () => {
       if (!pdfDoc) return;
       const page = await pdfDoc.getPage(pageNum);
       scale = fitScale(page);
       queueRenderPage(pageNum);
-    }, 180);
-  });
+    }, 80);
+  }
+
+  window.addEventListener("resize", refitPage);
+
+  const frameEl = root.closest("[data-pdf-frame]");
+  if (frameEl && typeof ResizeObserver !== "undefined") {
+    const frameWatch = new ResizeObserver(refitPage);
+    frameWatch.observe(frameEl);
+  }
 
   loadPdf(src).catch((error) => {
     console.error("PDF load failed", error);

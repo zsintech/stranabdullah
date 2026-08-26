@@ -16,9 +16,10 @@ const router = Router();
 router.get(
   "/",
   asyncHandler(async (_req, res) => {
-    const all = await withContentRepo((repo) =>
-      repo.listPublished({ limit: 1000 }).then((result) => result.items),
-    );
+    const [all, books] = await Promise.all([
+      withContentRepo((repo) => repo.listPublished({ limit: 1000 }).then((result) => result.items)),
+      withContentRepo((repo) => repo.getByType("book", 40)),
+    ]);
 
     const years = yearFacets(all);
     const languages = languageFacets(all);
@@ -39,6 +40,9 @@ router.get(
     const latest = rest.slice(0, 8);
     const kurdish = pickUnused(rest, latest, (item) => item.language === "ku", 8);
     const arabic = pickUnused(rest, [...latest, ...kurdish], (item) => item.language === "ar", 8);
+    const homeBooks = [...books].sort(
+      (a, b) => (b.year || 0) - (a.year || 0) || (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""),
+    );
 
     await renderPage(res, "index", {
       pageTitle: undefined,
@@ -46,6 +50,7 @@ router.get(
       latest,
       kurdish,
       arabic,
+      books: homeBooks,
       photos,
       years,
       languages,

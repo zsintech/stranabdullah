@@ -11,10 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles/app.css?v=20260825b" />
+    <link rel="stylesheet" href="/styles/app.css?v=20260826p" />
     <% if (onHome) { %>
-    <link rel="stylesheet" href="/css/home.css?v=20260825a" />
-    <link rel="preload" as="image" href="/brand/hero3.png" />
+    <link rel="stylesheet" href="/css/peel.css?v=20141224b" />
+    <link rel="stylesheet" href="/css/home.css?v=20260826b" />
+    <link rel="preload" as="image" href="/brand/hero4.png" />
     <% } %>
     <style>
       :root {
@@ -28,11 +29,11 @@
       html, body { font-family: "Amiri", "Noto Naskh Arabic", serif; }
     </style>
   </head>
-  <body class="min-h-screen bg-cream-100 text-ink antialiased">
+  <body class="min-h-screen bg-cream-100 text-ink antialiased<%= typeof isBook !== 'undefined' && isBook ? ' is-book-page' : '' %>">
     <a href="#main" class="skip-link">بچۆ بۆ ناوەڕۆک</a>
     <%- include("partials/header") %>
     <main id="main"><%- body %></main>
     <%- include("partials/footer") %>
-    <script src="/js/header.js" defer></script>
+    <script src="/js/header.js?v=20260826a" defer></script>
   </body>
 </html>

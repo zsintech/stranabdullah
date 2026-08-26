@@ -28,27 +28,27 @@
   </section>
 
   <div class="site-container site-container--body bio-body">
-    <section aria-labelledby="record-heading">
+    <section class="bio-record" aria-labelledby="record-heading">
       <%- include("partials/section-heading", { headingId: "record-heading", headingTitle: "تۆماری کاری بڵاوکراوە", description: "ئەم ژمارانە ڕاستەوخۆ لە ئەرشیفەکەوە وەرگیراون." }) %>
       <dl class="bio-stats float-saucer float-saucer--rounded float-saucer--lift-sm">
         <div>
           <dt class="t-meta">نووسینی تۆمارکراو</dt>
-          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><%= totalDisplay %></dd>
+          <dd class="bio-stats__value"><%= totalDisplay %></dd>
         </div>
         <% if (span) { %>
         <div>
           <dt class="t-meta">ماوەی نووسین</dt>
-          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><span dir="ltr"><%= span %></span></dd>
+          <dd class="bio-stats__value"><span dir="ltr"><%= span %></span></dd>
         </div>
         <% } %>
         <div>
           <dt class="t-meta">زمانەکان</dt>
-          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950"><%= languageList %></dd>
+          <dd class="bio-stats__value"><%= languageList %></dd>
         </div>
         <% if (booksCount) { %>
         <div>
           <dt class="t-meta">کتێبی تۆمارکراو</dt>
-          <dd class="mt-1 font-display text-[1.65rem] font-bold leading-tight text-forest-950">
+          <dd class="bio-stats__value">
             <a href="/books" class="no-underline text-inherit hover:text-gold-700"><%= booksDisplay %></a>
           </dd>
         </div>
@@ -56,38 +56,40 @@
       </dl>
     </section>
 
-    <% if (outlets.length) { %>
-    <section aria-labelledby="outlets-heading" class="mt-14">
-      <%- include("partials/section-heading", { headingId: "outlets-heading", headingTitle: "شوێنی بڵاوکردنەوە" }) %>
-      <ul class="border-t border-forest-950/12">
-        <% outlets.forEach(function (row) { %>
-        <li class="flex items-baseline gap-5 border-b border-forest-950/12 py-3.5">
-          <span class="font-display text-lg font-bold text-forest-950"><%= row.outlet %></span>
-          <span class="h-px flex-1 bg-forest-950/10" aria-hidden></span>
-          <span class="t-meta shrink-0"><%= row.countDisplay %> نووسین</span>
-        </li>
-        <% }); %>
-      </ul>
-    </section>
-    <% } %>
+    <div class="bio-split">
+      <% if (outlets.length) { %>
+      <section class="bio-outlets" aria-labelledby="outlets-heading">
+        <%- include("partials/section-heading", { headingId: "outlets-heading", headingTitle: "شوێنی بڵاوکردنەوە" }) %>
+        <ul class="bio-outlets__list">
+          <% outlets.forEach(function (row) { %>
+          <li class="bio-outlets__row">
+            <span class="bio-outlets__name"><%= row.outlet %></span>
+            <span class="bio-outlets__rule" aria-hidden></span>
+            <span class="t-meta bio-outlets__count"><%= row.countDisplay %> نووسین</span>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% } %>
 
-    <% if (years.length) { %>
-    <section aria-labelledby="years-heading" class="mt-14">
-      <%- include("partials/section-heading", { headingId: "years-heading", headingTitle: "بەپێی ساڵ", href: "/archive", linkLabel: "بڕوانە ئەرشیف" }) %>
-      <ul class="bio-year-rail">
-        <% years.forEach(function (year) { %>
-        <li>
-          <a href="<%= year.href %>" class="float-saucer bio-year-chip group">
-            <span class="bio-year-chip__year"><%= year.display %></span>
-            <span class="bio-year-chip__count t-meta"><%= kuDigits(year.count) %></span>
-          </a>
-        </li>
-        <% }); %>
-      </ul>
-    </section>
-    <% } %>
+      <% if (years.length) { %>
+      <section class="bio-years" aria-labelledby="years-heading">
+        <%- include("partials/section-heading", { headingId: "years-heading", headingTitle: "بەپێی ساڵ", href: "/archive", linkLabel: "بڕوانە ئەرشیف" }) %>
+        <ul class="bio-year-rail">
+          <% years.forEach(function (year) { %>
+          <li>
+            <a href="<%= year.href %>" class="float-saucer bio-year-chip group">
+              <span class="bio-year-chip__year"><%= year.display %></span>
+              <span class="bio-year-chip__count t-meta"><%= kuDigits(year.count) %></span>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+      </section>
+      <% } %>
+    </div>
 
-    <section class="float-saucer float-saucer--rounded float-saucer--lift-sm bio-note-saucer measure mt-14">
+    <section class="float-saucer float-saucer--rounded float-saucer--lift-sm bio-note-saucer">
       <div class="bio-note-saucer__actions">
         <a href="/archive" class="btn btn-secondary btn-sm">ئەرشیفی نووسینەکان</a>
         <% if (booksCount) { %>

@@ -1,4 +1,7 @@
 .pdf-reader {
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
   margin-block: 0 2rem;
   overflow: hidden;
   background: color-mix(in srgb, var(--paper, #faf7f0) 90%, white);
@@ -21,11 +24,11 @@
 .pdf-reader__toolbar {
   direction: rtl;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  gap: 0.35rem;
+  padding: 0.5rem 0.55rem;
   border-bottom: 1px solid color-mix(in srgb, var(--forest-950) 10%, transparent);
   background: color-mix(in srgb, var(--forest) 5%, var(--cream-100, #f4efe4));
 }
@@ -34,22 +37,27 @@
 .pdf-reader__tools {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: center;
+  gap: 0.25rem;
+  flex: 0 0 auto;
 }
 
 .pdf-reader__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2.25rem;
-  height: 2.25rem;
-  padding: 0 0.65rem;
+  min-width: 1.85rem;
+  height: 1.85rem;
+  padding: 0 0.45rem;
   border: 1px solid color-mix(in srgb, var(--forest-950) 18%, transparent);
   border-radius: 999px;
   background: white;
   color: var(--forest-950);
   font: inherit;
+  font-size: 0.85rem;
   font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease;
 }
@@ -65,14 +73,19 @@
 }
 
 .pdf-reader__btn--ghost {
-  min-width: 2rem;
-  font-size: 1.1rem;
-  line-height: 1;
+  min-width: 1.75rem;
+  font-size: 1rem;
+}
+
+.pdf-reader__fit {
+  min-width: 3.1rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .pdf-reader__page {
-  min-width: 4.5rem;
+  min-width: 3.4rem;
   text-align: center;
+  font-size: 0.82rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--forest-900);
@@ -82,29 +95,56 @@
 
 .pdf-reader__stage {
   position: relative;
-  height: min(75vh, 52rem);
-  min-height: 28rem;
-  padding: 1.25rem 1rem 1.5rem;
+  width: max-content;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-inline: auto;
+  padding: 0.55rem;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
   touch-action: pan-y;
   background:
     radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--forest) 6%, transparent), transparent 55%),
     color-mix(in srgb, var(--ink) 3%, var(--cream-100, #f4efe4));
 }
 
+.pdf-reader__stage.is-loading {
+  width: 100%;
+  min-height: 8rem;
+}
+
+.pdf-reader__stage.is-scrollable {
+  width: 100%;
+  max-width: 100%;
+  max-height: min(80vh, 52rem);
+  overflow: auto;
+  align-items: flex-start;
+  scrollbar-width: thin;
+}
+
+.pdf-reader__stage.is-scrollable::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
 .pdf-reader__canvas {
   display: block;
-  max-width: 100%;
   width: auto;
   height: auto;
+  flex: 0 0 auto;
   box-shadow:
     0 2px 0 color-mix(in srgb, var(--forest-950) 8%, transparent),
     0 16px 48px color-mix(in srgb, var(--forest-950) 14%, transparent);
   border-radius: 2px;
   background: white;
+}
+
+.pdf-reader__loading[hidden],
+.pdf-reader__canvas[hidden] {
+  display: none !important;
 }
 
 .pdf-reader__loading {
@@ -121,19 +161,26 @@
   border-top: 1px solid color-mix(in srgb, var(--forest-950) 8%, transparent);
 }
 
-.pdf-reader__download {
-  white-space: nowrap;
+.pdf-reader__download,
+.pdf-reader__download:link,
+.pdf-reader__download:visited {
+  flex: 0 0 auto;
+  min-width: auto;
+  padding-inline: 0.55rem;
+  font-size: 0.75rem;
+  color: var(--paper, #fbf8f1);
+  -webkit-text-fill-color: var(--paper, #fbf8f1);
+  background: var(--forest-950, #043b2b);
+  border-color: var(--forest-950, #043b2b);
+  text-decoration: none;
 }
 
-@media (max-width: 640px) {
-  .pdf-reader__toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .pdf-reader__nav,
-  .pdf-reader__tools {
-    justify-content: center;
-  }
+.pdf-reader__download:hover,
+.pdf-reader__download:focus-visible {
+  color: var(--paper, #fbf8f1);
+  -webkit-text-fill-color: var(--paper, #fbf8f1);
+  background: var(--forest-900, #06503c);
+  border-color: var(--forest-900, #06503c);
 }
 
 .book-pdf-section {
@@ -177,4 +224,153 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--forest) 12%, white);
   color: var(--forest-900);
+}
+
+.book-page__reader .pdf-reader {
+  position: relative;
+  overflow: visible;
+  width: max-content;
+  height: max-content;
+  max-width: 100%;
+  max-height: 100%;
+  margin-inline: 0;
+}
+
+.book-page__reader .pdf-reader__chrome {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+}
+
+.book-page__reader .pdf-reader__stage {
+  padding: 0;
+}
+
+.book-page__reader .pdf-reader__toolbar {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 0.55rem;
+  transform: translateY(-50%);
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  width: auto;
+  padding: 0.45rem 0.38rem;
+  border: 1px solid color-mix(in srgb, var(--forest-950) 12%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper, #faf7f0) 88%, white);
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--forest-950) 14%, transparent),
+    0 1px 0 color-mix(in srgb, white 70%, transparent) inset;
+  backdrop-filter: blur(12px);
+}
+
+.book-page__reader .pdf-reader__nav,
+.book-page__reader .pdf-reader__tools {
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.book-page__reader .pdf-reader__page,
+.book-page__reader .pdf-reader__fit {
+  min-width: 2.6rem;
+  font-size: 0.72rem;
+}
+
+.book-page__reader .pdf-reader__download {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  min-width: 1.85rem;
+  height: auto;
+  padding-block: 0.65rem;
+  padding-inline: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .book-page__reader .pdf-reader__toolbar {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(-0.4rem);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .book-page__reader .pdf-reader:hover .pdf-reader__toolbar,
+  .book-page__reader .pdf-reader:focus-within .pdf-reader__toolbar {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.book-page__reader .pdf-reader.is-landscape .pdf-reader__toolbar {
+  top: 0.45rem;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: row;
+  gap: 0.35rem;
+  padding: 0.35rem 0.45rem;
+}
+
+.book-page__reader .pdf-reader.is-landscape .pdf-reader__nav,
+.book-page__reader .pdf-reader.is-landscape .pdf-reader__tools {
+  flex-direction: row;
+}
+
+.book-page__reader .pdf-reader.is-landscape .pdf-reader__download {
+  writing-mode: horizontal-tb;
+  transform: none;
+  height: 1.85rem;
+  padding-block: 0;
+  padding-inline: 0.55rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .book-page__reader .pdf-reader.is-landscape .pdf-reader__toolbar {
+    transform: translateX(-50%) translateY(-0.3rem);
+  }
+
+  .book-page__reader .pdf-reader.is-landscape:hover .pdf-reader__toolbar,
+  .book-page__reader .pdf-reader.is-landscape:focus-within .pdf-reader__toolbar {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (max-width: 959px) {
+  .book-page__reader .pdf-reader__toolbar {
+    top: 0.45rem;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    gap: 0.35rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  .book-page__reader .pdf-reader__nav,
+  .book-page__reader .pdf-reader__tools {
+    flex-direction: row;
+  }
+
+  .book-page__reader .pdf-reader__download {
+    writing-mode: horizontal-tb;
+    transform: none;
+    height: 1.85rem;
+    padding-block: 0;
+    padding-inline: 0.55rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .book-page__reader .pdf-reader__toolbar {
+      transform: translateX(-50%) translateY(-0.3rem);
+    }
+
+    .book-page__reader .pdf-reader:hover .pdf-reader__toolbar,
+    .book-page__reader .pdf-reader:focus-within .pdf-reader__toolbar {
+      transform: translateX(-50%) translateY(0);
+    }
+  }
 }

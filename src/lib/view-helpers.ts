@@ -1,5 +1,6 @@
 import { contentTypeLabels, sourceAttribution } from "@/lib/content-labels";
 import {
+  formatIndexDate,
   formatKuDate,
   formatKuDayMonth,
   formatKuNumeric,
@@ -39,10 +40,33 @@ export function visualOf(item: ContentItem): string | undefined {
   );
 }
 
+function plainExcerpt(value: string | undefined): string {
+  return (value || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&rlm;|&lrm;|&shy;/gi, "")
+    .replace(/&#8207;|&#8206;/g, "")
+    .replace(/&amp;/gi, "&")
+    .replace(/[#*_>`]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function isUsefulExcerpt(item: ContentItem): boolean {
   const summary = item.summary.trim();
   if (summary.length < 40) return false;
   return !summary.startsWith(item.title.trim());
+}
+
+export function excerptOf(item: ContentItem, maxLen = 150): string {
+  const title = item.title.trim();
+  const candidates = [item.summary, item.subtitle, item.body]
+    .map(plainExcerpt)
+    .filter((text) => text.length >= 28 && !text.startsWith(title));
+  const text = candidates[0] || "";
+  if (!text) return "";
+  if (text.length <= maxLen) return text;
+  return `${text.slice(0, maxLen).replace(/\s+\S*$/, "")}…`;
 }
 
 export function languageLabel(code: string): string {
@@ -62,9 +86,10 @@ export function itemMetaParts(
 ): MetaPart[] {
   const dateStyle = options.dateStyle ?? "numeric";
   const dayMonth = dateStyle === "dayMonth" ? formatKuDayMonth(item.publishedAt) : "";
+  const dateLang = item.language === "ar" ? "ar" : item.language === "en" ? "en" : "ku";
   const date =
     dateStyle === "full"
-      ? formatKuDate(item.publishedAt)
+      ? formatIndexDate(item.publishedAt, dateLang) || formatKuDate(item.publishedAt)
       : dateStyle === "numeric"
         ? formatKuNumeric(item.publishedAt)
         : "";

@@ -18,9 +18,9 @@
       <% if (books.length) { %>
       <section aria-labelledby="books-heading">
         <%- include("partials/section-heading", { headingId: "books-heading", headingTitle: "کتێب", count: booksCount }) %>
-        <div class="space-y-4">
-          <% books.forEach(function (item, index) { %>
-          <%- include("partials/book-entry", { item: item, flip: index % 2 === 1 }) %>
+        <div class="book-panel-grid">
+          <% books.forEach(function (item) { %>
+          <%- include("partials/book-entry", { item: item }) %>
           <% }); %>
         </div>
       </section>

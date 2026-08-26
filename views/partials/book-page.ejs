@@ -1,0 +1,54 @@
+<article class="book-page">
+  <header class="book-page__head">
+    <div class="site-container book-page__head-inner">
+      <nav aria-label="ڕێڕەو" class="book-page__crumb t-meta">
+        <a href="/books" class="text-forest-900 no-underline"><span class="link-underline">کتێبەکان</span></a>
+        <% if (yearDisplay) { %>
+        <span class="book-page__dot" aria-hidden>·</span>
+        <a href="/archive?year=<%= item.year %>" class="text-forest-900 no-underline">
+          <span class="link-underline"><%= yearDisplay %></span>
+        </a>
+        <% } %>
+      </nav>
+      <h1 class="book-page__title"><%= item.title %></h1>
+      <%- include("item-meta", { item: item, metaOptions: { dateStyle: "full" }, extraClass: "book-page__meta" }) %>
+    </div>
+  </header>
+
+  <div class="site-container book-page__body">
+    <div class="book-page__slot" data-pdf-frame>
+      <div class="book-page__reader">
+        <% if (typeof documentUrl !== "undefined" && documentUrl) { %>
+        <%- include("pdf-viewer", { documentUrl: documentUrl, pdfVolumes: typeof pdfVolumes !== "undefined" ? pdfVolumes : undefined }) %>
+        <% } else if (typeof bodyHtml !== "undefined" && bodyHtml) { %>
+        <div class="measure prose mx-auto article-body"><%- bodyHtml %></div>
+        <% } else { %>
+        <div class="float-saucer float-saucer--rounded float-saucer--lift-sm article-missing">
+          <p class="t-h3">دەقی تەواو بەردەست نییە</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (related.length) { %>
+    <aside class="book-page__aside" aria-labelledby="book-related-heading">
+      <h2 id="book-related-heading" class="book-page__aside-title">لە هەمان بەش</h2>
+      <ul class="book-page__related">
+        <% related.forEach(function (entry) { const blurb = excerptOf(entry, 150); %>
+        <li>
+          <a href="/archive/<%= entry.slug %>" class="book-page__related-link group">
+            <span class="book-page__related-copy">
+              <% if (entry.year) { %><span class="book-page__related-year"><%= kuDigits(entry.year) %></span><% } %>
+              <span class="book-page__related-title link-underline"><%= entry.title %></span>
+            </span>
+            <% if (blurb) { %>
+            <span class="book-page__related-excerpt"><%= blurb %></span>
+            <% } %>
+          </a>
+        </li>
+        <% }); %>
+      </ul>
+    </aside>
+    <% } %>
+  </div>
+</article>

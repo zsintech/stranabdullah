@@ -63,13 +63,15 @@ export function formatIndexDate(iso?: string, lang: "ku" | "ar" | "en" = "ku"): 
     const month = parts.find((p) => p.type === "month")?.value;
     const year = parts.find((p) => p.type === "year")?.value;
     if (day && month && year) {
-      return `${day} ${month} ${year}`;
+      const out = `${day} ${month} ${year}`;
+      return lang === "en" ? out : kuDigits(out);
     }
-    return new Intl.DateTimeFormat(locale, {
+    const fallback = new Intl.DateTimeFormat(locale, {
       year: "numeric",
       month: "long",
       day: "numeric",
     }).format(date);
+    return lang === "en" ? fallback : kuDigits(fallback);
   } catch {
     return date.toLocaleDateString("en-GB", {
       day: "numeric",

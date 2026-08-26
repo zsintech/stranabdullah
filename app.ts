@@ -16,6 +16,7 @@ import {
   visualOf,
   isActivePath,
   isUsefulExcerpt,
+  excerptOf,
   itemMetaParts,
   languageLabel,
   navLinks,
@@ -54,6 +55,7 @@ app.locals.isActivePath = isActivePath;
 app.locals.coverOf = coverOf;
 app.locals.visualOf = visualOf;
 app.locals.isUsefulExcerpt = isUsefulExcerpt;
+app.locals.excerptOf = excerptOf;
 app.locals.itemMetaParts = itemMetaParts;
 app.locals.languageLabel = languageLabel;
 app.locals.pageTitle = pageTitle;

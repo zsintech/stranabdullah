@@ -5,6 +5,9 @@
     · <a href="/admin/items/<%= item.id %>">گەڕانەوە بۆ دەستکاری</a>
   </div>
   <% } %>
+  <% if (typeof isBook !== "undefined" && isBook) { %>
+  <%- include("partials/book-page") %>
+  <% } else { %>
   <article>
     <header class="border-b border-forest-950/12 bg-paper">
       <div class="site-container pb-12 pt-10 lg:pb-16 lg:pt-14">
@@ -34,12 +37,14 @@
       </div>
     </header>
 
+    <% if (typeof isBook === "undefined" || !isBook) { %>
     <% if (typeof coverUrl !== "undefined" && coverUrl) { %>
     <div class="site-container -mt-2 pb-0 pt-0 lg:-mt-4">
       <figure class="measure mx-auto">
         <img src="<%= coverUrl %>" alt="<%= typeof coverAlt !== "undefined" ? coverAlt : item.title %>" class="article-cover" loading="lazy" />
       </figure>
     </div>
+    <% } %>
     <% } %>
 
     <div class="site-container pb-20 pt-12 lg:pb-28 lg:pt-16">
@@ -151,4 +156,5 @@
     </div>
     <% } %>
   </article>
+  <% } %>
 </div>

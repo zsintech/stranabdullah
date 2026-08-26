@@ -44,38 +44,35 @@
       </button>
     </div>
   </div>
-
-  <div id="mobile-nav" class="fixed inset-0 top-0 z-50 bg-forest-950/40 lg:hidden hidden" hidden data-menu-close>
-    <nav aria-label="مێنوی مۆبایل" class="ms-auto flex h-full w-[min(88%,20.5rem)] flex-col bg-paper px-6 py-5" onclick="event.stopPropagation()">
-      <div class="flex items-start justify-between border-b border-forest-950/12 pb-5">
-        <div>
-          <p class="t-eyebrow">نووسینگەی تایبەتی</p>
-          <p class="mt-1 font-display text-lg font-bold text-forest-950">ستران عەبدوڵڵا</p>
-        </div>
-        <button type="button" class="-me-2 -mt-1 inline-flex size-11 items-center justify-center text-2xl text-forest-950" data-menu-close>
-          <span class="sr-only">داخستنی مێنو</span>
-          <span aria-hidden>×</span>
-        </button>
-      </div>
-
-      <div class="mt-1 flex flex-col">
-        <% navLinks.forEach(function (link) { const active = isActivePath(path, link.href); %>
-        <a
-          href="<%= link.href %>"
-          data-menu-close
-          <% if (active) { %>aria-current="page"<% } %>
-          class="flex min-h-[3.1rem] items-center gap-3 border-b border-forest-950/8 font-display text-base no-underline <%= active ? 'font-bold text-forest-950' : 'text-ink' %>"
-        >
-          <% if (active) { %><span class="size-1.5 rounded-full bg-wheat" aria-hidden></span><% } %>
-          <%= link.label %>
-        </a>
-        <% }); %>
-      </div>
-
-      <a href="/archive" class="btn btn-primary mt-8 w-full" data-menu-close>
-        <%- include("search-glyph") %>
-        گەڕان لە ئەرشیف
-      </a>
-    </nav>
-  </div>
 </header>
+
+<div id="mobile-nav" class="mobile-nav lg:hidden hidden" hidden data-menu-close>
+  <nav aria-label="مێنوی مۆبایل" class="mobile-nav__panel" onclick="event.stopPropagation()">
+    <div class="mobile-nav__head">
+      <p class="mobile-nav__brand">ستران عەبدوڵڵا</p>
+      <button type="button" class="mobile-nav__close" data-menu-close>
+        <span class="sr-only">داخستنی مێنو</span>
+        <span aria-hidden>×</span>
+      </button>
+    </div>
+
+    <div class="mobile-nav__links">
+      <% navLinks.forEach(function (link) { const active = isActivePath(path, link.href); %>
+      <a
+        href="<%= link.href %>"
+        data-menu-close
+        <% if (active) { %>aria-current="page"<% } %>
+        class="mobile-nav__link<%= active ? ' is-active' : '' %>"
+      >
+        <% if (active) { %><span class="mobile-nav__dot" aria-hidden></span><% } %>
+        <%= link.label %>
+      </a>
+      <% }); %>
+    </div>
+
+    <a href="/archive" class="btn btn-primary mobile-nav__search" data-menu-close>
+      <%- include("search-glyph") %>
+      گەڕان لە ئەرشیف
+    </a>
+  </nav>
+</div>

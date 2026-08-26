@@ -49,14 +49,13 @@
 
 <%- include("partials/home-photos") %>
 
+<%- include("partials/home-books") %>
+
 <% if (featured) { %>
 <div class="site-container site-container--tight home-feed">
   <section aria-labelledby="latest-heading">
     <%- include("partials/section-heading", { headingId: "latest-heading", headingTitle: "دوایین لە ئەرشیف", href: "/archive", linkLabel: archiveLabels.all }) %>
     <%- include("partials/feature-story", { item: featured }) %>
-    <div class="recent-field">
-      <%- include("partials/article-index", { items: latest, columns: true }) %>
-    </div>
   </section>
 </div>
 <% } %>

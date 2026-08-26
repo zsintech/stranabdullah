@@ -4,7 +4,7 @@
 
   const lockup = header.querySelector(".masthead-lockup");
   const toggle = header.querySelector("[data-menu-toggle]");
-  const mobile = header.querySelector("#mobile-nav");
+  const mobile = document.querySelector("#mobile-nav");
   const barTop = header.querySelector("[data-bar-top]");
   const barBottom = header.querySelector("[data-bar-bottom]");
   const overHero = header.getAttribute("data-over-hero") === "true";
@@ -22,6 +22,8 @@
     if (!mobile || !toggle) return;
     mobile.classList.toggle("hidden", !open);
     mobile.toggleAttribute("hidden", !open);
+    header.classList.toggle("is-menu-open", open);
+    document.documentElement.classList.toggle("is-menu-open", open);
     toggle.setAttribute("aria-expanded", String(open));
     document.body.style.overflow = open ? "hidden" : "";
     if (label) label.textContent = open ? "داخستنی مێنو" : "کردنەوەی مێنو";
@@ -50,7 +52,7 @@
     });
   }
 
-  header.querySelectorAll("[data-menu-close]").forEach(function (button) {
+  document.querySelectorAll("[data-menu-close]").forEach(function (button) {
     button.addEventListener("click", function () {
       setOpen(false);
     });

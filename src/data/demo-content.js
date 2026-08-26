@@ -521,7 +521,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-peshini-zerin-xebardar-2026.png",
+        "alt": "پێشینی زێڕین، گەپی دوور لەقین — خەبەردار"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -562,7 +566,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-peshini-zerin-mivani-hefte-2026.png",
+        "alt": "پێشینی زێڕین، گەپی دوور لەقین — میوانی هەفتە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -603,7 +611,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-peshini-zerin-manolog-2026.png",
+        "alt": "پێشینی زێڕین، گەپی دوور لەقین — مەنەلۆج"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -644,7 +656,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-be-bianuy-bele-2026.png",
+        "alt": "بە بیانووی (بلە)وە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3564,7 +3580,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-rastkirdinewey-rerrew-2023.png",
+        "alt": "راستکردنەوەی رێڕەو — ژانی ژیاندنەوەی حزبایەتی"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3605,7 +3625,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-jadal-kurdistani-2023.png",
+        "alt": "جدل کردستاني على ضفاف دجلة"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3646,7 +3670,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-bo-away-nebet-2023.png",
+        "alt": "بۆ ئەوەی نەبێتە زەمی پاشەملە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3839,7 +3867,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-tiri-rojgar-2020.png",
+        "alt": "تیری رۆژگار"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3880,7 +3912,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-chetri-bizutnewe-2020.png",
+        "alt": "چەتری بزووتنەوەی رزگاریخوازی گەلی کوردستان"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3921,7 +3957,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-meseley-tutineke-5-2019.png",
+        "alt": "مەسەلەی توتنەکە ٥ — کۆتایی ناوی قۆناغەکان بنێن"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -3962,7 +4002,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-le-ghazetewe-2019.png",
+        "alt": "لە غەزەتەوە بۆ غەزای سۆشیال میدیا"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4003,7 +4047,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-manshetakan-2018.png",
+        "alt": "مانشێتە مەزنەکان — ئەلبوومی رۆژگاری مانشێتی کاغەزی"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4044,7 +4092,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-tebinyekani-huzeyran-2017.png",
+        "alt": "تێبینییەکانی حوزەیران — خەم لە یەکێتی … خەم لە یەکێتییەکان"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4085,7 +4137,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-mikhak-2013.png",
+        "alt": "مێخەک کەمێک دوور لە سیاسەت"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4126,7 +4182,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-le-roma-2013.png",
+        "alt": "لە ڕۆما کەوتە بەر چاوم — کوردستانی عوسمانی و تورکیا"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4167,7 +4227,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-meseley-tutineke-2011.png",
+        "alt": "مەسەلەی توتنەکە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4208,7 +4272,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-bawer-ba-meseley-kerkuk-2007.png",
+        "alt": "باوەڕ بە مەسەلەی کەرکوک بهێنینەوە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4249,7 +4317,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-gul-u-gullee-2004.png",
+        "alt": "گوڵ و گوللە و مارینز"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4290,7 +4362,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-razakani-taarib-1999.png",
+        "alt": "رازەکانی تەعریب و راگواستن"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4331,7 +4407,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-ba-tanisht-siyaset-1999.png",
+        "alt": "بە تەنیشت سیاسەتەوە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
@@ -4372,7 +4452,11 @@ export default [
       "importedAt": "2026-08-13T15:18:15.458Z"
     },
     "media": {
-      "images": []
+      "images": [],
+      "coverImage": {
+        "cachedUrl": "/brand/books/book-hendek-hizr-1995.png",
+        "alt": "هەندێک هزر بۆ قۆنازی پەڕینەوە"
+      }
     },
     "audit": {
       "createdAt": "2026-08-13T15:18:15.458Z",
