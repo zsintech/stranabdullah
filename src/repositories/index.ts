@@ -32,6 +32,17 @@ function requireFirestore(): boolean {
   return process.env.CONTENT_SOURCE === "firestore";
 }
 
+function isQuotaOrTransient(error: unknown): boolean {
+  const code =
+    typeof error === "object" && error && "code" in error ? Number((error as { code: unknown }).code) : NaN;
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    code === 8 ||
+    code === 14 ||
+    /RESOURCE_EXHAUSTED|Quota exceeded|UNAVAILABLE|timed out/i.test(message)
+  );
+}
+
 export function isUsingSeedFallback(): boolean {
   return usingSeedFallback;
 }
@@ -64,7 +75,7 @@ export function getAdminContentRepository(): AdminContentRepository {
   }
 }
 
-/** Prefer Firestore; on query failure or timeout fall back to seed — unless CONTENT_SOURCE=firestore. */
+/** Prefer Firestore; on query failure or timeout fall back to seed. Quota errors always fall back so the public site stays up. */
 export async function withContentRepo<T>(
   fn: (repo: ContentRepository) => Promise<T>,
 ): Promise<T> {
@@ -76,9 +87,15 @@ export async function withContentRepo<T>(
   try {
     return await withTimeout(fn(primary), FIRESTORE_TIMEOUT_MS);
   } catch (error) {
-    if (requireFirestore()) throw error;
-    usingSeedFallback = true;
-    cached = createSeedContentRepository();
-    return fn(cached);
+    const allowSeed = !requireFirestore() || isQuotaOrTransient(error);
+    if (!allowSeed) throw error;
+    console.error("Firestore query failed; serving seed content.", error);
+    if (!requireFirestore()) {
+      usingSeedFallback = true;
+      cached = createSeedContentRepository();
+      return fn(cached);
+    }
+    // Keep Firestore as the write target for admin; use seed only for this public read.
+    return fn(createSeedContentRepository());
   }
 }
