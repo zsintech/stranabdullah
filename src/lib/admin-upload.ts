@@ -6,6 +6,32 @@ import { isUsingSeedFallback } from "@/repositories";
 
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]);
 
+function extOf(name: string): string {
+  return path.extname(name || "").toLowerCase();
+}
+
+export function inferUploadMime(file: { mimetype?: string; originalname?: string }): string {
+  const raw = String(file.mimetype || "")
+    .split(";")[0]
+    .trim()
+    .toLowerCase();
+  if (raw === "image/jpg") return "image/jpeg";
+  if (raw === "application/x-pdf") return "application/pdf";
+  if (ALLOWED.has(raw)) return raw;
+
+  const ext = extOf(file.originalname || "");
+  if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
+  if (ext === ".png") return "image/png";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".gif") return "image/gif";
+  if (ext === ".pdf") return "application/pdf";
+  return raw;
+}
+
+export function isAllowedUpload(file: { mimetype?: string; originalname?: string }): boolean {
+  return ALLOWED.has(inferUploadMime(file));
+}
+
 function safeName(original: string): string {
   return original.replace(/[^\w.\-]+/g, "_").slice(0, 80) || "file";
 }
@@ -15,8 +41,9 @@ export async function storeAdminUpload(file: {
   mimetype: string;
   originalname: string;
 }): Promise<string> {
-  if (!ALLOWED.has(file.mimetype)) {
-    throw new Error("جۆری فایل پشتیوانی ناکرێت.");
+  const mimetype = inferUploadMime(file);
+  if (!ALLOWED.has(mimetype)) {
+    throw new Error("جۆری فایل پشتیوانی ناکرێت. وێنە (JPEG, PNG, WebP) یان PDF باربکە.");
   }
 
   const filename = `${randomUUID()}-${safeName(file.originalname)}`;
@@ -33,7 +60,7 @@ export async function storeAdminUpload(file: {
   const token = randomUUID();
   const object = bucket.file(objectPath);
   await object.save(file.buffer, {
-    contentType: file.mimetype,
+    contentType: mimetype,
     metadata: {
       metadata: {
         firebaseStorageDownloadTokens: token,

@@ -1,62 +1,92 @@
 .admin-body {
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(1200px 480px at 80% -10%, color-mix(in srgb, var(--forest) 14%, transparent), transparent 60%),
-    var(--cream-100, #f4efe4);
+  background: var(--cream-100, #f4efe4);
   color: var(--ink);
 }
 
-.admin-top {
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.admin-header__shell {
+  width: 100%;
+}
+
+.admin-header__role {
+  color: var(--header-gold, #c9a966);
+}
+
+.admin-header__trail {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1.25rem;
-  padding: 0.85rem 1.25rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--forest) 16%, transparent);
-  background: color-mix(in srgb, var(--cream-100, #f4efe4) 88%, white);
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  backdrop-filter: blur(8px);
-}
-
-.admin-brand {
-  font-weight: 700;
-  text-decoration: none;
-  color: var(--forest-950, #12241a);
-}
-
-.admin-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-}
-
-.admin-nav a {
-  color: inherit;
-  text-decoration: none;
-  font-weight: 600;
-  opacity: 0.85;
-}
-
-.admin-nav a:hover {
-  opacity: 1;
-}
-
-.admin-logout {
+  gap: 0.25rem 0.75rem;
   margin-inline-start: auto;
 }
 
+.admin-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.admin-header__logout {
+  flex: 0 0 auto;
+}
+
+.admin-header__out {
+  color: var(--header-ivory, #f4f0e8);
+  border-color: color-mix(in srgb, #f4f0e8 42%, transparent);
+  background: transparent;
+}
+
+.admin-header__out:hover,
+.admin-header__out:focus-visible {
+  background: color-mix(in srgb, #f4f0e8 12%, transparent);
+  color: #fff;
+  border-color: color-mix(in srgb, #f4f0e8 70%, transparent);
+}
+
+.site-header.admin-header [data-header-shell] {
+  height: auto;
+  min-height: 4rem;
+  flex-wrap: wrap;
+  padding-block: 0.45rem;
+  row-gap: 0.35rem;
+}
+
+@media (min-width: 1024px) {
+  .site-header.admin-header [data-header-shell] {
+    height: 5.5rem;
+    min-height: 5.5rem;
+    flex-wrap: nowrap;
+    padding-block: 0;
+  }
+}
+
 .admin-main {
-  width: min(72rem, calc(100% - 2rem));
-  margin-inline: auto;
-  padding-block: 2rem 4rem;
+  padding-block: 1.5rem 4rem;
+}
+
+.admin-main__inner {
+  width: min(72rem, 100%);
 }
 
 .admin-login {
-  width: min(28rem, 100%);
-  margin: 4rem auto;
+  width: min(32rem, 100%);
+  margin: 3rem auto 4rem;
+}
+
+.admin-login__card {
+  padding: 1.6rem 1.5rem 1.75rem;
+}
+
+.admin-login .admin-form {
+  margin-top: 1.25rem;
 }
 
 /* Layout helpers */
@@ -66,7 +96,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .admin-lead {
@@ -103,19 +133,11 @@
 
 /* Cards */
 .admin-card {
-  padding: 1.1rem 1.15rem;
-  background: color-mix(in srgb, white 72%, transparent);
-  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
-  border-radius: 0.75rem;
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--forest-950) 4%, transparent);
-}
-
-.admin-card--flat {
-  box-shadow: none;
+  padding: 1.15rem 1.2rem;
 }
 
 .admin-card--muted {
-  background: color-mix(in srgb, var(--forest) 4%, white);
+  background: color-mix(in srgb, var(--forest) 5%, #fff);
 }
 
 .admin-card__title {
@@ -129,7 +151,7 @@
 .admin-stat-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 1.15rem;
 }
 
 @media (min-width: 720px) {
@@ -145,15 +167,11 @@
   padding: 1rem 1.1rem;
   text-decoration: none;
   color: inherit;
-  background: color-mix(in srgb, white 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
-  border-radius: 0.75rem;
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition: transform 150ms ease;
 }
 
 .admin-stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--forest-950) 8%, transparent);
 }
 
 .admin-stat-card__value {
@@ -174,8 +192,8 @@
 
 .admin-quick-actions {
   display: grid;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
+  gap: 1.15rem;
+  margin-top: 1.5rem;
 }
 
 @media (min-width: 720px) {
@@ -191,9 +209,6 @@
   padding: 1rem 1.1rem;
   text-decoration: none;
   color: inherit;
-  background: color-mix(in srgb, var(--forest) 6%, white);
-  border-radius: 0.75rem;
-  border: 1px solid color-mix(in srgb, var(--forest) 10%, transparent);
 }
 
 .admin-quick-action strong {
@@ -219,10 +234,11 @@
 
 .admin-recent-grid {
   display: grid;
-  gap: 0.85rem;
+  gap: 1.35rem;
   list-style: none;
   padding: 0;
   margin: 0;
+  align-items: start;
 }
 
 @media (min-width: 640px) {
@@ -243,16 +259,12 @@
   height: 100%;
   text-decoration: none;
   color: inherit;
-  background: color-mix(in srgb, white 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  overflow: visible;
+  transition: transform 150ms ease;
 }
 
 .admin-recent-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--forest-950) 10%, transparent);
 }
 
 .admin-recent-card__media {
@@ -262,6 +274,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.admin-recent-card--book .admin-recent-card__media {
+  aspect-ratio: 2 / 3;
+  background: color-mix(in srgb, var(--cream, #f8f5ee) 70%, #ddd4c4);
 }
 
 .admin-recent-card__media img {
@@ -327,8 +345,8 @@
 .admin-item-list {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  margin-top: 1.25rem;
+  gap: 1.15rem;
+  margin-top: 1.5rem;
 }
 
 .admin-item-row {
@@ -336,9 +354,6 @@
   grid-template-columns: auto 1fr;
   gap: 0.85rem 1rem;
   padding: 0.85rem 1rem;
-  background: color-mix(in srgb, white 75%, transparent);
-  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
-  border-radius: 0.75rem;
   align-items: center;
 }
 
@@ -361,6 +376,11 @@
   font-weight: 700;
   color: var(--forest-700);
   flex-shrink: 0;
+}
+
+.admin-item-row__thumb--book {
+  width: 2.6rem;
+  height: 3.9rem;
 }
 
 .admin-item-row__thumb img {
@@ -436,13 +456,13 @@
 .admin-editor-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1.35rem;
 }
 
 .admin-editor-main {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1.35rem;
   min-width: 0;
 }
 
@@ -744,6 +764,7 @@
 
 .admin-filters--bar {
   margin-top: 0;
+  padding: 1rem 1.1rem;
 }
 
 @media (min-width: 800px) {
@@ -782,9 +803,10 @@
 }
 
 .admin-flash {
-  padding: 0.75rem 1rem;
-  margin: 0 0 1rem;
-  border-radius: 0.5rem;
+  padding: 0.8rem 1.05rem;
+  margin: 0 0 1.15rem;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
 }
 
 .admin-flash--ok {
@@ -826,5 +848,76 @@
 }
 
 .mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
 .mt-8 { margin-top: 2rem; }
 .mt-10 { margin-top: 2.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.admin-drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 1.35rem 1rem;
+  border: 2px dashed color-mix(in srgb, var(--forest) 28%, transparent);
+  border-radius: 1rem;
+  text-align: center;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--cream-100, #f4efe4) 55%, white);
+  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+}
+
+.admin-drop:hover,
+.admin-drop.is-dragover,
+.admin-drop.has-file {
+  border-color: color-mix(in srgb, var(--forest) 55%, transparent);
+  background: color-mix(in srgb, var(--forest) 6%, white);
+}
+
+.admin-drop.is-dragover {
+  transform: translateY(-1px);
+}
+
+.admin-drop__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.admin-drop__text,
+.admin-drop__hint {
+  position: relative;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.admin-drop__text {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--forest-950);
+}
+
+.admin-drop__hint {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.admin-file-name {
+  margin: 0.55rem 0 0;
+}
+
+.admin-bio-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-bio-form .admin-card {
+  display: grid;
+  gap: 1rem;
+}

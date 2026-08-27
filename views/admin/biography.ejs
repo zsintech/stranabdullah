@@ -1,40 +1,63 @@
-<section>
-  <h1 class="t-h2">ژیاننامە</h1>
-  <p class="t-body mt-2">ئەم دەقە لە پەڕەی ژیاننامەی گشتی دەردەکەوێت.</p>
+<section class="admin-bio-page">
+  <header class="admin-page-header">
+    <div>
+      <p class="admin-kicker">ماڵپەڕ</p>
+      <h1 class="t-h2">ژیاننامە</h1>
+      <p class="t-body admin-lead">ئەم دەقە لە پەڕەی ژیاننامەی گشتی دەردەکەوێت.</p>
+    </div>
+    <a class="btn btn-secondary btn-sm" href="/biography" target="_blank" rel="noopener">بینینی گشتی</a>
+  </header>
+  <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
-  <form method="post" action="/admin/biography" enctype="multipart/form-data" class="admin-form">
+  <form method="post" action="/admin/biography" enctype="multipart/form-data" class="admin-form admin-bio-form" data-admin-media>
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <div>
-      <label class="field-label" for="name">ناو</label>
-      <input class="field" id="name" name="name" required value="<%= biography.name %>" />
+    <div class="admin-card float-saucer float-saucer--rounded">
+      <div>
+        <label class="field-label" for="name">ناو</label>
+        <input class="field field--title" id="name" name="name" required value="<%= biography.name %>" />
+      </div>
+      <div>
+        <label class="field-label" for="intro">پێشەکی</label>
+        <textarea class="field admin-textarea" id="intro" name="intro"><%= biography.intro %></textarea>
+      </div>
+      <div>
+        <label class="field-label" for="body">دەقی زیاتر</label>
+        <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body"><%= biography.body %></textarea>
+      </div>
     </div>
-    <div>
-      <label class="field-label" for="intro">پێشەکی</label>
-      <textarea class="field admin-textarea" id="intro" name="intro"><%= biography.intro %></textarea>
+
+    <div class="admin-card float-saucer float-saucer--rounded">
+      <h2 class="admin-card__title">وێنەی پۆرترێت</h2>
+      <label class="admin-drop" data-drop="image">
+        <input class="admin-drop__input" id="portrait" name="portrait" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
+        <span class="admin-drop__text">کلیک بکە یان وێنە بکێشە ئێرە</span>
+        <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
+      </label>
+      <div class="admin-cover-preview" data-cover-preview <%= biography.portraitUrl ? "" : "hidden" %>>
+        <img src="<%= biography.portraitUrl || "" %>" alt="" />
+      </div>
+      <p class="admin-file-name t-meta" data-file-name hidden></p>
+      <div class="admin-field-stack mt-4">
+        <div>
+          <label class="field-label" for="portraitUrl">یان URL</label>
+          <input class="field" id="portraitUrl" name="portraitUrl" dir="ltr" value="<%= biography.portraitUrl %>" data-cover-url />
+        </div>
+        <div>
+          <label class="field-label" for="portraitAlt">دەقی جێگرەوەی وێنە</label>
+          <input class="field" id="portraitAlt" name="portraitAlt" value="<%= biography.portraitAlt %>" />
+        </div>
+      </div>
     </div>
-    <div>
-      <label class="field-label" for="body">دەقی زیاتر</label>
-      <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body"><%= biography.body %></textarea>
+
+    <div class="admin-card float-saucer float-saucer--rounded">
+      <div>
+        <label class="field-label" for="note">تێبینیی خوارەوە</label>
+        <textarea class="field admin-textarea" id="note" name="note"><%= biography.note %></textarea>
+      </div>
     </div>
-    <div>
-      <label class="field-label" for="portraitUrl">وێنە (URL)</label>
-      <input class="field" id="portraitUrl" name="portraitUrl" dir="ltr" value="<%= biography.portraitUrl %>" />
+    <div class="admin-form-footer">
+      <button class="btn btn-primary" type="submit">پاشەکەوت</button>
     </div>
-    <div>
-      <label class="field-label" for="portrait">یان فایلێک باربکە</label>
-      <input id="portrait" name="portrait" type="file" accept="image/*" />
-    </div>
-    <% if (biography.portraitUrl) { %>
-    <img class="admin-cover-preview" src="<%= biography.portraitUrl %>" alt="" />
-    <% } %>
-    <div>
-      <label class="field-label" for="portraitAlt">دەقی جێگرەوەی وێنە</label>
-      <input class="field" id="portraitAlt" name="portraitAlt" value="<%= biography.portraitAlt %>" />
-    </div>
-    <div>
-      <label class="field-label" for="note">تێبینیی خوارەوە</label>
-      <textarea class="field admin-textarea" id="note" name="note"><%= biography.note %></textarea>
-    </div>
-    <button class="btn btn-primary" type="submit">پاشەکەوت</button>
   </form>
 </section>
+<script src="/js/admin-editor.js?v=20260827b" defer></script>

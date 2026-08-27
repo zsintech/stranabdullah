@@ -4,7 +4,7 @@ import { asyncHandler } from "@/lib/async-handler";
 import { consumeAdminFlash, setAdminFlash, setAdminSession, clearAdminSession, isAllowedAdminEmail, allowedAdminEmails, readAdminSession } from "@/lib/admin-session";
 import { assertCsrf, CsrfError, issueCsrf, readCsrf } from "@/lib/csrf";
 import { AuthError, signInWithPassword } from "@/lib/firebase-password";
-import { storeAdminUpload } from "@/lib/admin-upload";
+import { storeAdminUpload, isAllowedUpload, inferUploadMime } from "@/lib/admin-upload";
 import { renderPage } from "@/lib/render-page";
 import { renderAdmin } from "@/lib/render-admin";
 import { coverOf } from "@/lib/view-helpers";
@@ -22,12 +22,27 @@ import type { ContentDraftInput } from "@/repositories/content-repository";
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 40 * 1024 * 1024 },
+  fileFilter(_req, file, cb) {
+    if (!isAllowedUpload(file)) {
+      cb(new Error("جۆری فایل پشتیوانی ناکرێت. وێنە یان PDF باربکە."));
+      return;
+    }
+    file.mimetype = inferUploadMime(file);
+    cb(null, true);
+  },
 });
 
 const itemUpload = upload.fields([
   { name: "cover", maxCount: 1 },
   { name: "document", maxCount: 1 },
 ]);
+
+function uploadErrorMessage(error: unknown): string {
+  if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+    return "قەبارەی فایل لە ٤٠ مێگابایت گەورەترە.";
+  }
+  return error instanceof Error ? error.message : "بارکردنی فایل سەرکەوتوو نەبوو.";
+}
 
 const router = Router();
 
@@ -239,7 +254,16 @@ router.get(
 
 router.post(
   "/items",
-  itemUpload,
+  (req, res, next) => {
+    itemUpload(req, res, (err) => {
+      if (!err) {
+        next();
+        return;
+      }
+      setAdminFlash(res, { type: "error", message: uploadErrorMessage(err) });
+      res.redirect("/admin/items/new");
+    });
+  },
   asyncHandler(async (req, res) => {
     try {
       assertCsrf(req);
@@ -280,7 +304,16 @@ router.get(
 
 router.post(
   "/items/:id",
-  itemUpload,
+  (req, res, next) => {
+    itemUpload(req, res, (err) => {
+      if (!err) {
+        next();
+        return;
+      }
+      setAdminFlash(res, { type: "error", message: uploadErrorMessage(err) });
+      res.redirect(`/admin/items/${req.params.id}`);
+    });
+  },
   asyncHandler(async (req, res) => {
     const id = req.params.id;
     try {
@@ -335,7 +368,15 @@ router.post(
 
 router.post(
   "/upload",
-  upload.single("file"),
+  (req, res, next) => {
+    upload.single("file")(req, res, (err) => {
+      if (!err) {
+        next();
+        return;
+      }
+      res.status(400).json({ error: uploadErrorMessage(err) });
+    });
+  },
   asyncHandler(async (req, res) => {
     try {
       assertCsrf(req);
@@ -370,10 +411,13 @@ router.get(
       coverUrl,
       coverAlt: item.media.coverImage?.alt || item.title,
       documentUrl: item.media.documentUrl,
+      pdfVolumes: undefined,
       isBook: item.contentType === "book" || item.contentType === "audiobook",
       minutes: readingTime(item.body),
       outlet: sourceOutletLabel(item),
       yearDisplay: item.year ? kuDigits(item.year) : undefined,
+      related: [],
+      recentItems: [],
       isPreview: true,
     });
   }),
@@ -407,7 +451,16 @@ router.get(
 
 router.post(
   "/biography",
-  upload.single("portrait"),
+  (req, res, next) => {
+    upload.single("portrait")(req, res, (err) => {
+      if (!err) {
+        next();
+        return;
+      }
+      setAdminFlash(res, { type: "error", message: uploadErrorMessage(err) });
+      res.redirect("/admin/biography");
+    });
+  },
   asyncHandler(async (req, res) => {
     try {
       assertCsrf(req);

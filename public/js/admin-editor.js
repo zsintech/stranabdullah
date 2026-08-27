@@ -1,14 +1,91 @@
 (function () {
+  function isImage(file) {
+    return (file.type && file.type.startsWith("image/")) || /\.(jpe?g|png|webp|gif)$/i.test(file.name);
+  }
+
+  function isPdf(file) {
+    return file.type === "application/pdf" || file.type === "application/x-pdf" || /\.pdf$/i.test(file.name);
+  }
+
+  function bindDrop(drop) {
+    const kind = drop.getAttribute("data-drop") || "image";
+    const input = drop.querySelector('input[type="file"]');
+    if (!input) return;
+    const root = drop.closest("form") || document;
+    const preview = root.querySelector("[data-cover-preview]");
+    const previewImg = preview?.querySelector("img");
+    const nameEl = drop.parentElement?.querySelector("[data-file-name]");
+    const pdfCurrent = root.querySelector("[data-pdf-current]");
+    const pdfLink = root.querySelector("[data-pdf-link]");
+    const urlField =
+      kind === "pdf" ? root.querySelector("[data-pdf-url]") : root.querySelector("[data-cover-url]");
+
+    function accept(file) {
+      return kind === "pdf" ? isPdf(file) : isImage(file);
+    }
+
+    function applyFile(file) {
+      if (!file || !accept(file)) {
+        if (file) input.value = "";
+        return;
+      }
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      if (kind === "pdf") {
+        if (pdfCurrent && pdfLink) {
+          pdfLink.textContent = file.name;
+          pdfLink.removeAttribute("href");
+          pdfCurrent.hidden = false;
+        }
+        if (urlField) urlField.value = "";
+      } else if (preview && previewImg) {
+        previewImg.src = URL.createObjectURL(file);
+        preview.hidden = false;
+      }
+      if (nameEl) {
+        nameEl.hidden = false;
+        nameEl.textContent = file.name;
+      }
+      drop.classList.add("has-file");
+    }
+
+    drop.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      drop.classList.add("is-dragover");
+    });
+    drop.addEventListener("dragleave", () => drop.classList.remove("is-dragover"));
+    drop.addEventListener("drop", (event) => {
+      event.preventDefault();
+      drop.classList.remove("is-dragover");
+      applyFile(event.dataTransfer?.files?.[0]);
+    });
+    input.addEventListener("change", () => applyFile(input.files?.[0]));
+  }
+
+  document.querySelectorAll("[data-drop]").forEach(bindDrop);
+
+  document.querySelectorAll("form[enctype='multipart/form-data']").forEach((form) => {
+    form.addEventListener("submit", () => {
+      form.querySelectorAll("button[type='submit']").forEach((button) => {
+        button.disabled = true;
+        if (!button.dataset.label) button.dataset.label = button.textContent || "";
+        button.textContent = "پاشەکەوت دەکرێت…";
+      });
+      document.querySelectorAll(`button[form='${form.id}']`).forEach((button) => {
+        button.disabled = true;
+        if (!button.dataset.label) button.dataset.label = button.textContent || "";
+        button.textContent = "پاشەکەوت دەکرێت…";
+      });
+    });
+  });
+
   const form = document.querySelector("[data-admin-editor]");
   if (!form) return;
 
   const titleInput = form.querySelector("#title");
   const slugInput = form.querySelector("#slug");
   const bodyInput = form.querySelector("#body");
-  const coverInput = form.querySelector("#cover");
-  const coverPreview = form.querySelector("[data-cover-preview]");
-  const coverPreviewImg = coverPreview?.querySelector("img");
-  const coverDrop = form.querySelector("[data-cover-drop]");
   const writePanel = form.querySelector("[data-write-panel]");
   const previewPanel = form.querySelector("[data-preview-panel]");
   const tabButtons = form.querySelectorAll("[data-editor-tab]");
@@ -36,39 +113,6 @@
       .replace(/-+/g, "-")
       .replace(/^-|-$/g, "")
       .slice(0, 80);
-  }
-
-  function showCoverPreview(url) {
-    if (!coverPreview || !coverPreviewImg) return;
-    coverPreviewImg.src = url;
-    coverPreview.hidden = false;
-  }
-
-  if (coverInput) {
-    coverInput.addEventListener("change", () => {
-      const file = coverInput.files?.[0];
-      if (!file) return;
-      showCoverPreview(URL.createObjectURL(file));
-    });
-  }
-
-  if (coverDrop && coverInput) {
-    coverDrop.addEventListener("click", () => coverInput.click());
-    coverDrop.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      coverDrop.classList.add("is-dragover");
-    });
-    coverDrop.addEventListener("dragleave", () => coverDrop.classList.remove("is-dragover"));
-    coverDrop.addEventListener("drop", (event) => {
-      event.preventDefault();
-      coverDrop.classList.remove("is-dragover");
-      const file = event.dataTransfer?.files?.[0];
-      if (!file || !file.type.startsWith("image/")) return;
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      coverInput.files = dt.files;
-      showCoverPreview(URL.createObjectURL(file));
-    });
   }
 
   tabButtons.forEach((button) => {
@@ -131,7 +175,7 @@
   if (uploadBtn && bodyInput && csrf) {
     const hiddenFile = document.createElement("input");
     hiddenFile.type = "file";
-    hiddenFile.accept = "image/*";
+    hiddenFile.accept = "image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif";
     hiddenFile.hidden = true;
     form.appendChild(hiddenFile);
 
@@ -140,20 +184,26 @@
       const file = hiddenFile.files?.[0];
       if (!file) return;
       uploadBtn.disabled = true;
+      const previous = uploadBtn.textContent;
       uploadBtn.textContent = "باردەکرێت…";
       try {
         const data = new FormData();
         data.append("file", file);
         data.append("_csrf", csrf);
-        const response = await fetch("/admin/upload", { method: "POST", body: data });
-        const payload = await response.json();
+        const response = await fetch("/admin/upload", {
+          method: "POST",
+          body: data,
+          credentials: "same-origin",
+          headers: { "x-csrf-token": csrf },
+        });
+        const payload = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(payload.error || "بارکردن سەرکەوتوو نەبوو.");
         insertAtCursor(`\n\n![${file.name}](${payload.url})\n\n`);
       } catch (error) {
-        alert(error instanceof Error ? error.message : "بارکردن سەرکەوتوو نەبوو.");
+        window.alert(error instanceof Error ? error.message : "بارکردن سەرکەوتوو نەبوو.");
       } finally {
         uploadBtn.disabled = false;
-        uploadBtn.textContent = "وێنە باربکە";
+        uploadBtn.textContent = previous || "وێنە باربکە";
         hiddenFile.value = "";
       }
     });
@@ -166,56 +216,5 @@
     bodyInput.focus();
     const pos = start + snippet.length;
     bodyInput.setSelectionRange(pos, pos);
-  }
-
-  const pdfDrop = form.querySelector("[data-pdf-drop]");
-  const pdfInput = form.querySelector("#document");
-  const pdfCurrent = form.querySelector("[data-pdf-current]");
-  const pdfLink = form.querySelector("[data-pdf-link]");
-  const pdfUrlField = form.querySelector("[data-pdf-url]");
-  const contentTypeSelect = form.querySelector("#contentType");
-  const pdfCard = form.querySelector("[data-pdf-admin]");
-
-  function syncPdfCardVisibility() {
-    if (!pdfCard || !contentTypeSelect) return;
-    const type = contentTypeSelect.value;
-    const show = type === "book" || type === "audiobook" || type === "document";
-    pdfCard.hidden = !show;
-  }
-
-  if (contentTypeSelect) {
-    contentTypeSelect.addEventListener("change", syncPdfCardVisibility);
-    syncPdfCardVisibility();
-  }
-
-  function showPdfSelected(name) {
-    if (!pdfCurrent || !pdfLink) return;
-    pdfLink.textContent = name || "فایلی هەڵبژێردراو";
-    pdfLink.removeAttribute("href");
-    pdfCurrent.hidden = false;
-  }
-
-  if (pdfDrop && pdfInput) {
-    pdfDrop.addEventListener("click", () => pdfInput.click());
-    pdfDrop.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      pdfDrop.classList.add("is-dragover");
-    });
-    pdfDrop.addEventListener("dragleave", () => pdfDrop.classList.remove("is-dragover"));
-    pdfDrop.addEventListener("drop", (event) => {
-      event.preventDefault();
-      pdfDrop.classList.remove("is-dragover");
-      const file = event.dataTransfer?.files?.[0];
-      if (!file || file.type !== "application/pdf") return;
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      pdfInput.files = dt.files;
-      showPdfSelected(file.name);
-      if (pdfUrlField) pdfUrlField.value = "";
-    });
-    pdfInput.addEventListener("change", () => {
-      const file = pdfInput.files?.[0];
-      if (file) showPdfSelected(file.name);
-    });
   }
 })();

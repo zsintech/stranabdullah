@@ -22,6 +22,7 @@
       <button class="btn btn-primary btn-sm" type="submit" form="item-form">پاشەکەوت</button>
     </div>
   </header>
+  <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
   <form
     id="item-form"
@@ -35,7 +36,7 @@
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
     <aside class="admin-editor-sidebar">
-      <div class="admin-card">
+      <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">دۆخ</h2>
         <div class="admin-status-picker">
           <% ["draft", "published", "archived"].forEach(function (status) { %>
@@ -48,7 +49,7 @@
         </div>
       </div>
 
-      <div class="admin-card">
+      <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">وردەکاری</h2>
         <div class="admin-field-stack">
           <div>
@@ -103,20 +104,21 @@
         </div>
       </div>
 
-      <div class="admin-card">
+      <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">وێنەی بەرگ</h2>
-        <div class="admin-cover-drop" data-cover-drop>
-          <input id="cover" name="cover" type="file" accept="image/*" hidden />
-          <p class="admin-cover-drop__text">کلیک بکە یان وێنە بکێشە</p>
-          <p class="admin-cover-drop__hint">JPEG, PNG, WebP · تا ٨ مێگابایت</p>
-        </div>
+        <label class="admin-drop" data-drop="image">
+          <input class="admin-drop__input" id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
+          <span class="admin-drop__text">کلیک بکە یان وێنە بکێشە ئێرە</span>
+          <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
+        </label>
         <div class="admin-cover-preview" data-cover-preview <%= cover ? "" : "hidden" %>>
           <img src="<%= cover || "" %>" alt="" />
         </div>
+        <p class="admin-file-name t-meta" data-file-name hidden></p>
         <div class="admin-field-stack mt-4">
           <div>
             <label class="field-label" for="coverUrl">یان URL</label>
-            <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" placeholder="https://..." />
+            <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" placeholder="https://..." data-cover-url />
           </div>
           <div>
             <label class="field-label" for="coverAlt">جێگرتەوەی وێنە</label>
@@ -125,14 +127,15 @@
         </div>
       </div>
 
-      <div class="admin-card admin-pdf-card" data-pdf-admin>
-        <h2 class="admin-card__title">PDF · کتێب</h2>
-        <p class="admin-card__hint">بۆ کتێبەکان — خوێنەر دەتوانێت لە ماڵپەڕدا بخوێنێت یان داگری بکات. PDFی پەستکراو باشترە بۆ شوێن.</p>
-        <div class="admin-pdf-drop" data-pdf-drop>
-          <input id="document" name="document" type="file" accept="application/pdf,.pdf" hidden />
-          <p class="admin-cover-drop__text">PDF باربکە</p>
-          <p class="admin-cover-drop__hint">تا ٤٠ مێگابایت</p>
-        </div>
+      <div class="admin-card float-saucer float-saucer--rounded admin-pdf-card" data-pdf-admin>
+        <h2 class="admin-card__title">فایلی PDF</h2>
+        <p class="admin-card__hint">بۆ کتێب و بەڵگەنامە — خوێنەر دەتوانێت لە ماڵپەڕدا بیخوێنێتەوە یان داگری بکات.</p>
+        <label class="admin-drop admin-drop--pdf" data-drop="pdf">
+          <input class="admin-drop__input" id="document" name="document" type="file" accept="application/pdf,.pdf" />
+          <span class="admin-drop__text">کلیک بکە یان PDF بکێشە ئێرە</span>
+          <span class="admin-drop__hint">تا ٤٠ مێگابایت</span>
+        </label>
+        <p class="admin-file-name t-meta" data-file-name hidden></p>
         <div class="admin-pdf-current" data-pdf-current <%= documentUrl ? "" : "hidden" %>>
           <span class="admin-pdf-current__icon" aria-hidden>PDF</span>
           <a href="<%= documentUrl || "#" %>" target="_blank" rel="noopener" dir="ltr" data-pdf-link><%= documentUrl ? "فایلی ئێستا" : "" %></a>
@@ -154,7 +157,7 @@
       </div>
 
       <% if (item) { %>
-      <div class="admin-card admin-card--muted">
+      <div class="admin-card float-saucer float-saucer--rounded admin-card--muted">
         <p class="t-meta">دوایین گۆڕانکاری: <%= item.audit.updatedAt ? item.audit.updatedAt.slice(0, 10) : "" %></p>
         <button class="btn btn-sm admin-btn-danger" type="submit" form="delete-item-form">سڕینەوەی تۆمار</button>
       </div>
@@ -162,7 +165,7 @@
     </aside>
 
     <div class="admin-editor-main">
-      <div class="admin-card admin-card--flat">
+      <div class="admin-card float-saucer float-saucer--rounded">
         <div class="admin-field-stack">
           <div>
             <label class="field-label" for="title">ناونیشان</label>
@@ -183,7 +186,7 @@
         </div>
       </div>
 
-      <div class="admin-card admin-card--flat">
+      <div class="admin-card float-saucer float-saucer--rounded">
         <div class="admin-editor-tabs">
           <button type="button" class="admin-editor-tab is-active" data-editor-tab="write">نووسین</button>
           <button type="button" class="admin-editor-tab" data-editor-tab="preview">پێشبینین</button>
@@ -196,7 +199,7 @@
         <input type="hidden" name="bodyFormat" value="markdown" />
       </div>
 
-      <details class="admin-card admin-card--flat admin-details">
+      <details class="admin-card float-saucer float-saucer--rounded admin-details">
         <summary class="admin-details__summary">زیاتر — تاگ، سەرچاوە، میدیا</summary>
         <div class="admin-field-stack mt-4">
           <div class="admin-grid admin-grid--2">
@@ -243,4 +246,4 @@
   </form>
   <% } %>
 </section>
-<script src="/js/admin-editor.js?v=20260822b" defer></script>
+<script src="/js/admin-editor.js?v=20260827b" defer></script>

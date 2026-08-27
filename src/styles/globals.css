@@ -4721,3 +4721,17 @@ body.is-book-page #main > .bg-cream-100 {
   flex-direction: column;
   overflow: hidden;
 }
+
+.admin-preview-banner {
+  padding: 0.7rem 1.1rem;
+  text-align: center;
+  font-weight: 600;
+  background: color-mix(in srgb, #c4a035 82%, white);
+  color: #4a3800;
+  border-bottom: 1px solid color-mix(in srgb, #8b6914 28%, transparent);
+}
+
+.admin-preview-banner a {
+  color: inherit;
+  font-weight: 700;
+}

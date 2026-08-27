@@ -6,8 +6,9 @@
     </div>
     <a class="btn btn-primary" href="/admin/items/new">+ نوێ</a>
   </header>
+  <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
-  <form method="get" action="/admin/items" class="admin-filters admin-filters--bar">
+  <form method="get" action="/admin/items" class="admin-filters admin-filters--bar float-saucer float-saucer--rounded">
     <input class="field" name="q" value="<%= filters.q %>" placeholder="گەڕان بە ناونیشان..." />
     <select class="field" name="status">
       <option value="">هەموو دۆخەکان</option>
@@ -33,8 +34,9 @@
   <div class="admin-item-list">
     <% items.forEach(function (entry) { %>
     <% const thumb = visualOf(entry); %>
-    <article class="admin-item-row">
-      <a class="admin-item-row__thumb" href="/admin/items/<%= entry.id %>">
+    <% const isBook = entry.contentType === "book" || entry.contentType === "audiobook"; %>
+    <article class="admin-item-row float-saucer float-saucer--rounded">
+      <a class="admin-item-row__thumb<%= isBook ? " admin-item-row__thumb--book" : "" %>" href="/admin/items/<%= entry.id %>">
         <% if (thumb) { %>
         <img src="<%= thumb %>" alt="" loading="lazy" />
         <% } else { %>

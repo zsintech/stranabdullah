@@ -6,36 +6,37 @@
     </div>
     <a class="btn btn-primary" href="/admin/items/new">+ تۆماری نوێ</a>
   </header>
+  <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
   <div class="admin-stat-grid">
-    <a class="admin-stat-card" href="/admin/items">
+    <a class="admin-stat-card float-saucer float-saucer--rounded" href="/admin/items">
       <span class="admin-stat-card__value"><%= kuDigits(counts.all) %></span>
       <span class="admin-stat-card__label">گشتی</span>
     </a>
-    <a class="admin-stat-card admin-stat-card--published" href="/admin/items?status=published">
+    <a class="admin-stat-card admin-stat-card--published float-saucer float-saucer--rounded" href="/admin/items?status=published">
       <span class="admin-stat-card__value"><%= kuDigits(counts.published) %></span>
       <span class="admin-stat-card__label">بڵاوکراوە</span>
     </a>
-    <a class="admin-stat-card admin-stat-card--draft" href="/admin/items?status=draft">
+    <a class="admin-stat-card admin-stat-card--draft float-saucer float-saucer--rounded" href="/admin/items?status=draft">
       <span class="admin-stat-card__value"><%= kuDigits(counts.draft) %></span>
       <span class="admin-stat-card__label">ڕەشنووس</span>
     </a>
-    <a class="admin-stat-card admin-stat-card--archived" href="/admin/items?status=archived">
+    <a class="admin-stat-card admin-stat-card--archived float-saucer float-saucer--rounded" href="/admin/items?status=archived">
       <span class="admin-stat-card__value"><%= kuDigits(counts.archived) %></span>
       <span class="admin-stat-card__label">شاردراوەتەوە</span>
     </a>
   </div>
 
   <div class="admin-quick-actions">
-    <a class="admin-quick-action" href="/admin/items/new">
+    <a class="admin-quick-action float-saucer float-saucer--rounded" href="/admin/items/new">
       <strong>نووسینی نوێ</strong>
       <span>وتار، لێدوان، چاوپێکەوتن...</span>
     </a>
-    <a class="admin-quick-action" href="/admin/biography">
+    <a class="admin-quick-action float-saucer float-saucer--rounded" href="/admin/biography">
       <strong>ژیاننامە</strong>
       <span>دەق و وێنەی پەڕەی ژیاننامە</span>
     </a>
-    <a class="admin-quick-action" href="/admin/items?status=draft">
+    <a class="admin-quick-action float-saucer float-saucer--rounded" href="/admin/items?status=draft">
       <strong>ڕەشنووسەکان</strong>
       <span><%= kuDigits(counts.draft) %> تۆمار چاوەڕێی بڵاوکردنەوە</span>
     </a>
@@ -55,11 +56,12 @@
     <ul class="admin-recent-grid">
       <% recent.forEach(function (entry) { %>
       <% const thumb = visualOf(entry); %>
+      <% const isBook = entry.contentType === "book" || entry.contentType === "audiobook"; %>
       <li>
-        <a class="admin-recent-card" href="/admin/items/<%= entry.id %>">
+        <a class="admin-recent-card float-saucer float-saucer--rounded<%= isBook ? " admin-recent-card--book" : "" %>" href="/admin/items/<%= entry.id %>">
           <div class="admin-recent-card__media">
             <% if (thumb) { %>
-            <img src="<%= thumb %>" alt="" loading="lazy" />
+            <img src="<%= thumb %>" alt="<%= isBook ? (entry.title || "") : "" %>" loading="lazy" />
             <% } else { %>
             <span class="admin-recent-card__placeholder"><%= contentTypeLabels[entry.contentType].slice(0, 1) %></span>
             <% } %>

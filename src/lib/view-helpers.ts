@@ -36,7 +36,9 @@ export function coverOf(item: ContentItem): string | undefined {
 export function visualOf(item: ContentItem): string | undefined {
   return (
     coverOf(item) ||
-    (item.contentType === "book" || item.contentType === "audiobook" ? "/brand/portrait.png" : undefined)
+    (item.contentType === "book" || item.contentType === "audiobook"
+      ? `/brand/books/${item.slug}.png`
+      : undefined)
   );
 }
 

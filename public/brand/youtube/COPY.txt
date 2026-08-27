@@ -1,0 +1,78 @@
+YouTube — نووسینگەی تایبەتی ستران عەبدوڵڵا
+Account: nusingastranabdullah@gmail.com
+
+============================================================
+CREATE CHANNEL  (YouTube Studio → Customise channel)
+============================================================
+
+Channel name
+ستران عەبدوڵڵا
+
+Handle (try in this order)
+@StranAbdullah
+@StranAbdulla
+@NusingayStranAbdullah
+
+============================================================
+CAPTION  (first line of the About description — this is what
+shows under the name on the channel page)
+============================================================
+
+نووسینگەی تایبەتی ستران عەبدوڵڵا — کەناڵی فەرمی.
+
+============================================================
+ABOUT / DESCRIPTION  (paste all of this)
+============================================================
+
+نووسینگەی تایبەتی ستران عەبدوڵڵا — کەناڵی فەرمی.
+
+نووسەر و ڕۆژنامەنووس. تۆماری سەرەکی وتار، کتێب، دیدار و بڵاوکراوەکان.
+
+ماڵپەڕی فەرمی و ئەرشیفی دیجیتاڵی:
+https://stranabdullah.onrender.com
+
+پەیوەندی:
+nusingastranabdullah@gmail.com
+
+فەیسبووک:
+https://www.facebook.com/stran.abdulla.1
+
+The official channel of the Private Office of Stran Abdullah — writing, journalism, books, and archive.
+
+============================================================
+LINKS  (About → Links)
+============================================================
+
+ماڵپەڕ     https://stranabdullah.onrender.com
+ئیمەیڵ     nusingastranabdullah@gmail.com
+فەیسبووک   https://www.facebook.com/stran.abdulla.1
+
+============================================================
+KEYWORDS
+============================================================
+
+ستران عەبدوڵڵا, نووسینگەی تایبەتی ستران عەبدوڵڵا, Stran Abdullah, Heval Stran Abdullah, ڕۆژنامەنووس, نووسەر, کوردستان, کەرکوک, کتێب, ئەرشیف
+
+============================================================
+UPLOAD THESE FILES
+============================================================
+
+Profile picture   public/brand/youtube/avatar.png     (800×800)
+Cover / banner    public/brand/youtube/banner.png     (2560×1440)
+Video watermark   public/brand/youtube/watermark.png  (150×150, transparent)
+
+YouTube Studio → Customise channel → Branding
+  Profile picture
+  Banner image
+  Video watermark (bottom-left, 15s from end)
+
+============================================================
+DEFAULT VIDEO DESCRIPTION  (paste under every new video)
+============================================================
+
+[ناونیشانی ڤیدیۆکە]
+
+نووسینگەی تایبەتی ستران عەبدوڵڵا
+https://stranabdullah.onrender.com
+
+#ستران_عەبدوڵڵا #کوردستان #نووسین

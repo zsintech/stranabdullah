@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/styles/app.css?v=20260825b" />
-    <link rel="stylesheet" href="/css/admin.css?v=20260825a" />
+    <link rel="stylesheet" href="/styles/app.css?v=20260827b" />
+    <link rel="stylesheet" href="/css/admin.css?v=20260827b" />
     <style>
       :root {
         --font-arabic: "Amiri", "Noto Naskh Arabic", serif;
@@ -23,30 +23,47 @@
     </style>
   </head>
   <body class="admin-body">
-    <% if (typeof adminUser !== "undefined" && adminUser) { %>
-    <header class="admin-top">
-      <a href="/admin" class="admin-brand">بەڕێوەبەر</a>
-      <nav class="admin-nav">
-        <a href="/admin">سەرەکی</a>
-        <a href="/admin/items">تۆمارەکان</a>
-        <a href="/admin/items/new">نوێ</a>
-        <a href="/admin/biography">ژیاننامە</a>
-        <a href="/" target="_blank" rel="noopener">ماڵپەڕ</a>
-      </nav>
-      <form method="post" action="/admin/logout" class="admin-logout">
-        <input type="hidden" name="_csrf" value="<%= csrf %>" />
-        <button type="submit" class="btn btn-sm btn-secondary">دەرچوون</button>
-      </form>
+    <% const adminPath = typeof path !== "undefined" ? path : ""; %>
+    <header class="site-header site-header--atmosphere admin-header">
+      <div data-header-shell class="shell flex items-center gap-3 sm:gap-5 admin-header__shell">
+        <a href="<%= typeof adminUser !== 'undefined' && adminUser ? '/admin' : '/' %>" class="masthead-lockup group" aria-label="نووسینگەی تایبەتی ستران عەبدوڵڵا — بەڕێوەبەر">
+          <span class="masthead-flora" aria-hidden>
+            <img src="/brand/tulip.png" alt="" class="masthead-flora__bloom" />
+          </span>
+          <span class="masthead-brand">
+            <span class="masthead-wordmark">ستران عەبدوڵڵا</span>
+            <span class="masthead-eyebrow admin-header__role">بەڕێوەبەر</span>
+          </span>
+        </a>
+
+        <% if (typeof adminUser !== "undefined" && adminUser) { %>
+        <div class="admin-header__trail">
+          <nav class="admin-header__nav" aria-label="بەڕێوەبەر">
+            <a href="/admin" class="masthead-link<%= adminPath === '/admin' ? ' is-active' : '' %>">سەرەکی</a>
+            <a href="/admin/items" class="masthead-link<%= adminPath.indexOf('/admin/items') === 0 && adminPath.indexOf('/new') < 0 ? ' is-active' : '' %>">تۆمارەکان</a>
+            <a href="/admin/items/new" class="masthead-link<%= adminPath === '/admin/items/new' ? ' is-active' : '' %>">نوێ</a>
+            <a href="/admin/biography" class="masthead-link<%= adminPath === '/admin/biography' ? ' is-active' : '' %>">ژیاننامە</a>
+            <a href="/" class="masthead-link" target="_blank" rel="noopener">ماڵپەڕ</a>
+          </nav>
+          <form method="post" action="/admin/logout" class="admin-header__logout">
+            <input type="hidden" name="_csrf" value="<%= csrf %>" />
+            <button type="submit" class="btn btn-sm admin-header__out">دەرچوون</button>
+          </form>
+        </div>
+        <% } %>
+      </div>
     </header>
-    <% } %>
+
     <main class="admin-main">
-      <% if (typeof flash !== "undefined" && flash) { %>
-      <p class="admin-flash admin-flash--<%= flash.type %>"><%= flash.message %></p>
-      <% } %>
-      <% if (typeof seedMode !== "undefined" && seedMode && typeof adminUser !== "undefined" && adminUser) { %>
-      <p class="admin-flash admin-flash--error">ئێستا لەسەر ناوەڕۆکی ناوخۆیی (seed) دەنووسیت — گۆڕانکارییەکان دوای ڕیستارتی سێرڤەر نامێنن. بۆ بەرهەم CONTENT_SOURCE=firestore دابنێ.</p>
-      <% } %>
-      <%- body %>
+      <div class="site-container admin-main__inner">
+        <% if (typeof flash !== "undefined" && flash) { %>
+        <p class="admin-flash admin-flash--<%= flash.type %>"><%= flash.message %></p>
+        <% } %>
+        <% if (typeof seedMode !== "undefined" && seedMode && typeof adminUser !== "undefined" && adminUser) { %>
+        <p class="admin-flash admin-flash--error">ئێستا لەسەر ناوەڕۆکی ناوخۆیی (seed) دەنووسیت — گۆڕانکارییەکان دوای ڕیستارتی سێرڤەر نامێنن. بۆ بەرهەم CONTENT_SOURCE=firestore دابنێ.</p>
+        <% } %>
+        <%- body %>
+      </div>
     </main>
   </body>
 </html>

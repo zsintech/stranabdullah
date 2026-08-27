@@ -1,20 +1,23 @@
 <section class="admin-login">
-  <p class="t-eyebrow">ستران عەبدوڵڵا</p>
-  <h1 class="t-h2 mt-2">چوونەژوورەوەی بەڕێوەبەر</h1>
-  <% if (error) { %>
-  <p class="admin-flash admin-flash--error"><%= error %></p>
-  <% } %>
-  <form method="post" action="/admin/login" class="admin-form admin-form--narrow">
-    <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <input type="hidden" name="next" value="<%= next %>" />
-    <div>
-      <label class="field-label" for="email">ئیمەیڵ</label>
-      <input class="field" id="email" name="email" type="email" autocomplete="username" required />
-    </div>
-    <div>
-      <label class="field-label" for="password">وشەی نهێنی</label>
-      <input class="field" id="password" name="password" type="password" autocomplete="current-password" required />
-    </div>
-    <button type="submit" class="btn btn-primary">چوونەژوورەوە</button>
-  </form>
+  <div class="float-saucer float-saucer--rounded float-saucer--lift-sm admin-login__card">
+    <p class="t-eyebrow">ستران عەبدوڵڵا</p>
+    <h1 class="t-h2 mt-2">چوونەژوورەوەی بەڕێوەبەر</h1>
+    <%- include("../partials/gold-rule", { extraClass: "mt-5 max-w-[12rem]" }) %>
+    <% if (error) { %>
+    <p class="admin-flash admin-flash--error mt-6"><%= error %></p>
+    <% } %>
+    <form method="post" action="/admin/login" class="admin-form admin-form--narrow">
+      <input type="hidden" name="_csrf" value="<%= csrf %>" />
+      <input type="hidden" name="next" value="<%= next %>" />
+      <div>
+        <label class="field-label" for="email">ئیمەیڵ</label>
+        <input class="field" id="email" name="email" type="email" autocomplete="username" required />
+      </div>
+      <div>
+        <label class="field-label" for="password">وشەی نهێنی</label>
+        <input class="field" id="password" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary">چوونەژوورەوە</button>
+    </form>
+  </div>
 </section>

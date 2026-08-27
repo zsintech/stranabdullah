@@ -24,7 +24,8 @@ export function readCsrf(req: Request): string | undefined {
 export function assertCsrf(req: Request): void {
   const cookie = readCsrf(req);
   const body = req.body as Record<string, unknown> | undefined;
-  const submitted = typeof body?._csrf === "string" ? body._csrf : "";
+  const header = req.get("x-csrf-token") || "";
+  const submitted = typeof body?._csrf === "string" && body._csrf ? body._csrf : header;
   if (!cookie || !submitted) {
     throw new CsrfError();
   }
