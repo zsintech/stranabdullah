@@ -5,6 +5,7 @@ import { isUsingEmulators } from "@/lib/env";
 
 let cached: AdminContentRepository | null = null;
 let usingSeedFallback = false;
+let firestoreDegraded = false;
 
 const FIRESTORE_TIMEOUT_MS = 8000;
 
@@ -32,7 +33,7 @@ function requireFirestore(): boolean {
   return process.env.CONTENT_SOURCE === "firestore";
 }
 
-function isQuotaOrTransient(error: unknown): boolean {
+export function isQuotaOrTransient(error: unknown): boolean {
   const code =
     typeof error === "object" && error && "code" in error ? Number((error as { code: unknown }).code) : NaN;
   const message = error instanceof Error ? error.message : String(error);
@@ -43,8 +44,21 @@ function isQuotaOrTransient(error: unknown): boolean {
   );
 }
 
+export class FirestoreUnavailableError extends Error {
+  constructor() {
+    super(
+      "سنووری بەکارهێنانی Firestore تەواو بووە. خوێندنەوە کاتی دەگەڕێتەوە بۆ ناوەڕۆکی ناوخۆیی؛ پاشەکەوتکردن تا کاتێک کۆتا دێتەوە کار ناکات. دواتر هەوڵبدەرەوە یان پلانی Firebase بەرز بکەرەوە.",
+    );
+    this.name = "FirestoreUnavailableError";
+  }
+}
+
 export function isUsingSeedFallback(): boolean {
   return usingSeedFallback;
+}
+
+export function isFirestoreDegraded(): boolean {
+  return firestoreDegraded;
 }
 
 export function getContentRepository(): ContentRepository {
@@ -90,12 +104,41 @@ export async function withContentRepo<T>(
     const allowSeed = !requireFirestore() || isQuotaOrTransient(error);
     if (!allowSeed) throw error;
     console.error("Firestore query failed; serving seed content.", error);
+    firestoreDegraded = true;
     if (!requireFirestore()) {
       usingSeedFallback = true;
       cached = createSeedContentRepository();
       return fn(cached);
     }
-    // Keep Firestore as the write target for admin; use seed only for this public read.
     return fn(createSeedContentRepository());
   }
+}
+
+/** Admin reads fall back to seed on quota; writes surface a clear error instead of a 500. */
+export async function withAdminRepo<T>(
+  fn: (repo: AdminContentRepository) => Promise<T>,
+  mode: "read" | "write" = "read",
+): Promise<T> {
+  const primary = getAdminContentRepository();
+  if (usingSeedFallback) {
+    return fn(primary);
+  }
+
+  try {
+    return await withTimeout(fn(primary), FIRESTORE_TIMEOUT_MS);
+  } catch (error) {
+    if (!isQuotaOrTransient(error)) throw error;
+    firestoreDegraded = true;
+    console.error(`Admin Firestore ${mode} failed.`, error);
+    if (mode === "write") {
+      throw new FirestoreUnavailableError();
+    }
+    return fn(createSeedContentRepository());
+  }
+}
+
+export function adminErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof FirestoreUnavailableError) return error.message;
+  if (isQuotaOrTransient(error)) return new FirestoreUnavailableError().message;
+  return error instanceof Error ? error.message : fallback;
 }

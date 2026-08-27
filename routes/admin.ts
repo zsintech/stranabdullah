@@ -12,7 +12,7 @@ import { articleBodyHtml } from "@/lib/markdown";
 import { kuDigits, readingTime } from "@/lib/format";
 import { sourceOutletLabel } from "@/lib/content-labels";
 import { requireAdmin } from "@/middleware/require-admin";
-import { getAdminContentRepository, isUsingSeedFallback } from "@/repositories";
+import { getAdminContentRepository, isUsingSeedFallback, isFirestoreDegraded, withAdminRepo, adminErrorMessage } from "@/repositories";
 import { splitList } from "@/lib/slug";
 import { contentTypes, type ContentStatus, type ContentType } from "@/types/content";
 import { DEFAULT_BIOGRAPHY } from "@/types/biography";
@@ -195,6 +195,7 @@ router.use((req, res, next) => {
   res.locals.csrf = readCsrf(req) ?? issueCsrf(res);
   res.locals.flash = consumeAdminFlash(req, res);
   res.locals.seedMode = isUsingSeedFallback();
+  res.locals.firestoreDegraded = isFirestoreDegraded();
   res.locals.statusLabels = statusLabels;
   res.locals.statusHints = statusHints;
   res.locals.contentTypeLabels = contentTypeLabels;
@@ -204,8 +205,7 @@ router.use((req, res, next) => {
 router.get(
   "/",
   asyncHandler(async (_req, res) => {
-    const repo = getAdminContentRepository();
-    const items = await repo.listAll();
+    const items = await withAdminRepo((repo) => repo.listAll());
     const counts = {
       all: items.length,
       published: items.filter((item) => item.status === "published").length,
@@ -227,11 +227,13 @@ router.get(
     const status = typeof req.query.status === "string" ? (req.query.status as ContentStatus) : undefined;
     const type = typeof req.query.type === "string" ? (req.query.type as ContentType) : undefined;
     const q = typeof req.query.q === "string" ? req.query.q : undefined;
-    const items = await getAdminContentRepository().listAll({
-      status: status && status in statusLabels ? status : undefined,
-      type: type && contentTypes.includes(type) ? type : undefined,
-      q,
-    });
+    const items = await withAdminRepo((repo) =>
+      repo.listAll({
+        status: status && status in statusLabels ? status : undefined,
+        type: type && contentTypes.includes(type) ? type : undefined,
+        q,
+      }),
+    );
     await renderAdmin(res, "items", {
       pageTitle: "تۆمارەکان",
       items,
@@ -275,7 +277,10 @@ router.post(
       const body = req.body as Record<string, unknown>;
       const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
       const media = await mediaFromRequest(body, files);
-      const item = await getAdminContentRepository().create(draftFromBody(body, media), req.adminUser!.email);
+      const item = await withAdminRepo(
+        (repo) => repo.create(draftFromBody(body, media), req.adminUser!.email),
+        "write",
+      );
       setAdminFlash(res, { type: "ok", message: "تۆمارەکە پاشەکەوت کرا." });
       res.redirect(`/admin/items/${item.id}`);
     } catch (error) {
@@ -284,7 +289,7 @@ router.post(
         res.redirect("/admin/items/new");
         return;
       }
-      setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "پاشەکەوتکردن سەرکەوتوو نەبوو." });
+      setAdminFlash(res, { type: "error", message: adminErrorMessage(error, "پاشەکەوتکردن سەرکەوتوو نەبوو.") });
       res.redirect("/admin/items/new");
     }
   }),
@@ -293,7 +298,7 @@ router.post(
 router.get(
   "/items/:id",
   asyncHandler(async (req, res) => {
-    const item = await getAdminContentRepository().getById(req.params.id);
+    const item = await withAdminRepo((repo) => repo.getById(req.params.id));
     if (!item) {
       setAdminFlash(res, { type: "error", message: "تۆمار نەدۆزرایەوە." });
       res.redirect("/admin/items");
@@ -326,13 +331,13 @@ router.post(
       const body = req.body as Record<string, unknown>;
       const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
       const media = await mediaFromRequest(body, files);
-      await getAdminContentRepository().update(id, draftFromBody(body, media), req.adminUser!.email);
+      await withAdminRepo((repo) => repo.update(id, draftFromBody(body, media), req.adminUser!.email), "write");
       setAdminFlash(res, { type: "ok", message: "گۆڕانکارییەکان پاشەکەوت کران." });
       res.redirect(`/admin/items/${id}`);
     } catch (error) {
       setAdminFlash(res, {
         type: "error",
-        message: error instanceof Error ? error.message : "پاشەکەوتکردن سەرکەوتوو نەبوو.",
+        message: adminErrorMessage(error, "پاشەکەوتکردن سەرکەوتوو نەبوو."),
       });
       res.redirect(`/admin/items/${id}`);
     }
@@ -346,10 +351,10 @@ router.post(
       assertCsrf(req);
       const status = text(req.body as Record<string, unknown>, "status") as ContentStatus;
       if (!(status in statusLabels)) throw new Error("دۆخی نادیار.");
-      await getAdminContentRepository().setStatus(req.params.id, status, req.adminUser!.email);
+      await withAdminRepo((repo) => repo.setStatus(req.params.id, status, req.adminUser!.email), "write");
       setAdminFlash(res, { type: "ok", message: `دۆخ بوو بە ${statusLabels[status]}.` });
     } catch (error) {
-      setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "گۆڕینی دۆخ سەرکەوتوو نەبوو." });
+      setAdminFlash(res, { type: "error", message: adminErrorMessage(error, "گۆڕینی دۆخ سەرکەوتوو نەبوو.") });
     }
     const back = typeof req.body?.back === "string" && req.body.back.startsWith("/admin") ? req.body.back : `/admin/items/${req.params.id}`;
     res.redirect(back);
@@ -362,10 +367,10 @@ router.post(
     try {
       assertCsrf(req);
       const featured = text(req.body as Record<string, unknown>, "featured") === "true";
-      await getAdminContentRepository().setFeatured(req.params.id, featured, req.adminUser!.email);
+      await withAdminRepo((repo) => repo.setFeatured(req.params.id, featured, req.adminUser!.email), "write");
       setAdminFlash(res, { type: "ok", message: featured ? "کرا بە تایبەت." : "تایبەتی لابرا." });
     } catch (error) {
-      setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "گۆڕینی تایبەت سەرکەوتوو نەبوو." });
+      setAdminFlash(res, { type: "error", message: adminErrorMessage(error, "گۆڕینی تایبەت سەرکەوتوو نەبوو.") });
     }
     res.redirect(`/admin/items/${req.params.id}`);
   }),
@@ -400,7 +405,7 @@ router.post(
 router.get(
   "/items/:id/preview",
   asyncHandler(async (req, res) => {
-    const item = await getAdminContentRepository().getById(req.params.id);
+    const item = await withAdminRepo((repo) => repo.getById(req.params.id));
     if (!item) {
       setAdminFlash(res, { type: "error", message: "تۆمار نەدۆزرایەوە." });
       res.redirect("/admin/items");
@@ -433,11 +438,11 @@ router.post(
   asyncHandler(async (req, res) => {
     try {
       assertCsrf(req);
-      await getAdminContentRepository().delete(req.params.id);
+      await withAdminRepo((repo) => repo.delete(req.params.id), "write");
       setAdminFlash(res, { type: "ok", message: "تۆمار سڕایەوە." });
       res.redirect("/admin/items");
     } catch (error) {
-      setAdminFlash(res, { type: "error", message: error instanceof Error ? error.message : "سڕینەوە سەرکەوتوو نەبوو." });
+      setAdminFlash(res, { type: "error", message: adminErrorMessage(error, "سڕینەوە سەرکەوتوو نەبوو.") });
       res.redirect(`/admin/items/${req.params.id}`);
     }
   }),
@@ -446,7 +451,7 @@ router.post(
 router.get(
   "/biography",
   asyncHandler(async (_req, res) => {
-    const biography = await getAdminContentRepository().getBiography();
+    const biography = await withAdminRepo((repo) => repo.getBiography());
     await renderAdmin(res, "biography", {
       pageTitle: "ژیاننامە",
       biography,
@@ -472,19 +477,23 @@ router.post(
       const body = req.body as Record<string, unknown>;
       let portraitUrl = text(body, "portraitUrl") || DEFAULT_BIOGRAPHY.portraitUrl;
       if (req.file) portraitUrl = await storeAdminUpload(req.file);
-      await getAdminContentRepository().saveBiography({
-        name: text(body, "name") || DEFAULT_BIOGRAPHY.name,
-        intro: text(body, "intro"),
-        body: typeof body.body === "string" ? body.body : "",
-        portraitUrl,
-        portraitAlt: text(body, "portraitAlt") || DEFAULT_BIOGRAPHY.portraitAlt,
-        note: text(body, "note"),
-      });
+      await withAdminRepo(
+        (repo) =>
+          repo.saveBiography({
+            name: text(body, "name") || DEFAULT_BIOGRAPHY.name,
+            intro: text(body, "intro"),
+            body: typeof body.body === "string" ? body.body : "",
+            portraitUrl,
+            portraitAlt: text(body, "portraitAlt") || DEFAULT_BIOGRAPHY.portraitAlt,
+            note: text(body, "note"),
+          }),
+        "write",
+      );
       setAdminFlash(res, { type: "ok", message: "ژیاننامە پاشەکەوت کرا." });
     } catch (error) {
       setAdminFlash(res, {
         type: "error",
-        message: error instanceof Error ? error.message : "پاشەکەوتکردن سەرکەوتوو نەبوو.",
+        message: adminErrorMessage(error, "پاشەکەوتکردن سەرکەوتوو نەبوو."),
       });
     }
     res.redirect("/admin/biography");
