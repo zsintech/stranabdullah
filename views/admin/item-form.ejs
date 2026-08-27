@@ -3,8 +3,13 @@
   const cover = item ? (item.media.coverImage && (item.media.coverImage.cachedUrl || item.media.coverImage.remoteUrl)) : "";
   const coverAlt = item && item.media.coverImage && item.media.coverImage.alt ? item.media.coverImage.alt : "";
   const documentUrl = item && item.media && item.media.documentUrl ? item.media.documentUrl : "";
+  const videoUrl = item && item.media && item.media.videoUrl ? item.media.videoUrl : "";
   const currentStatus = item ? item.status : "draft";
-  const isBookType = item ? (item.contentType === "book" || item.contentType === "audiobook") : false;
+  const activeType = item ? item.contentType : (typeof defaultType !== "undefined" && defaultType ? defaultType : "article");
+  const ytThumb = videoUrl ? youtubeThumbnail(videoUrl) : "";
+  const mediaKinds = ["interview", "podcast", "video", "photo", "book", "audiobook"];
+  const isWritingKind = mediaKinds.indexOf(activeType) < 0;
+  const isBookKind = activeType === "book" || activeType === "audiobook";
 %>
 <section class="admin-editor-page">
   <header class="admin-editor-header">
@@ -35,6 +40,263 @@
   >
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
+    <div class="admin-editor-main">
+      <div class="admin-card float-saucer float-saucer--rounded admin-kind-card">
+        <h2 class="admin-card__title">جۆری تۆمار</h2>
+        <p class="admin-card__hint">هەڵبژێرە ئەم تۆمارە لە کوێ دەردەکەوێت — سێ جۆری یوتیوب لە پەڕەی میدیا، وێنە، یان نووسین/کتێب.</p>
+        <div class="admin-kind-grid" role="radiogroup" aria-label="جۆری تۆمار" data-kind-grid>
+          <label class="admin-kind<%= activeType === "interview" ? " is-active" : "" %>">
+            <input type="radio" name="contentType" value="interview" <%= activeType === "interview" ? "checked" : "" %> data-kind />
+            <span class="admin-kind__label">چاوپێکەوتن</span>
+            <span class="admin-kind__hint">یوتیوب · پەڕەی میدیا</span>
+          </label>
+          <label class="admin-kind<%= activeType === "podcast" ? " is-active" : "" %>">
+            <input type="radio" name="contentType" value="podcast" <%= activeType === "podcast" ? "checked" : "" %> data-kind />
+            <span class="admin-kind__label">پۆدکاست</span>
+            <span class="admin-kind__hint">یوتیوب · پەڕەی میدیا</span>
+          </label>
+          <label class="admin-kind<%= activeType === "video" ? " is-active" : "" %>">
+            <input type="radio" name="contentType" value="video" <%= activeType === "video" ? "checked" : "" %> data-kind />
+            <span class="admin-kind__label">ڤیدیۆی ئەرشیف</span>
+            <span class="admin-kind__hint">یوتیوب · پەڕەی میدیا</span>
+          </label>
+          <label class="admin-kind<%= activeType === "photo" ? " is-active" : "" %>">
+            <input type="radio" name="contentType" value="photo" <%= activeType === "photo" ? "checked" : "" %> data-kind />
+            <span class="admin-kind__label">وێنە</span>
+            <span class="admin-kind__hint">بارکردنی وێنە · میدیا / سەرەکی</span>
+          </label>
+          <label class="admin-kind<%= isWritingKind ? " is-active" : "" %>" data-kind-writing>
+            <input type="radio" name="contentType" value="<%= isWritingKind ? activeType : "article" %>" <%= isWritingKind ? "checked" : "" %> data-kind data-kind-writing-radio />
+            <span class="admin-kind__label">نووسین</span>
+            <span class="admin-kind__hint">وتار، بۆچوون، لێدوان...</span>
+          </label>
+          <label class="admin-kind<%= isBookKind ? " is-active" : "" %>">
+            <input type="radio" name="contentType" value="book" <%= isBookKind ? "checked" : "" %> data-kind />
+            <span class="admin-kind__label">کتێب</span>
+            <span class="admin-kind__hint">بەرگ + PDF</span>
+          </label>
+        </div>
+
+        <div class="admin-writing-type" data-panel="writing-extra" <%= isWritingKind ? "" : "hidden" %>>
+          <label class="field-label" for="writingType">جۆری نووسین</label>
+          <select class="field" id="writingType" data-writing-type>
+            <% ["article","speech","opinion","statement","announcement","document","other"].forEach(function (type) { %>
+            <option value="<%= type %>" <%= activeType === type ? "selected" : "" %>><%= contentTypeLabels[type] %></option>
+            <% }); %>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded">
+        <div class="admin-field-stack">
+          <div>
+            <label class="field-label" for="title" data-label-title>ناونیشان</label>
+            <input class="field field--title" id="title" name="title" required value="<%= item ? item.title : "" %>" placeholder="ناونیشان..." />
+          </div>
+          <div>
+            <label class="field-label" for="subtitle" data-label-subtitle>ژێرناونیشان / هێڵی دووەم</label>
+            <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" placeholder="بۆ وێنە: ساڵ یان شوێن..." />
+          </div>
+          <div>
+            <label class="field-label" for="summary" data-label-summary>کورتە / وەسف</label>
+            <textarea class="field admin-textarea" id="summary" name="summary" rows="3" placeholder="کورتەیەک بۆ لیست و گەڕان..."><%= item ? item.summary : "" %></textarea>
+          </div>
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="slug">لینک (slug)</label>
+              <input class="field" id="slug" name="slug" dir="ltr" value="<%= item ? item.slug : "" %>" placeholder="auto-from-title" />
+            </div>
+            <div data-field="location">
+              <label class="field-label" for="location">شوێن</label>
+              <input class="field" id="location" name="location" value="<%= item && item.location ? item.location : "" %>" placeholder="بۆ وێنە و ڕووداو" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded" data-panel="youtube">
+        <h2 class="admin-card__title">لینکی یوتیوب</h2>
+        <p class="admin-card__hint">لینکی watch، youtu.be یان embed دابنێ. وێنەی بەرگ خۆکار لە یوتیوب دێت ئەگەر وێنەیەکت بار نەکردبێت.</p>
+        <div class="admin-field-stack">
+          <div>
+            <label class="field-label" for="videoUrl">URL</label>
+            <input
+              class="field"
+              id="videoUrl"
+              name="videoUrl"
+              dir="ltr"
+              placeholder="https://www.youtube.com/watch?v=…"
+              value="<%= videoUrl %>"
+              data-youtube-url
+            />
+          </div>
+          <div class="admin-youtube-preview" data-youtube-preview <%= ytThumb ? "" : "hidden" %>>
+            <img src="<%= ytThumb || "" %>" alt="" data-youtube-thumb />
+            <div class="admin-youtube-preview__meta">
+              <p class="t-meta" data-youtube-id><%= videoUrl && youtubeId(videoUrl) ? "ID: " + youtubeId(videoUrl) : "" %></p>
+              <a class="admin-link" href="<%= videoUrl || "#" %>" target="_blank" rel="noopener" data-youtube-open <%= videoUrl ? "" : "hidden" %>>کردنەوە لە یوتیوب</a>
+            </div>
+          </div>
+          <div>
+            <label class="field-label" for="outlet">ناوی بەرنامە / کەناڵ</label>
+            <input class="field" id="outlet" name="outlet" value="<%= item && item.extras && item.extras.outlet ? item.extras.outlet : "" %>" placeholder="بۆ نموونە: میوانی هەفتە" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded" data-panel="cover">
+        <h2 class="admin-card__title" data-label-cover>وێنەی بەرگ</h2>
+        <p class="admin-card__hint" data-hint-cover>وێنە بار بکە یان URL دابنێ. بۆ وێنەی ئەرشیف ئەمە سەرەکیە.</p>
+        <label class="admin-drop" data-drop="image">
+          <input class="admin-drop__input" id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
+          <span class="admin-drop__text">کلیک بکە یان وێنە بکێشە ئێرە</span>
+          <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
+        </label>
+        <div class="admin-cover-preview" data-cover-preview <%= cover ? "" : "hidden" %>>
+          <img src="<%= cover || "" %>" alt="" />
+        </div>
+        <p class="admin-file-name t-meta" data-file-name hidden></p>
+        <div class="admin-field-stack mt-4">
+          <div>
+            <label class="field-label" for="coverUrl">یان URL</label>
+            <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" placeholder="https://..." data-cover-url />
+          </div>
+          <div>
+            <label class="field-label" for="coverAlt">وەسفی وێنە (alt)</label>
+            <input class="field" id="coverAlt" name="coverAlt" value="<%= coverAlt %>" placeholder="وەسف بۆ دەستگەیشتن و گەڕان" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded" data-panel="home-gallery">
+        <h2 class="admin-card__title">لە پەڕەی سەرەکی</h2>
+        <div class="admin-field-stack">
+          <label class="admin-check admin-check--card">
+            <input type="checkbox" name="homeGallery" <%= item && item.extras && item.extras.homeGallery ? "checked" : "" %> />
+            <span>نیشاندان لە کارۆسێلی وێنەی سەرەکی</span>
+          </label>
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="homeGalleryOrder">ڕیز</label>
+              <input
+                class="field"
+                id="homeGalleryOrder"
+                name="homeGalleryOrder"
+                type="number"
+                min="1"
+                dir="ltr"
+                value="<%= item && item.extras && item.extras.homeGalleryOrder ? item.extras.homeGalleryOrder : "" %>"
+                placeholder="1"
+              />
+            </div>
+            <label class="admin-check admin-check--card" style="align-self:end">
+              <input type="checkbox" name="homeGalleryWide" <%= item && item.extras && item.extras.homeGalleryWide ? "checked" : "" %> />
+              <span>وێنەی فراوان</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded admin-pdf-card" data-panel="pdf" data-pdf-admin>
+        <h2 class="admin-card__title">فایلی PDF</h2>
+        <p class="admin-card__hint">بۆ کتێب — خوێنەر دەتوانێت بیخوێنێتەوە یان داگری بکات.</p>
+        <label class="admin-drop admin-drop--pdf" data-drop="pdf">
+          <input class="admin-drop__input" id="document" name="document" type="file" accept="application/pdf,.pdf" />
+          <span class="admin-drop__text">کلیک بکە یان PDF بکێشە ئێرە</span>
+          <span class="admin-drop__hint">تا ٤٠ مێگابایت</span>
+        </label>
+        <p class="admin-file-name t-meta" data-file-name hidden></p>
+        <div class="admin-pdf-current" data-pdf-current <%= documentUrl ? "" : "hidden" %>>
+          <span class="admin-pdf-current__icon" aria-hidden>PDF</span>
+          <a href="<%= documentUrl || "#" %>" target="_blank" rel="noopener" dir="ltr" data-pdf-link><%= documentUrl ? "فایلی ئێستا" : "" %></a>
+        </div>
+        <div class="admin-field-stack mt-4">
+          <div>
+            <label class="field-label" for="documentUrl">یان URL</label>
+            <input class="field" id="documentUrl" name="documentUrl" dir="ltr" value="<%= documentUrl %>" placeholder="https://..." data-pdf-url />
+          </div>
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="publisher">بڵاوکەرەوە</label>
+              <input class="field" id="publisher" name="publisher" value="<%= item && item.extras && item.extras.publisher ? item.extras.publisher : "" %>" />
+            </div>
+            <div>
+              <label class="field-label" for="isbn">ISBN</label>
+              <input class="field" id="isbn" name="isbn" dir="ltr" value="<%= item && item.extras && item.extras.isbn ? item.extras.isbn : "" %>" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded admin-compose-card" data-panel="body">
+        <div class="admin-compose__head">
+          <div>
+            <h2 class="admin-card__title">دەقی نووسین</h2>
+            <p class="admin-card__hint">شریتی سەرەوە فۆرمات دەکات؛ دوگمەی وێنە یان ڕاکێشان بۆ ناو دەق.</p>
+          </div>
+          <div class="admin-editor-tabs" role="tablist" aria-label="دەقی نووسین">
+            <button type="button" class="admin-editor-tab is-active" data-editor-tab="write" role="tab" aria-selected="true">نووسین</button>
+            <button type="button" class="admin-editor-tab" data-editor-tab="preview" role="tab" aria-selected="false">پێشبینین</button>
+          </div>
+        </div>
+
+        <div class="admin-compose" data-compose>
+          <div class="admin-compose__tools" data-write-tools>
+            <button type="button" class="admin-tool" data-format="bold">قەڵەو</button>
+            <button type="button" class="admin-tool" data-format="italic">لار</button>
+            <button type="button" class="admin-tool" data-format="heading">سەردێڕ</button>
+            <button type="button" class="admin-tool" data-format="list">لیست</button>
+            <button type="button" class="admin-tool" data-format="quote">وتە</button>
+            <button type="button" class="admin-tool" data-format="link">لینک</button>
+            <button type="button" class="admin-tool admin-tool--accent" data-upload-inline>وێنە</button>
+          </div>
+          <div data-write-panel>
+            <label class="sr-only" for="body">دەقی نووسین</label>
+            <textarea
+              class="admin-compose__input"
+              id="body"
+              name="body"
+              rows="18"
+              placeholder="دەقەکە لێرە بنووسە…"
+            ><%= item ? item.body : "" %></textarea>
+          </div>
+          <div class="admin-preview prose" data-preview-panel hidden></div>
+        </div>
+        <input type="hidden" name="bodyFormat" value="markdown" />
+      </div>
+
+      <details class="admin-card float-saucer float-saucer--rounded admin-details">
+        <summary class="admin-details__summary">زیاتر — تاگ، سەرچاوە، دەنگ</summary>
+        <div class="admin-field-stack mt-4">
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="topics">بابەتەکان</label>
+              <input class="field" id="topics" name="topics" value="<%= item ? item.topics.join("، ") : "" %>" placeholder="بە کۆما جیا بکەوە" />
+            </div>
+            <div>
+              <label class="field-label" for="tags">تاگ</label>
+              <input class="field" id="tags" name="tags" value="<%= item ? item.tags.join("، ") : "" %>" />
+            </div>
+          </div>
+          <div class="admin-grid admin-grid--2">
+            <div>
+              <label class="field-label" for="author">نووسەر</label>
+              <input class="field" id="author" name="author" value="<%= item && item.extras && item.extras.author ? item.extras.author : "" %>" />
+            </div>
+            <div>
+              <label class="field-label" for="audioUrl">لینکی دەنگ</label>
+              <input class="field" id="audioUrl" name="audioUrl" dir="ltr" value="<%= item && item.media && item.media.audioUrl ? item.media.audioUrl : "" %>" />
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="admin-form-footer">
+        <button class="btn btn-primary" type="submit">پاشەکەوت</button>
+        <a class="btn btn-secondary" href="/admin/items">گەڕانەوە</a>
+      </div>
+    </div>
+
     <aside class="admin-editor-sidebar">
       <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">دۆخ</h2>
@@ -52,14 +314,6 @@
       <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">وردەکاری</h2>
         <div class="admin-field-stack">
-          <div>
-            <label class="field-label" for="contentType">جۆر</label>
-            <select class="field" id="contentType" name="contentType">
-              <% contentTypes.forEach(function (type) { %>
-              <option value="<%= type %>" <%= item && item.contentType === type ? "selected" : (!item && type === "article" ? "selected" : "") %>><%= contentTypeLabels[type] %></option>
-              <% }); %>
-            </select>
-          </div>
           <div>
             <label class="field-label" for="language">زمان</label>
             <select class="field" id="language" name="language">
@@ -80,79 +334,6 @@
             <input type="checkbox" name="featured" <%= item && item.featured ? "checked" : "" %> />
             <span>تایبەت لە سەرەکی</span>
           </label>
-          <label class="admin-check admin-check--card">
-            <input type="checkbox" name="homeGallery" <%= item && item.extras && item.extras.homeGallery ? "checked" : "" %> />
-            <span>لە پەڕەی سەرەکی — وێنەی ئەرشیف</span>
-          </label>
-          <div>
-            <label class="field-label" for="homeGalleryOrder">ڕیزی وێنە لە سەرەکی</label>
-            <input
-              class="field"
-              id="homeGalleryOrder"
-              name="homeGalleryOrder"
-              type="number"
-              min="1"
-              dir="ltr"
-              value="<%= item && item.extras && item.extras.homeGalleryOrder ? item.extras.homeGalleryOrder : "" %>"
-              placeholder="1"
-            />
-          </div>
-          <label class="admin-check admin-check--card">
-            <input type="checkbox" name="homeGalleryWide" <%= item && item.extras && item.extras.homeGalleryWide ? "checked" : "" %> />
-            <span>وێنەی فراوان لە کارۆسێل</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="admin-card float-saucer float-saucer--rounded">
-        <h2 class="admin-card__title">وێنەی بەرگ</h2>
-        <label class="admin-drop" data-drop="image">
-          <input class="admin-drop__input" id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
-          <span class="admin-drop__text">کلیک بکە یان وێنە بکێشە ئێرە</span>
-          <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
-        </label>
-        <div class="admin-cover-preview" data-cover-preview <%= cover ? "" : "hidden" %>>
-          <img src="<%= cover || "" %>" alt="" />
-        </div>
-        <p class="admin-file-name t-meta" data-file-name hidden></p>
-        <div class="admin-field-stack mt-4">
-          <div>
-            <label class="field-label" for="coverUrl">یان URL</label>
-            <input class="field" id="coverUrl" name="coverUrl" dir="ltr" value="<%= cover || "" %>" placeholder="https://..." data-cover-url />
-          </div>
-          <div>
-            <label class="field-label" for="coverAlt">جێگرتەوەی وێنە</label>
-            <input class="field" id="coverAlt" name="coverAlt" value="<%= coverAlt %>" />
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-card float-saucer float-saucer--rounded admin-pdf-card" data-pdf-admin>
-        <h2 class="admin-card__title">فایلی PDF</h2>
-        <p class="admin-card__hint">بۆ کتێب و بەڵگەنامە — خوێنەر دەتوانێت لە ماڵپەڕدا بیخوێنێتەوە یان داگری بکات.</p>
-        <label class="admin-drop admin-drop--pdf" data-drop="pdf">
-          <input class="admin-drop__input" id="document" name="document" type="file" accept="application/pdf,.pdf" />
-          <span class="admin-drop__text">کلیک بکە یان PDF بکێشە ئێرە</span>
-          <span class="admin-drop__hint">تا ٤٠ مێگابایت</span>
-        </label>
-        <p class="admin-file-name t-meta" data-file-name hidden></p>
-        <div class="admin-pdf-current" data-pdf-current <%= documentUrl ? "" : "hidden" %>>
-          <span class="admin-pdf-current__icon" aria-hidden>PDF</span>
-          <a href="<%= documentUrl || "#" %>" target="_blank" rel="noopener" dir="ltr" data-pdf-link><%= documentUrl ? "فایلی ئێستا" : "" %></a>
-        </div>
-        <div class="admin-field-stack mt-4">
-          <div>
-            <label class="field-label" for="documentUrl">یان URL</label>
-            <input class="field" id="documentUrl" name="documentUrl" dir="ltr" value="<%= documentUrl %>" placeholder="https://..." data-pdf-url />
-          </div>
-          <div>
-            <label class="field-label" for="publisher">بڵاوکەرەوە</label>
-            <input class="field" id="publisher" name="publisher" value="<%= item && item.extras && item.extras.publisher ? item.extras.publisher : "" %>" />
-          </div>
-          <div>
-            <label class="field-label" for="isbn">ISBN</label>
-            <input class="field" id="isbn" name="isbn" dir="ltr" value="<%= item && item.extras && item.extras.isbn ? item.extras.isbn : "" %>" />
-          </div>
         </div>
       </div>
 
@@ -163,81 +344,6 @@
       </div>
       <% } %>
     </aside>
-
-    <div class="admin-editor-main">
-      <div class="admin-card float-saucer float-saucer--rounded">
-        <div class="admin-field-stack">
-          <div>
-            <label class="field-label" for="title">ناونیشان</label>
-            <input class="field field--title" id="title" name="title" required value="<%= item ? item.title : "" %>" placeholder="ناونیشانی نووسین..." />
-          </div>
-          <div>
-            <label class="field-label" for="subtitle">ژێرناونیشان / هێڵی دووەمی سەردێڕی وێنە</label>
-            <input class="field" id="subtitle" name="subtitle" value="<%= item && item.subtitle ? item.subtitle : "" %>" placeholder="بۆ وێنە: بۆ نموونە ساڵی ١٩٩٩" />
-          </div>
-          <div>
-            <label class="field-label" for="slug">لینک (slug)</label>
-            <input class="field" id="slug" name="slug" dir="ltr" value="<%= item ? item.slug : "" %>" placeholder="auto-from-title" />
-          </div>
-          <div>
-            <label class="field-label" for="summary">کورتە</label>
-            <textarea class="field admin-textarea" id="summary" name="summary" rows="3" placeholder="کورتەیەک بۆ لیست و گەڕان..."><%= item ? item.summary : "" %></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-card float-saucer float-saucer--rounded">
-        <div class="admin-editor-tabs">
-          <button type="button" class="admin-editor-tab is-active" data-editor-tab="write">نووسین</button>
-          <button type="button" class="admin-editor-tab" data-editor-tab="preview">پێشبینین</button>
-          <button type="button" class="btn btn-secondary btn-sm admin-editor-upload" data-upload-inline>وێنە باربکە</button>
-        </div>
-        <div data-write-panel>
-          <textarea class="field admin-textarea admin-textarea--editor" id="body" name="body" placeholder="دەقی نووسین... Markdown پشتیوانی دەکرێت.&#10;&#10;![وێنە](url)&#10;**قەڵەو** *لار*"><%= item ? item.body : "" %></textarea>
-        </div>
-        <div class="admin-preview prose" data-preview-panel hidden></div>
-        <input type="hidden" name="bodyFormat" value="markdown" />
-      </div>
-
-      <details class="admin-card float-saucer float-saucer--rounded admin-details">
-        <summary class="admin-details__summary">زیاتر — تاگ، سەرچاوە، میدیا</summary>
-        <div class="admin-field-stack mt-4">
-          <div class="admin-grid admin-grid--2">
-            <div>
-              <label class="field-label" for="topics">بابەتەکان</label>
-              <input class="field" id="topics" name="topics" value="<%= item ? item.topics.join("، ") : "" %>" placeholder="بە کۆما جیا بکەوە" />
-            </div>
-            <div>
-              <label class="field-label" for="tags">تاگ</label>
-              <input class="field" id="tags" name="tags" value="<%= item ? item.tags.join("، ") : "" %>" />
-            </div>
-          </div>
-          <div class="admin-grid admin-grid--2">
-            <div>
-              <label class="field-label" for="outlet">شوێنی بڵاوکردنەوە</label>
-              <input class="field" id="outlet" name="outlet" value="<%= item && item.extras && item.extras.outlet ? item.extras.outlet : "" %>" />
-            </div>
-            <div>
-              <label class="field-label" for="author">نووسەر</label>
-              <input class="field" id="author" name="author" value="<%= item && item.extras && item.extras.author ? item.extras.author : "" %>" />
-            </div>
-          </div>
-          <div>
-            <label class="field-label" for="videoUrl">لینکی ڤیدیۆ</label>
-            <input class="field" id="videoUrl" name="videoUrl" dir="ltr" value="<%= item && item.media && item.media.videoUrl ? item.media.videoUrl : "" %>" />
-          </div>
-          <div>
-            <label class="field-label" for="audioUrl">لینکی دەنگ</label>
-            <input class="field" id="audioUrl" name="audioUrl" dir="ltr" value="<%= item && item.media && item.media.audioUrl ? item.media.audioUrl : "" %>" />
-          </div>
-        </div>
-      </details>
-
-      <div class="admin-form-footer">
-        <button class="btn btn-primary" type="submit">پاشەکەوت</button>
-        <a class="btn btn-secondary" href="/admin/items">گەڕانەوە</a>
-      </div>
-    </div>
   </form>
 
   <% if (item) { %>
@@ -246,4 +352,4 @@
   </form>
   <% } %>
 </section>
-<script src="/js/admin-editor.js?v=20260827b" defer></script>
+<script src="/js/admin-editor.js?v=20260827d" defer></script>

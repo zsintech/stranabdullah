@@ -12,6 +12,7 @@ import pagesRouter from "./routes/pages";
 import { kuDigits } from "./src/lib/format";
 import { viewsDir, renderPage } from "./src/lib/render-page";
 import {
+  archivePhotoFallbacks,
   coverOf,
   visualOf,
   isActivePath,
@@ -32,6 +33,7 @@ import {
 } from "./src/lib/format";
 import { archiveLabels } from "./src/lib/archive-labels";
 import { SITE_EMAIL, SITE_NAME, SITE_NAME_SHORT, SITE_DESCRIPTION } from "./src/lib/constants";
+import { youtubeEmbedUrl, youtubeId, youtubeThumbnail } from "./src/lib/youtube";
 import { withContentRepo } from "./src/repositories/index";
 import { getServerEnv } from "./src/lib/env";
 import { readArchiveCountCache, writeArchiveCountCache } from "./src/lib/public-cache";
@@ -49,8 +51,10 @@ const cookieSecret =
 
 app.set("view engine", "ejs");
 app.set("views", viewsDir);
+app.set("trust proxy", 1);
 
 app.locals.navLinks = navLinks;
+app.locals.archivePhotoFallbacks = archivePhotoFallbacks;
 app.locals.isActivePath = isActivePath;
 app.locals.coverOf = coverOf;
 app.locals.visualOf = visualOf;
@@ -73,6 +77,9 @@ app.locals.SITE_EMAIL = SITE_EMAIL;
 app.locals.SITE_NAME = SITE_NAME;
 app.locals.SITE_NAME_SHORT = SITE_NAME_SHORT;
 app.locals.SITE_DESCRIPTION = SITE_DESCRIPTION;
+app.locals.youtubeId = youtubeId;
+app.locals.youtubeThumbnail = youtubeThumbnail;
+app.locals.youtubeEmbedUrl = youtubeEmbedUrl;
 
 app.use((req, _res, next) => {
   console.log(`${req.method} ${req.path}`);

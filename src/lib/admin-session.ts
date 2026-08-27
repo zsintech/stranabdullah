@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { appCookieOptions } from "@/lib/cookie-options";
 import { getServerEnv } from "@/lib/env";
 
 export const ADMIN_SESSION_COOKIE = "adminSession";
@@ -45,18 +46,15 @@ export function setAdminSession(res: Response, session: Omit<AdminSession, "exp"
     ...session,
     exp: Date.now() + maxAge,
   };
-  res.cookie(cookieName(), JSON.stringify(payload), {
-    signed: true,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge,
-    path: "/",
-  });
+  res.cookie(
+    cookieName(),
+    JSON.stringify(payload),
+    appCookieOptions({ signed: true, maxAge }),
+  );
 }
 
 export function clearAdminSession(res: Response): void {
-  res.clearCookie(cookieName(), { path: "/" });
+  res.clearCookie(cookieName(), appCookieOptions());
 }
 
 export function readAdminSession(req: Request): AdminSession | null {
@@ -74,17 +72,16 @@ export function readAdminSession(req: Request): AdminSession | null {
 }
 
 export function setAdminFlash(res: Response, flash: AdminFlash): void {
-  res.cookie(FLASH_COOKIE, JSON.stringify(flash), {
-    httpOnly: true,
-    sameSite: "lax",
-    maxAge: 60_000,
-    path: "/",
-  });
+  res.cookie(
+    FLASH_COOKIE,
+    JSON.stringify(flash),
+    appCookieOptions({ maxAge: 60_000 }),
+  );
 }
 
 export function consumeAdminFlash(req: Request, res: Response): AdminFlash | undefined {
   const raw = req.cookies?.[FLASH_COOKIE];
-  res.clearCookie(FLASH_COOKIE, { path: "/" });
+  res.clearCookie(FLASH_COOKIE, appCookieOptions());
   if (typeof raw !== "string") return undefined;
   try {
     const parsed = JSON.parse(raw) as AdminFlash;

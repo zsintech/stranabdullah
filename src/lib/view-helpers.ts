@@ -8,6 +8,7 @@ import {
   languageLabels,
 } from "@/lib/format";
 import { SITE_NAME, SITE_NAME_SHORT } from "@/lib/constants";
+import { youtubeThumbnail } from "@/lib/youtube";
 import type { ContentItem } from "@/types/content";
 
 export const navLinks = [
@@ -24,12 +25,38 @@ export function isActivePath(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/** Shared overlapping-lane shots when Firestore has no published photos yet. */
+export const archivePhotoFallbacks = [
+  {
+    href: "/media",
+    src: "/brand/archive/with-talabani.png",
+    title: "کۆنگرەی ئۆپۆزسێۆنی عیراق لە نیوۆرک",
+    yearLabel: "ساڵی ١٩٩٩",
+    wide: false,
+  },
+  {
+    href: "/media",
+    src: "/brand/archive/study-table.png",
+    title: "بۆ یادگاری: کتێبخانەی زانکۆی مووسڵ…ڕۆژی دووشەمە ٤/٦/١٩٩٥",
+    yearLabel: "",
+    wide: true,
+  },
+  {
+    href: "/media",
+    src: "/brand/archive/youth-portrait.png",
+    title: "وێنەگر جبار طاهر ٢٧/٢/١٩٩٦",
+    yearLabel: "",
+    wide: false,
+  },
+] as const;
+
 export function coverOf(item: ContentItem): string | undefined {
   return (
     item.media.coverImage?.cachedUrl ||
     item.media.coverImage?.remoteUrl ||
     item.media.images[0]?.cachedUrl ||
-    item.media.images[0]?.remoteUrl
+    item.media.images[0]?.remoteUrl ||
+    youtubeThumbnail(item.media.videoUrl)
   );
 }
 

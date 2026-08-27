@@ -776,6 +776,27 @@ img.hero__art {
     linear-gradient(180deg, color-mix(in srgb, var(--cream, #f8f5ee) 92%, #fff), var(--cream, #f8f5ee) 40%, var(--cream, #f8f5ee));
 }
 
+.photo-lane + .photo-lane {
+  padding-block-start: clamp(0.35rem, 1.6vw, 1rem);
+}
+
+.photo-lane--empty {
+  padding-block-end: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.photo-lane__empty {
+  margin: 0;
+  padding: 1.1rem 1.25rem;
+  max-width: 42rem;
+  font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 62%, var(--ink-muted, #5c5346));
+  background: color-mix(in srgb, #fff 55%, var(--cream, #f8f5ee));
+  border: 1px solid color-mix(in srgb, var(--forest-950, #043b2b) 10%, transparent);
+  border-radius: 1.15rem;
+}
+
 .photo-lane__head {
   display: flex;
   flex-wrap: wrap;
@@ -1123,6 +1144,61 @@ img.hero__art {
 
   .photo-lane__frame--tall {
     min-width: min(64vw, 16.5rem);
+  }
+}
+
+.photo-lane--video .photo-lane__frame--wide .photo-lane__media,
+.photo-lane--video .photo-lane__frame--tall .photo-lane__media {
+  aspect-ratio: 16 / 9;
+}
+
+.photo-lane--video .photo-lane__frame--tall img,
+.photo-lane--video .photo-lane__frame img {
+  object-position: center center;
+}
+
+.photo-lane__play {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.photo-lane__play svg {
+  width: 3.1rem;
+  height: 3.1rem;
+  padding: 0.85rem 0.75rem 0.85rem 0.95rem;
+  color: #f4efe4;
+  background: color-mix(in srgb, #04120e 42%, transparent);
+  border: 1px solid color-mix(in srgb, #f4efe4 55%, transparent);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  transition:
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    background 280ms ease,
+    border-color 280ms ease;
+}
+
+.photo-lane__frame:hover .photo-lane__play svg,
+.photo-lane__frame:focus-visible .photo-lane__play svg {
+  transform: scale(1.08);
+  background: color-mix(in srgb, #04120e 28%, var(--gold, #dca927) 22%);
+  border-color: var(--gold, #dca927);
+}
+
+@media (min-width: 760px) {
+  .photo-lane--video.photo-lane--spread .photo-lane__track {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    padding-block: 0.5rem 1.25rem;
+  }
+
+  .photo-lane--video.photo-lane--spread .photo-lane__frame--tall:first-child,
+  .photo-lane--video.photo-lane--spread .photo-lane__frame--wide,
+  .photo-lane--video.photo-lane--spread .photo-lane__frame--tall:last-child {
+    margin: 0;
   }
 }
 

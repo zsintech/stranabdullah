@@ -33,7 +33,12 @@ SESSION_COOKIE_NAME=adminSession
 SESSION_EXPIRES_DAYS=14
 COOKIE_SIGNATURE_SECRET=
 CSRF_SECRET=
+PUBLIC_SITE_URL=https://stranabdullah.org
 ```
+
+`COOKIE_SIGNATURE_SECRET` signs httpOnly cookies (session + CSRF cookie). `CSRF_SECRET` HMACs the CSRF token value itself. Generate long random strings for both in production (Render blueprint can auto-generate them).
+
+Admin login is host-relative (`/admin/login`). After buying `stranabdullah.org`, add that host (and `www.stranabdullah.org`) under Firebase Authentication → Settings → Authorized domains, then attach the domain in Render and point Namecheap DNS at the records Render shows.
 
 `FIREBASE_ADMIN_PRIVATE_KEY` should keep `\n` as the two-character sequence `\\n` in env files.
 

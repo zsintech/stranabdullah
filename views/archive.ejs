@@ -14,18 +14,34 @@
     }) %>
   </div>
 
+  <% if (typeof photoShots !== "undefined" && photoShots.length) { %>
+  <%- include("partials/photo-lane", {
+    shots: photoShots,
+    headingKicker: "ئەرشیف",
+    headingTitle: "وێنە",
+    laneHeadingId: "archive-photos-heading",
+    laneMoreHref: "/media",
+    laneMoreLabel: "میدیا",
+  }) %>
+  <% } %>
+
   <div class="site-container site-container--body archive-body">
     <%- include("partials/archive-filters") %>
     <div class="mt-7 lg:mt-10">
+      <% const photoOnly = typeof filters !== "undefined" && filters.type === "photo"; %>
+      <% if (!photoOnly) { %>
       <% if (!groups.length) { %>
+      <% if (!(typeof photoShots !== "undefined" && photoShots.length)) { %>
       <%- include("partials/empty-state", {
         emptyTitle: "هیچ تۆمارێک نەدۆزرایەوە",
         emptyNote: "هەوڵبدە بە وشەیەکی تر یان فلتەرەکان لاببە.",
         actionHref: "/archive",
         actionLabel: "هەموو ئەرشیف"
       }) %>
+      <% } %>
       <% } else { %>
       <%- include("partials/archive-timeline") %>
+      <% } %>
       <% } %>
     </div>
     <% if (typeof nextHref !== "undefined" && nextHref) { %>

@@ -2742,6 +2742,38 @@ textarea,
     overflow: hidden;
     border-radius: 0.75rem;
   }
+
+  .youtube-embed {
+    margin: 0;
+  }
+
+  .youtube-embed__frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #121c18;
+    border-radius: 0.85rem;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 18px 40px rgba(1, 26, 21, 0.12);
+  }
+
+  .youtube-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+    padding: 0.65rem;
+    overflow: hidden;
+  }
+  .photo-tile__media {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+  }
   .essay-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

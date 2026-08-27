@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { ContentDraftInput } from "@/repositories/content-repository";
 import { ContentItemSchema, type ContentItem, type ContentStatus } from "@/types/content";
+import { youtubeThumbnail } from "@/lib/youtube";
 import { slugify } from "@/lib/slug";
 
 export function applyDraft(
@@ -23,6 +24,8 @@ export function applyDraft(
   const coverUrl = input.coverUrl?.trim();
   const coverAlt = input.coverAlt?.trim() || input.title.trim();
   const existingCover = current?.media?.coverImage;
+  const videoUrl = input.videoUrl?.trim() || current?.media?.videoUrl;
+  const ytThumb = youtubeThumbnail(videoUrl);
 
   function coverFromUrl(url: string, alt: string) {
     if (/^https?:\/\//i.test(url)) return { remoteUrl: url, alt };
@@ -54,9 +57,11 @@ export function applyDraft(
         ? coverFromUrl(coverUrl, coverAlt)
         : existingCover
           ? { ...existingCover, alt: input.coverAlt?.trim() || existingCover.alt || input.title.trim() }
-          : undefined,
+          : ytThumb
+            ? { remoteUrl: ytThumb, alt: coverAlt }
+            : undefined,
       images: current?.media?.images ?? [],
-      videoUrl: input.videoUrl?.trim() || current?.media?.videoUrl,
+      videoUrl,
       audioUrl: input.audioUrl?.trim() || current?.media?.audioUrl,
       documentUrl: input.documentUrl?.trim() || current?.media?.documentUrl,
       externalEmbedUrl: current?.media?.externalEmbedUrl,

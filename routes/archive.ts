@@ -8,7 +8,7 @@ import { kuDigits, readingTime } from "@/lib/format";
 import { articleBodyHtml } from "@/lib/markdown";
 import { renderPage } from "@/lib/render-page";
 import { proxyPdfUrl, volumesForSlug } from "@/lib/pdf-map";
-import { coverOf } from "@/lib/view-helpers";
+import { coverOf, archivePhotoFallbacks } from "@/lib/view-helpers";
 import { withContentRepo } from "@/repositories";
 import { ArchiveFiltersSchema, contentTypes } from "@/types/content";
 
@@ -60,7 +60,7 @@ router.get(
 
     const filters = parsed.success ? parsed.data : { limit: PAGE_SIZE };
 
-    const [{ items, nextCursor }, matching, all] = await Promise.all([
+    const [{ items, nextCursor }, matching, all, photoItems] = await Promise.all([
       withContentRepo((repo) => repo.listPublished(filters)),
       withContentRepo((repo) =>
         repo
@@ -68,13 +68,18 @@ router.get(
           .then((result) => result.items),
       ),
       withContentRepo((repo) => repo.listPublished({ limit: 1000 }).then((result) => result.items)),
+      withContentRepo((repo) => repo.getByType("photo", 60)),
     ]);
 
     const years = yearFacets(all);
     const yearTotals = Object.fromEntries(
       yearFacets(matching).map((facet) => [facet.label, facet.count]),
     );
-    const availableTypes = contentTypes.filter((type) => all.some((item) => item.contentType === type));
+    const availableTypes = contentTypes.filter(
+      (type) =>
+        all.some((item) => item.contentType === type) ||
+        (type === "photo" && photoItems.length > 0),
+    );
     const availableLanguages = [...new Set(all.map((item) => item.language))];
 
     const activeFilters = [
@@ -104,6 +109,33 @@ router.get(
       items: entries,
     }));
 
+    const photoPool = (filters.type && filters.type !== "photo" ? [] : photoItems).filter(
+      (item) => coverOf(item),
+    );
+    const filteredPhotos = photoPool
+      .filter((item) => !filters.year || item.year === filters.year)
+      .filter((item) => !filters.language || item.language === filters.language)
+      .filter((item) => {
+        if (!filters.q) return true;
+        const q = filters.q.trim().toLowerCase();
+        return `${item.title} ${item.summary} ${item.subtitle ?? ""}`.toLowerCase().includes(q);
+      })
+      .sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""));
+    const canUseFallbacks =
+      filteredPhotos.length === 0 &&
+      !filters.q &&
+      !filters.year &&
+      (!filters.type || filters.type === "photo");
+    const photoShots = canUseFallbacks
+      ? archivePhotoFallbacks.map((shot) => ({ ...shot }))
+      : filteredPhotos.map((item, index) => ({
+          href: `/archive/${item.slug}`,
+          src: coverOf(item) as string,
+          title: item.title,
+          yearLabel: item.subtitle || (item.year ? `ساڵی ${kuDigits(item.year)}` : ""),
+          wide: Boolean(item.extras?.homeGalleryWide) || index % 3 === 1,
+        }));
+
     await renderPage(res, "archive", {
       pageTitle: "ئەرشیف",
       pageDescription: "ئەرشیفی گەڕان و فلتەرکراو بەپێی جۆر، ساڵ، بابەت و زمان.",
@@ -116,6 +148,8 @@ router.get(
       resultCountDisplay: kuDigits(matching.length),
       totalDisplay: kuDigits(all.length),
       groups,
+      photoShots,
+      loadLaneCss: true,
       nextHref: nextCursor ? buildArchiveQuery(filters, nextCursor) : undefined,
       latestYear: years[0]?.label,
       latestYearDisplay: years[0]?.display,

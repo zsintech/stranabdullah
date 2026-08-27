@@ -27,6 +27,10 @@ function applyFilters(items: ContentItem[], filters?: ArchiveFilters): ContentIt
       (item) =>
         item.contentType !== "book" &&
         item.contentType !== "audiobook" &&
+        item.contentType !== "photo" &&
+        item.contentType !== "video" &&
+        item.contentType !== "interview" &&
+        item.contentType !== "podcast" &&
         !item.tags.includes("about"),
     );
   }

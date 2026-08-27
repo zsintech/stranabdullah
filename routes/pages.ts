@@ -16,9 +16,10 @@ const router = Router();
 router.get(
   "/",
   asyncHandler(async (_req, res) => {
-    const [all, books] = await Promise.all([
+    const [all, books, photoItems] = await Promise.all([
       withContentRepo((repo) => repo.listPublished({ limit: 1000 }).then((result) => result.items)),
       withContentRepo((repo) => repo.getByType("book", 40)),
+      withContentRepo((repo) => repo.getByType("photo", 40)),
     ]);
 
     const years = yearFacets(all);
@@ -27,8 +28,8 @@ router.get(
 
     const featured = all.find((item) => item.featured) ?? all[0];
     const rest = all.filter((item) => item.id !== featured?.id);
-    const photos = all
-      .filter((item) => item.contentType === "photo" && coverOf(item) && item.extras?.homeGallery)
+    const photos = photoItems
+      .filter((item) => coverOf(item) && item.extras?.homeGallery)
       .sort((a, b) => {
         const ao = typeof a.extras?.homeGalleryOrder === "number" ? a.extras.homeGalleryOrder : 999;
         const bo = typeof b.extras?.homeGalleryOrder === "number" ? b.extras.homeGalleryOrder : 999;
@@ -136,22 +137,30 @@ router.get(
 router.get(
   "/media",
   asyncHandler(async (_req, res) => {
-    const [interviews, videos, photos] = await Promise.all([
+    const [interviews, podcasts, videos, photos] = await Promise.all([
       withContentRepo((repo) => repo.getByType("interview", 40)),
+      withContentRepo((repo) => repo.getByType("podcast", 40)),
       withContentRepo((repo) => repo.getByType("video", 40)),
       withContentRepo((repo) => repo.getByType("photo", 60)),
     ]);
 
     await renderPage(res, "media", {
       pageTitle: "میدیا",
-      pageDescription: "چاوپێکەوتن، ڤیدیۆ و وێنە لە ئەرشیف.",
+      pageDescription: "چاوپێکەوتن، پۆدکاست و ڤیدیۆی ئەرشیف لە یوتیوب، لەگەڵ وێنەکان.",
       interviews,
+      podcasts,
       videos,
       photos,
-      empty: interviews.length === 0 && videos.length === 0 && photos.length === 0,
+      empty:
+        interviews.length === 0 &&
+        podcasts.length === 0 &&
+        videos.length === 0 &&
+        photos.length === 0,
       interviewCount: kuDigits(interviews.length),
+      podcastCount: kuDigits(podcasts.length),
       videoCount: kuDigits(videos.length),
       photoCount: kuDigits(photos.length),
+      loadLaneCss: true,
     });
   }),
 );

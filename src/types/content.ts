@@ -5,6 +5,7 @@ export const contentTypes = [
   "article",
   "opinion",
   "interview",
+  "podcast",
   "book",
   "audiobook",
   "photo",

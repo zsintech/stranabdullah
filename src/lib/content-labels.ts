@@ -5,6 +5,7 @@ export const contentTypeLabels: Record<ContentType, string> = {
   article: "وتار",
   opinion: "بۆچوون",
   interview: "چاوپێکەوتن",
+  podcast: "پۆدکاست",
   book: "کتێب",
   audiobook: "کتێبی دەنگی",
   photo: "وێنە",

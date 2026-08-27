@@ -24,8 +24,10 @@ function mapDoc(id: string, data: DocumentData): ContentItem {
   return ContentItemSchema.parse({ id, ...data });
 }
 
+const VISUAL_TYPES = new Set(["book", "audiobook", "photo", "video", "interview", "podcast"]);
+
 function excludeFromWritingFeed(item: ContentItem): boolean {
-  return item.contentType === "book" || item.contentType === "audiobook" || item.tags.includes("about");
+  return VISUAL_TYPES.has(item.contentType) || item.tags.includes("about");
 }
 
 export function createFirestoreContentRepository(): AdminContentRepository {

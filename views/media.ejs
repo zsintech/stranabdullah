@@ -1,78 +1,89 @@
+<%
+  function videoShot(item) {
+    const yt = youtubeId(item.media && item.media.videoUrl);
+    const src = coverOf(item) || youtubeThumbnail(item.media && item.media.videoUrl);
+    if (!src && !yt) return null;
+    return {
+      href: "/archive/" + item.slug,
+      src: src || youtubeThumbnail(item.media && item.media.videoUrl),
+      title: item.title,
+      yearLabel: item.extras && item.extras.outlet
+        ? item.extras.outlet
+        : (item.year ? "ساڵی " + kuDigits(item.year) : ""),
+      wide: true,
+      play: true,
+    };
+  }
+
+  const interviewShots = (typeof interviews !== "undefined" ? interviews : []).map(videoShot).filter(Boolean);
+  const podcastShots = (typeof podcasts !== "undefined" ? podcasts : []).map(videoShot).filter(Boolean);
+  const archiveVideoShots = (typeof videos !== "undefined" ? videos : []).map(videoShot).filter(Boolean);
+  const fromAdminPhotos = (typeof photos !== "undefined" ? photos : [])
+    .map(function (item, index) {
+      const src = coverOf(item);
+      if (!src) return null;
+      return {
+        href: "/archive/" + item.slug,
+        src: src,
+        title: item.title,
+        yearLabel: item.location || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
+        wide: index % 3 === 1,
+      };
+    })
+    .filter(Boolean);
+  const photoShots = fromAdminPhotos.length ? fromAdminPhotos : archivePhotoFallbacks;
+%>
 <div class="bg-cream-100">
   <%- include("partials/masthead", {
     tone: "forest",
     eyebrow: "دەنگ و وێنە",
     title: "میدیا",
-    description: "چاوپێکەوتن، ڤیدیۆ و ئەرشیفی وێنە.",
+    description: "چاوپێکەوتن، پۆدکاست و ڤیدیۆی ئەرشیف لە یوتیوب، لەگەڵ وێنەکان.",
     ghostSrc: "/brand/banner.png"
   }) %>
 
-  <div class="site-container site-container--body">
-    <div class="space-y-16">
-      <% if (empty) { %>
-      <%- include("partials/empty-state", {
-        emptyTitle: "هێشتا میدیا تۆمار نەکراوە",
-        emptyNote: "چاوپێکەوتن و ڤیدیۆ و وێنەکان دواتر کاتالۆگ دەکرێن. لە ئێستادا نووسینەکان لە ئەرشیفدان."
-      }) %>
-      <% } %>
+  <%- include("partials/photo-lane", {
+    shots: interviewShots,
+    headingKicker: "یوتیوب",
+    headingTitle: "چاوپێکەوتن",
+    laneHeadingId: "interviews-heading",
+    laneMoreHref: interviewShots.length ? "/archive?type=interview" : "",
+    laneMoreLabel: "هەموو چاوپێکەوتنەکان",
+    laneMod: "photo-lane--video",
+    showEmpty: true,
+    emptyNote: "جۆری چاوپێکەوتن هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+  }) %>
 
-      <% if (interviews.length) { %>
-      <section aria-labelledby="interviews-heading">
-        <%- include("partials/section-heading", { headingId: "interviews-heading", headingTitle: "چاوپێکەوتن", count: interviewCount }) %>
-        <div class="space-y-10">
-          <%- include("partials/media-feature", { item: interviews[0], compact: false }) %>
-          <% if (interviews.length > 1) { %>
-          <ul class="content-list float-saucer float-saucer--rounded float-saucer--lift-sm">
-            <% interviews.slice(1).forEach(function (item) { %>
-            <li>
-              <a href="/archive/<%= item.slug %>" class="content-list__link content-list__link--grid group">
-                <span class="t-meta"><%= formatKuDate(item.publishedAt) %></span>
-                <span class="link-underline font-display text-lg font-bold text-forest-950"><%= item.title %></span>
-              </a>
-            </li>
-            <% }); %>
-          </ul>
-          <% } %>
-        </div>
-      </section>
-      <% } %>
+  <%- include("partials/photo-lane", {
+    shots: podcastShots,
+    headingKicker: "یوتیوب",
+    headingTitle: "پۆدکاست",
+    laneHeadingId: "podcasts-heading",
+    laneMoreHref: podcastShots.length ? "/archive?type=podcast" : "",
+    laneMoreLabel: "هەموو پۆدکاستەکان",
+    laneMod: "photo-lane--video",
+    showEmpty: true,
+    emptyNote: "جۆری پۆدکاست هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+  }) %>
 
-      <% if (videos.length) { %>
-      <section aria-labelledby="videos-heading">
-        <%- include("partials/section-heading", { headingId: "videos-heading", headingTitle: "ڤیدیۆ", count: videoCount }) %>
-        <div class="grid gap-10 md:grid-cols-2">
-          <% videos.forEach(function (item) { %>
-          <%- include("partials/media-feature", { item: item, compact: true }) %>
-          <% }); %>
-        </div>
-      </section>
-      <% } %>
+  <%- include("partials/photo-lane", {
+    shots: archiveVideoShots,
+    headingKicker: "یوتیوب",
+    headingTitle: "ڤیدیۆی ئەرشیف",
+    laneHeadingId: "videos-heading",
+    laneMoreHref: archiveVideoShots.length ? "/archive?type=video" : "",
+    laneMoreLabel: "هەموو ڤیدیۆکان",
+    laneMod: "photo-lane--video",
+    showEmpty: true,
+    emptyNote: "جۆری ڤیدیۆ هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+  }) %>
 
-      <% if (photos.length) { %>
-      <section aria-labelledby="photos-heading">
-        <%- include("partials/section-heading", { headingId: "photos-heading", headingTitle: "ئەرشیفی وێنە", count: photoCount }) %>
-        <ul class="grid gap-6 sm:grid-cols-6">
-          <% photos.forEach(function (item, index) { const image = coverOf(item); const wide = index % 3 === 0; %>
-          <li class="<%= wide ? 'sm:col-span-4' : 'sm:col-span-2' %>">
-            <figure class="photo-tile float-saucer float-saucer--rounded float-saucer--lift-sm group">
-              <a href="/archive/<%= item.slug %>" class="block no-underline">
-                <% if (image) { %>
-                <span class="photo-tile__media relative <%= wide ? 'aspect-[3/2]' : 'aspect-[4/5]' %>">
-                  <img src="<%= image %>" alt="<%= item.title %>" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]" />
-                </span>
-                <% } %>
-                <figcaption class="t-meta mt-3 px-1">
-                  <% if (item.year) { %><span class="font-display font-bold text-forest-950"><%= kuDigits(item.year) %></span><% } %>
-                  <% if (item.location) { %><span class="ms-2"><%= item.location %></span><% } %>
-                  <span class="mt-1 block text-ink-muted"><%= item.title %></span>
-                </figcaption>
-              </a>
-            </figure>
-          </li>
-          <% }); %>
-        </ul>
-      </section>
-      <% } %>
-    </div>
-  </div>
+  <%- include("partials/photo-lane", {
+    shots: photoShots,
+    headingKicker: "ئەرشیف",
+    headingTitle: "وێنە",
+    laneHeadingId: "media-photos-heading",
+    laneMoreHref: "/archive?type=photo",
+    laneMoreLabel: "هەموو وێنەکان",
+  }) %>
 </div>

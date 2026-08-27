@@ -1,0 +1,80 @@
+<%
+  var lane = typeof locals === "object" && locals ? locals : {};
+  var gallery = Array.isArray(lane.shots) ? lane.shots : [];
+  var isSpread = gallery.length > 0 && gallery.length <= 3;
+  var kicker = lane.headingKicker || "ئەرشیف";
+  var title = lane.headingTitle || "وێنە";
+  var headingId = lane.laneHeadingId || "photos-heading";
+  var moreHref = lane.laneMoreHref || "";
+  var moreLabel = lane.laneMoreLabel || "هەمووی ببینە";
+  var extraClass = lane.laneMod ? (" " + lane.laneMod) : "";
+  var allowEmpty = Boolean(lane.showEmpty);
+  var emptyCopy = lane.emptyNote || "لە بەڕێوەبەر لینکی یوتیوب دابنێ.";
+%>
+<% if (gallery.length || allowEmpty) { %>
+<section class="photo-lane<%= isSpread ? ' photo-lane--spread' : '' %><%= extraClass %><%= !gallery.length ? ' photo-lane--empty' : '' %>" aria-labelledby="<%= headingId %>" data-photo-lane>
+  <div class="site-container">
+    <header class="photo-lane__head">
+      <div class="photo-lane__intro">
+        <p class="photo-lane__kicker"><%= kicker %></p>
+        <h2 id="<%= headingId %>" class="photo-lane__title"><%= title %></h2>
+      </div>
+      <% if (moreHref && gallery.length) { %>
+      <a href="<%= moreHref %>" class="photo-lane__all group">
+        <span class="link-underline"><%= moreLabel %></span>
+        <span class="arrow-slide" aria-hidden="true">←</span>
+      </a>
+      <% } %>
+    </header>
+  </div>
+
+  <% if (gallery.length) { %>
+  <div class="photo-lane__viewport">
+    <% if (!isSpread) { %>
+    <div class="photo-lane__fade photo-lane__fade--start" aria-hidden="true"></div>
+    <div class="photo-lane__fade photo-lane__fade--end" aria-hidden="true"></div>
+    <% } %>
+    <div class="photo-lane__track" dir="rtl" data-photo-track tabindex="0" aria-label="<%= title %>">
+      <% gallery.forEach(function (shot, index) { %>
+      <a
+        href="<%= shot.href %>"
+        class="photo-lane__frame photo-lane__frame--<%= shot.wide ? 'wide' : 'tall' %><%= shot.play ? ' photo-lane__frame--play' : '' %>"
+        style="--i: <%= index %>"
+        <% if (shot.external) { %>rel="noopener noreferrer" target="_blank"<% } %>
+      >
+        <span class="photo-lane__media">
+          <img
+            src="<%= shot.src %>"
+            alt="<%= shot.title || title %>"
+            loading="<%= index < 3 ? 'eager' : 'lazy' %>"
+            decoding="async"
+          />
+          <% if (shot.play) { %>
+          <span class="photo-lane__play" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 6.5v11l9-5.5-9-5.5Z" fill="currentColor" /></svg>
+          </span>
+          <% } %>
+          <% if (shot.title || shot.yearLabel) { %>
+          <span class="photo-lane__caption">
+            <span class="photo-lane__index"><%= kuDigits(index + 1) %></span>
+            <span class="photo-lane__caption-copy">
+              <% if (shot.title) { %><span class="photo-lane__caption-title"><%= shot.title %></span><% } %>
+              <% if (shot.yearLabel) { %><span class="photo-lane__year"><%= shot.yearLabel %></span><% } %>
+            </span>
+          </span>
+          <% } %>
+        </span>
+      </a>
+      <% }); %>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="site-container">
+    <p class="photo-lane__empty"><%= emptyCopy %></p>
+  </div>
+  <% } %>
+</section>
+<% if (gallery.length && !isSpread) { %>
+<script src="/js/home-photos.js?v=20260827a" defer></script>
+<% } %>
+<% } %>

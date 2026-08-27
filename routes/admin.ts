@@ -243,11 +243,16 @@ router.get(
 
 router.get(
   "/items/new",
-  asyncHandler(async (_req, res) => {
+  asyncHandler(async (req, res) => {
+    const requested =
+      typeof req.query.type === "string" && contentTypes.includes(req.query.type as ContentType)
+        ? (req.query.type as ContentType)
+        : "article";
     await renderAdmin(res, "item-form", {
       pageTitle: "تۆماری نوێ",
       item: null,
       contentTypes,
+      defaultType: requested,
     });
   }),
 );
