@@ -12,7 +12,7 @@ import { articleBodyHtml } from "@/lib/markdown";
 import { kuDigits, readingTime } from "@/lib/format";
 import { sourceOutletLabel } from "@/lib/content-labels";
 import { requireAdmin } from "@/middleware/require-admin";
-import { getAdminContentRepository, isUsingSeedFallback, isFirestoreDegraded, withAdminRepo, adminErrorMessage } from "@/repositories";
+import { isUsingSeedFallback, isFirestoreDegraded, withAdminRepo, adminErrorMessage } from "@/repositories";
 import { splitList } from "@/lib/slug";
 import { contentTypes, type ContentStatus, type ContentType } from "@/types/content";
 import { DEFAULT_BIOGRAPHY } from "@/types/biography";
