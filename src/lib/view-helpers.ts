@@ -146,8 +146,8 @@ export function itemMetaParts(
   return parts;
 }
 
-export function pageTitle(title?: string): string {
-  return title ? `${title}${SITE_NAME.includes("ستران") ? " · ستران عەبدوڵڵا" : ""}` : SITE_NAME;
+export function pageTitle(_title?: string): string {
+  return SITE_NAME_SHORT;
 }
 
 export { SITE_NAME, SITE_NAME_SHORT };
