@@ -36,7 +36,9 @@ CSRF_SECRET=
 PUBLIC_SITE_URL=https://stranabdullah.org
 ```
 
-**Storage bucket:** copy the exact name from Firebase Console → Build → Storage (often `your-project-id.firebasestorage.app` or `your-project-id.appspot.com`). Set it as `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` on Render. Without enabling Storage first, uploads fail with “bucket does not exist”.
+**Storage bucket:** copy the exact name from Firebase Console → Build → Storage (often `your-project-id.firebasestorage.app` or `your-project-id.appspot.com`). Set it as `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` on Render.
+
+**Storage requires Blaze billing** — the free Spark plan cannot create a Storage bucket (`billing account disabled`). Upgrade in Firebase Console → ⚙️ → Usage and billing → Modify plan → Blaze, then **Build → Storage → Get started**.
 
 Verify storage from your machine (same env as production):
 
