@@ -9,6 +9,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 import { getPublicEnv, getServerEnv, isUsingEmulators } from "@/lib/env";
+import { normalizeBucketName, storageBucketCandidates } from "@/lib/firebase-storage-bucket";
 
 function ensureEmulatorEnv() {
   if (!isUsingEmulators()) return;
@@ -33,8 +34,12 @@ export function getAdminApp(): App {
     serverEnv.FIREBASE_ADMIN_PROJECT_ID ??
     publicEnv.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 
+  const storageBucket =
+    normalizeBucketName(publicEnv.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET) ||
+    storageBucketCandidates(projectId)[0];
+
   if (isUsingEmulators()) {
-    return initializeApp({ projectId });
+    return initializeApp({ projectId, storageBucket });
   }
 
   if (
@@ -48,7 +53,7 @@ export function getAdminApp(): App {
         privateKey: serverEnv.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
       }),
       projectId,
-      storageBucket: publicEnv.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      storageBucket,
     });
   }
 
@@ -56,7 +61,7 @@ export function getAdminApp(): App {
     return initializeApp({
       credential: applicationDefault(),
       projectId,
-      storageBucket: publicEnv.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+      storageBucket,
     });
   }
 

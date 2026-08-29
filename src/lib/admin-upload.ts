@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { getAdminStorage } from "@/server/auth/firebase-admin";
 import { isUsingSeedFallback } from "@/repositories";
+import { resolveStorageBucketName, storageBucketErrorMessage } from "@/lib/firebase-storage-bucket";
 
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]);
 
@@ -55,17 +56,22 @@ export async function storeAdminUpload(file: {
     return `/uploads/${filename}`;
   }
 
-  const bucket = getAdminStorage().bucket();
+  const bucketName = await resolveStorageBucketName();
+  const bucket = getAdminStorage().bucket(bucketName);
   const objectPath = `admin/${filename}`;
   const token = randomUUID();
   const object = bucket.file(objectPath);
-  await object.save(file.buffer, {
-    contentType: mimetype,
-    metadata: {
+  try {
+    await object.save(file.buffer, {
+      contentType: mimetype,
       metadata: {
-        firebaseStorageDownloadTokens: token,
+        metadata: {
+          firebaseStorageDownloadTokens: token,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    throw new Error(storageBucketErrorMessage(error, "بارکردنی فایل سەرکەوتوو نەبوو."));
+  }
   return `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(objectPath)}?alt=media&token=${token}`;
 }

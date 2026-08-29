@@ -17,7 +17,8 @@
     "download:map-pdfs": "tsx scripts/download-map-pdfs.ts",
     "admin:create-user": "tsx scripts/create-admin-user.ts",
     "admin:authorize-domains": "tsx scripts/authorize-site-domains.ts",
-    "admin:smoke": "tsx scripts/admin-smoke.ts"
+    "admin:smoke": "tsx scripts/admin-smoke.ts",
+    "admin:verify-storage": "tsx scripts/verify-firebase-storage.ts"
   },
   "engines": {
     "node": ">=20"

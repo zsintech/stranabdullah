@@ -14,7 +14,7 @@ PORT=3001
 
 ## Admin CMS + production content (Firestore)
 
-Enable Email/Password in Firebase Authentication. Create Firestore and Storage.
+Enable Email/Password in Firebase Authentication. Create **Firestore** and **Storage** (Build → Storage → Get started).
 
 ```
 CONTENT_SOURCE=firestore
@@ -34,6 +34,20 @@ SESSION_EXPIRES_DAYS=14
 COOKIE_SIGNATURE_SECRET=
 CSRF_SECRET=
 PUBLIC_SITE_URL=https://stranabdullah.org
+```
+
+**Storage bucket:** copy the exact name from Firebase Console → Build → Storage (often `your-project-id.firebasestorage.app` or `your-project-id.appspot.com`). Set it as `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` on Render. Without enabling Storage first, uploads fail with “bucket does not exist”.
+
+Verify storage from your machine (same env as production):
+
+```bash
+npm run admin:verify-storage
+```
+
+Deploy storage rules once (optional):
+
+```bash
+npx firebase deploy --only storage
 ```
 
 `COOKIE_SIGNATURE_SECRET` signs httpOnly cookies (session + CSRF cookie). `CSRF_SECRET` HMACs the CSRF token value itself. Generate long random strings for both in production (Render blueprint can auto-generate them).

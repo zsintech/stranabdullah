@@ -32,6 +32,12 @@ Deploy Firestore indexes once:
 npx firebase deploy --only firestore:indexes
 ```
 
+Verify Firebase Storage (admin uploads):
+
+```bash
+npm run admin:verify-storage
+```
+
 ## Render
 
 Blueprint: `render.yaml` (free web service). Set Firebase credentials and `ADMIN_ALLOWED_EMAILS` in the Render dashboard, then run the migration once against that project. Until Firebase is configured the public site still falls back to seed content.

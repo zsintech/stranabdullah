@@ -5,6 +5,7 @@ import { consumeAdminFlash, setAdminFlash, setAdminSession, clearAdminSession, i
 import { assertCsrf, CsrfError, issueCsrf, readCsrf } from "@/lib/csrf";
 import { AuthError, signInWithPassword } from "@/lib/firebase-password";
 import { storeAdminUpload, isAllowedUpload, inferUploadMime } from "@/lib/admin-upload";
+import { storageBucketErrorMessage } from "@/lib/firebase-storage-bucket";
 import { renderPage } from "@/lib/render-page";
 import { renderAdmin } from "@/lib/render-admin";
 import { coverOf } from "@/lib/view-helpers";
@@ -42,7 +43,7 @@ function uploadErrorMessage(error: unknown): string {
   if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
     return "قەبارەی فایل لە ٤٠ مێگابایت گەورەترە.";
   }
-  return error instanceof Error ? error.message : "بارکردنی فایل سەرکەوتوو نەبوو.";
+  return storageBucketErrorMessage(error, error instanceof Error ? error.message : "بارکردنی فایل سەرکەوتوو نەبوو.");
 }
 
 const router = Router();
