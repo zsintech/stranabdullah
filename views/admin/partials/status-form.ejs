@@ -1,0 +1,11 @@
+<form
+  method="post"
+  action="/admin/items/<%= entry.id %>/status"
+  class="admin-inline-form<%= typeof extraClass !== "undefined" && extraClass ? " " + extraClass : "" %>"
+  <% if (typeof confirm !== "undefined" && confirm) { %>onsubmit="return confirm('<%= confirm %>');"<% } %>
+>
+  <input type="hidden" name="_csrf" value="<%= csrf %>" />
+  <input type="hidden" name="status" value="<%= status %>" />
+  <input type="hidden" name="back" value="<%= back %>" />
+  <button class="btn btn-sm <%= buttonClass || "btn-secondary" %>" type="submit"><%= label %></button>
+</form>

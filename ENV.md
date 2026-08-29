@@ -55,3 +55,5 @@ npx tsx scripts/migrate-seed-to-firestore.ts
 ```
 
 Admin UI: `/admin/login`.
+
+For reliable admin saves in production, upgrade the Firebase project to **Blaze** (pay-as-you-go). The free Spark tier has daily Firestore read/write limits; when exhausted, the admin UI still loads but saves fail until the quota resets (~midnight Pacific).

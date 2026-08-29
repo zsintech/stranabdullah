@@ -1,0 +1,15 @@
+<% if (typeof breadcrumbs !== "undefined" && breadcrumbs && breadcrumbs.length) { %>
+<nav class="admin-breadcrumb" aria-label="ڕێڕەو">
+  <ol class="admin-breadcrumb__list">
+    <% breadcrumbs.forEach(function (crumb, idx) { %>
+    <li class="admin-breadcrumb__item">
+      <% if (crumb.href) { %>
+      <a href="<%= crumb.href %>"><%= crumb.label %></a>
+      <% } else { %>
+      <span aria-current="page"><%= crumb.label %></span>
+      <% } %>
+    </li>
+    <% }); %>
+  </ol>
+</nav>
+<% } %>

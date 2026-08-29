@@ -1,4 +1,5 @@
 <section class="admin-items-page">
+  <%- include("partials/breadcrumb") %>
   <header class="admin-page-header">
     <div>
       <h1 class="t-h2">تۆمارەکان</h1>
@@ -7,6 +8,14 @@
     <a class="btn btn-primary" href="/admin/items/new">+ نوێ</a>
   </header>
   <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
+
+  <div class="admin-quick-actions admin-quick-actions--compact">
+    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=interview">چاوپێکەوتن</a>
+    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=podcast">پۆدکاست</a>
+    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=video">ڤیدیۆ</a>
+    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=photo">وێنە</a>
+    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new">نووسین</a>
+  </div>
 
   <form method="get" action="/admin/items" class="admin-filters admin-filters--bar float-saucer float-saucer--rounded">
     <input class="field" name="q" value="<%= filters.q %>" placeholder="گەڕان بە ناونیشان..." />
@@ -35,6 +44,8 @@
     <% items.forEach(function (entry) { %>
     <% const thumb = visualOf(entry); %>
     <% const isBook = entry.contentType === "book" || entry.contentType === "audiobook"; %>
+    <% const mediaBadge = { interview: "چاوپێکەوتن", podcast: "پۆدکاست", video: "ڤیدیۆ", photo: "وێنە" }; %>
+    <% const mediaBadgeKind = { interview: "youtube", podcast: "youtube", video: "youtube", photo: "photo" }; %>
     <article class="admin-item-row float-saucer float-saucer--rounded">
       <a class="admin-item-row__thumb<%= isBook ? " admin-item-row__thumb--book" : "" %>" href="/admin/items/<%= entry.id %>">
         <% if (thumb) { %>
@@ -46,6 +57,9 @@
       <div class="admin-item-row__main">
         <div class="admin-item-row__head">
           <a class="admin-item-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
+          <% if (mediaBadge[entry.contentType]) { %>
+          <span class="admin-badge admin-badge--type admin-badge--<%= mediaBadgeKind[entry.contentType] %>"><%= mediaBadge[entry.contentType] %></span>
+          <% } %>
           <% if (entry.featured) { %><span class="admin-badge admin-badge--featured">تایبەت</span><% } %>
           <% if (entry.extras && entry.extras.homeGallery) { %><span class="admin-badge admin-badge--gallery">سەرەکی · وێنە</span><% } %>
         </div>
@@ -56,23 +70,18 @@
         </p>
       </div>
       <div class="admin-item-row__actions">
-        <% if (entry.status !== "published") { %>
-        <form method="post" action="/admin/items/<%= entry.id %>/status">
-          <input type="hidden" name="_csrf" value="<%= csrf %>" />
-          <input type="hidden" name="status" value="published" />
-          <input type="hidden" name="back" value="/admin/items" />
-          <button class="btn btn-sm btn-primary" type="submit">بڵاوکردنەوە</button>
-        </form>
-        <% } else { %>
-        <a class="btn btn-sm btn-light" href="/archive/<%= entry.slug %>" target="_blank" rel="noopener">بینین</a>
-        <form method="post" action="/admin/items/<%= entry.id %>/status">
-          <input type="hidden" name="_csrf" value="<%= csrf %>" />
-          <input type="hidden" name="status" value="draft" />
-          <input type="hidden" name="back" value="/admin/items" />
-          <button class="btn btn-sm btn-secondary" type="submit">ڕەشنووس</button>
-        </form>
-        <% } %>
         <a class="btn btn-sm btn-secondary" href="/admin/items/<%= entry.id %>">دەستکاری</a>
+        <% if (entry.status === "published") { %>
+        <a class="btn btn-sm btn-light" href="/archive/<%= entry.slug %>" target="_blank" rel="noopener">بینین</a>
+        <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
+        <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
+        <% } else if (entry.status === "draft") { %>
+        <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin/items", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
+        <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
+        <% } else if (entry.status === "archived") { %>
+        <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin/items", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
+        <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
+        <% } %>
       </div>
     </article>
     <% }); %>

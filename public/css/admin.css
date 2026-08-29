@@ -417,7 +417,18 @@
   .admin-item-row__actions {
     grid-column: auto;
     justify-content: flex-end;
+    flex-wrap: nowrap;
   }
+}
+
+.admin-badge--type.admin-badge--youtube {
+  background: color-mix(in srgb, #c4302b 14%, white);
+  color: #8b1a12;
+}
+
+.admin-badge--type.admin-badge--photo {
+  background: color-mix(in srgb, var(--forest) 14%, white);
+  color: var(--forest-800);
 }
 
 /* Editor layout */
@@ -905,6 +916,226 @@
   background: color-mix(in srgb, #8b2e2e 12%, white);
 }
 
+.admin-flash__link {
+  display: inline-block;
+  margin-inline-start: 0.65rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.admin-login__note {
+  margin: 1.25rem 0 0;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.admin-flash__link--secondary {
+  margin-inline-start: 0.45rem;
+}
+
+.admin-breadcrumb {
+  margin: 0 0 1rem;
+}
+
+.admin-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.82rem;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.admin-breadcrumb__item:not(:last-child)::after {
+  content: "›";
+  margin-inline-start: 0.5rem;
+  opacity: 0.55;
+}
+
+.admin-breadcrumb__item a {
+  color: var(--forest-800);
+  text-decoration: none;
+}
+
+.admin-breadcrumb__item a:hover {
+  text-decoration: underline;
+}
+
+.admin-workflow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-workflow__step {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  background: color-mix(in srgb, var(--forest) 8%, white);
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+  border: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
+}
+
+.admin-workflow__step.is-current {
+  border-color: color-mix(in srgb, var(--gold, #dca927) 55%, var(--forest-950));
+  background: color-mix(in srgb, var(--gold, #dca927) 14%, white);
+  color: var(--forest-950);
+  font-weight: 700;
+}
+
+.admin-workflow__step.is-done {
+  background: color-mix(in srgb, var(--forest) 16%, white);
+  color: var(--forest-900);
+}
+
+.admin-kind-details {
+  padding: 0;
+  overflow: hidden;
+}
+
+.admin-kind-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-kind-summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-kind-summary__toggle {
+  font-size: 0.78rem;
+  color: var(--forest-700);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.admin-kind-details__body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--forest) 10%, transparent);
+}
+
+.admin-kind-details:not([open]) .admin-kind-details__body {
+  display: none;
+}
+
+.admin-draft-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-draft-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+}
+
+.admin-draft-row__title {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--forest-950);
+}
+
+.admin-draft-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.admin-quick-actions--compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.admin-quick-action--compact {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--forest) 14%, transparent);
+  background: color-mix(in srgb, var(--cream-100, #f4efe4) 60%, white);
+  color: var(--forest-900);
+}
+
+.admin-quick-action--compact:hover {
+  border-color: color-mix(in srgb, var(--gold, #dca927) 45%, var(--forest-950));
+}
+
+.admin-form-footer--sticky {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  padding: 0.85rem 0;
+  margin-top: 0.5rem;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--cream-100, #f4efe4) 95%, white) 70%,
+    transparent
+  );
+}
+
+@media (min-width: 960px) {
+  .admin-form-footer--sticky {
+    position: static;
+    background: none;
+    padding-bottom: 0;
+  }
+}
+
+.admin-btn-hide {
+  background: color-mix(in srgb, #6b4a4a 12%, white);
+  border-color: color-mix(in srgb, #6b4a4a 28%, transparent);
+  color: #5c3030;
+}
+
+.admin-btn-hide:hover {
+  background: color-mix(in srgb, #6b4a4a 18%, white);
+}
+
+.admin-banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.admin-banner--archived {
+  background: color-mix(in srgb, #6b4a4a 10%, white);
+  border: 1px solid color-mix(in srgb, #6b4a4a 22%, transparent);
+  color: #4a2828;
+}
+
+.admin-inline-form {
+  display: inline;
+  margin: 0;
+}
+
+.admin-section--archived .admin-draft-row {
+  opacity: 0.92;
+}
+
 .admin-pill {
   display: inline-block;
   margin-inline-start: 0.4rem;
@@ -1072,6 +1303,72 @@
 
 .admin-writing-type {
   margin-top: 0.85rem;
+}
+
+.admin-kind-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+}
+
+.admin-kind-checklist li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--forest) 8%, white);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.admin-kind-checklist li::before {
+  content: "○";
+  font-size: 0.65rem;
+}
+
+.admin-kind-checklist li.is-done {
+  background: color-mix(in srgb, var(--forest) 16%, white);
+  color: var(--forest-900);
+}
+
+.admin-kind-checklist li.is-done::before {
+  content: "●";
+  color: var(--forest-700);
+}
+
+.admin-bio-tabs-head {
+  margin-bottom: 0.25rem;
+}
+
+.admin-bio-preview-card {
+  margin-top: 0;
+}
+
+.admin-bio-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.admin-bio-preview__lead {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  font-weight: 600;
+}
+
+.admin-bio-preview__para {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.admin-portrait-current {
+  margin: 0 0 0.75rem;
+  word-break: break-all;
 }
 
 .admin-youtube-preview {

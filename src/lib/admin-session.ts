@@ -14,6 +14,10 @@ export type AdminSession = {
 export type AdminFlash = {
   type: "ok" | "error";
   message: string;
+  href?: string;
+  hrefLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
 };
 
 function cookieName(): string {
@@ -87,6 +91,10 @@ export function consumeAdminFlash(req: Request, res: Response): AdminFlash | und
     const parsed = JSON.parse(raw) as AdminFlash;
     if (parsed.type !== "ok" && parsed.type !== "error") return undefined;
     if (typeof parsed.message !== "string") return undefined;
+    if (parsed.href !== undefined && typeof parsed.href !== "string") return undefined;
+    if (parsed.hrefLabel !== undefined && typeof parsed.hrefLabel !== "string") return undefined;
+    if (parsed.secondaryHref !== undefined && typeof parsed.secondaryHref !== "string") return undefined;
+    if (parsed.secondaryLabel !== undefined && typeof parsed.secondaryLabel !== "string") return undefined;
     return parsed;
   } catch {
     return undefined;

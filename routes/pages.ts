@@ -7,7 +7,7 @@ import { kuDigits } from "@/lib/format";
 import { countBy, pickUnused } from "@/lib/home";
 import { coverOf } from "@/lib/view-helpers";
 import { renderPage } from "@/lib/render-page";
-import { getAdminContentRepository, withContentRepo } from "@/repositories";
+import { withContentRepo, withAdminRepo } from "@/repositories";
 import type { ContentItem } from "@/types/content";
 import { DEFAULT_BIOGRAPHY } from "@/types/biography";
 
@@ -93,7 +93,7 @@ router.get(
 
     let biography = DEFAULT_BIOGRAPHY;
     try {
-      biography = await getAdminContentRepository().getBiography();
+      biography = await withAdminRepo((repo) => repo.getBiography());
     } catch {
       biography = DEFAULT_BIOGRAPHY;
     }

@@ -320,6 +320,24 @@
   const labelSummary = form.querySelector("[data-label-summary]");
   const labelCover = form.querySelector("[data-label-cover]");
   const hintCover = form.querySelector("[data-hint-cover]");
+  const kindLabelEl = form.querySelector("[data-kind-label]");
+  const workflow = form.querySelector("[data-workflow]");
+
+  const KIND_LABELS = {
+    interview: "چاوپێکەوتن",
+    podcast: "پۆدکاست",
+    video: "ڤیدیۆی ئەرشیف",
+    photo: "وێنە",
+    book: "کتێب",
+    audiobook: "کتێبی دەنگی",
+    article: "وتار",
+    speech: "وتە",
+    opinion: "بۆچوون",
+    statement: "لێدوان",
+    announcement: "ڕاگەیاندن",
+    document: "بەڵگەنامە",
+    other: "هیتر",
+  };
 
   function currentKind() {
     const checked = form.querySelector("[data-kind]:checked");
@@ -348,7 +366,7 @@
     setPanel("cover", true);
     setPanel("home-gallery", isPhoto);
     setPanel("pdf", isBook);
-    setPanel("body", isWriting || isBook);
+    setPanel("body", isBook || (isWriting && !isPhoto));
     setPanel("writing-extra", isWriting);
 
     if (labelTitle) labelTitle.textContent = isPhoto ? "سەردێڕی وێنە" : isYt ? "ناونیشانی ڤیدیۆ" : "ناونیشان";
@@ -372,7 +390,152 @@
           ? "وێنە بار بکە — ئەمە لە پەڕەی میدیا و کارۆسێلی سەرەکی دەردەکەوێت."
           : "وێنە بار بکە یان URL دابنێ.";
     }
+
+    syncKindChecklist(kind);
+    syncWorkflowSteps(kind);
   }
+
+  function syncWorkflowSteps(kind) {
+    if (!workflow) return;
+    const isYt = YT_TYPES.has(kind);
+    const isPhoto = kind === "photo";
+    const isBook = BOOK_TYPES.has(kind);
+    const isWriting = !isYt && !isPhoto && !isBook;
+
+    const steps = workflow.querySelectorAll("[data-workflow-step]");
+    const mediaStep = workflow.querySelector('[data-workflow-step="media"]');
+    const detailsStep = workflow.querySelector('[data-workflow-step="details"]');
+    const publishStep = workflow.querySelector('[data-workflow-step="publish"]');
+
+    if (mediaStep) {
+      mediaStep.textContent = isYt
+        ? "١ · لینکی یوتیوب"
+        : isPhoto
+          ? "١ · وێنە"
+          : isBook
+            ? "١ · بەرگ و PDF"
+            : "١ · ناونیشان";
+    }
+    if (detailsStep) {
+      detailsStep.textContent = isWriting ? "٢ · دەق" : "٢ · وردەکاری";
+    }
+    if (publishStep) publishStep.textContent = "٣ · بڵاوکردنەوە";
+
+    const titleOk = Boolean(titleInput?.value.trim());
+    const ytOk = Boolean(youtubeUrl?.value.trim());
+    const coverInput = form.querySelector("#cover");
+    const coverOk =
+      Boolean(coverUrlField?.value.trim()) ||
+      Boolean(coverInput?.files?.length) ||
+      (isYt && ytOk);
+    const bodyOk = Boolean(bodyInput?.value.trim());
+    const publishedOk = Boolean(form.querySelector('input[name="status"][value="published"]:checked'));
+    const archivedOk = Boolean(form.querySelector('input[name="status"][value="archived"]:checked'));
+
+    let mediaDone = false;
+    if (isYt) mediaDone = ytOk;
+    else if (isPhoto || isBook) mediaDone = coverOk;
+    else mediaDone = titleOk;
+
+    let detailsDone = false;
+    if (isWriting) detailsDone = bodyOk;
+    else detailsDone = titleOk && (isYt ? ytOk : isPhoto || isBook ? coverOk : true);
+
+    steps.forEach((step) => {
+      step.classList.remove("is-done", "is-current");
+    });
+    if (mediaStep) {
+      mediaStep.classList.toggle("is-done", mediaDone);
+      if (!mediaDone) mediaStep.classList.add("is-current");
+    }
+    if (detailsStep) {
+      detailsStep.classList.toggle("is-done", detailsDone);
+      if (mediaDone && !detailsDone) detailsStep.classList.add("is-current");
+    }
+    if (publishStep) {
+      publishStep.textContent = archivedOk ? "٣ · شاردراوەتەوە" : "٣ · بڵاوکردنەوە";
+      publishStep.classList.toggle("is-done", publishedOk || archivedOk);
+      if (mediaDone && detailsDone && !publishedOk && !archivedOk) publishStep.classList.add("is-current");
+    }
+
+    if (kindLabelEl) {
+      kindLabelEl.textContent = KIND_LABELS[kind] || kind;
+    }
+  }
+
+  const kindChecklist = form.querySelector("[data-kind-checklist]");
+
+  function syncKindChecklist(kind) {
+    if (!kindChecklist) return;
+    const isYt = YT_TYPES.has(kind);
+    const isPhoto = kind === "photo";
+    const isBook = BOOK_TYPES.has(kind);
+    const show = isYt || isPhoto;
+    kindChecklist.hidden = !show;
+
+    const titleOk = Boolean(titleInput?.value.trim());
+    const ytOk = Boolean(youtubeUrl?.value.trim());
+    const coverInput = form.querySelector("#cover");
+    const coverOk =
+      Boolean(coverUrlField?.value.trim()) ||
+      Boolean(coverInput?.files?.length) ||
+      (isYt && ytOk);
+    const publishedOk = Boolean(form.querySelector('input[name="status"][value="published"]:checked'));
+
+    kindChecklist.querySelectorAll("[data-check]").forEach((item) => {
+      const key = item.getAttribute("data-check");
+      let done = false;
+      if (key === "title") done = titleOk;
+      if (key === "youtube") done = !isYt || ytOk;
+      if (key === "cover") done = isPhoto || isBook ? coverOk : true;
+      if (key === "published") done = publishedOk;
+      item.classList.toggle("is-done", done);
+      item.hidden = key === "youtube" && !isYt;
+    });
+  }
+
+  if (kindChecklist) {
+    form.addEventListener("input", () => {
+      const kind = currentKind();
+      syncKindChecklist(kind);
+      syncWorkflowSteps(kind);
+    });
+    form.addEventListener("change", () => {
+      const kind = currentKind();
+      syncKindChecklist(kind);
+      syncWorkflowSteps(kind);
+    });
+  }
+
+  function validateBeforeSubmit() {
+    const kind = currentKind();
+    const isYt = YT_TYPES.has(kind);
+    const isPhoto = kind === "photo";
+    const isBook = BOOK_TYPES.has(kind);
+    const coverInput = form.querySelector("#cover");
+    const hasCover =
+      Boolean(coverUrlField?.value.trim()) || Boolean(coverInput?.files?.length);
+
+    if (isYt && !youtubeUrl?.value.trim()) {
+      window.alert("لینکی یوتیوب پێویستە بۆ ئەم جۆرە.");
+      youtubeUrl?.focus();
+      return false;
+    }
+    if ((isPhoto || isBook) && !hasCover) {
+      window.alert(isPhoto ? "وێنە پێویستە — فایل بار بکە یان URL دابنێ." : "وێنەی بەرگ پێویستە بۆ کتێب.");
+      form.querySelector("[data-panel='cover']")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return false;
+    }
+    return true;
+  }
+
+  form.addEventListener(
+    "submit",
+    (event) => {
+      if (!validateBeforeSubmit()) event.preventDefault();
+    },
+    true,
+  );
 
   kindRadios.forEach((radio) => {
     radio.addEventListener("change", () => {
@@ -444,4 +607,64 @@
   }
 
   syncKindUi();
+  syncWorkflowSteps(currentKind());
+})();
+
+(function () {
+  const bioForm = document.querySelector("[data-admin-bio]");
+  if (!bioForm) return;
+
+  const editPanel = bioForm.querySelector("[data-bio-edit-panel]");
+  const previewPanel = bioForm.querySelector("[data-bio-preview-panel]");
+  const previewContent = bioForm.querySelector("[data-bio-preview-content]");
+  const previewName = bioForm.querySelector("[data-bio-preview-name]");
+  const nameInput = bioForm.querySelector("[data-bio-name]");
+  const introInput = bioForm.querySelector("[data-bio-intro]");
+  const bodyInput = bioForm.querySelector("[data-bio-body]");
+  const tabButtons = bioForm.querySelectorAll("[data-bio-tab]");
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function renderBioPreview() {
+    if (!previewContent) return;
+    const name = nameInput?.value.trim() || "";
+    if (previewName) previewName.textContent = name;
+    const blocks = [];
+    String(introInput?.value || "")
+      .split(/\n+/)
+      .filter(Boolean)
+      .forEach((para, idx) => {
+        const cls = idx === 0 ? "admin-bio-preview__lead" : "admin-bio-preview__para";
+        blocks.push(`<p class="${cls}">${escapeHtml(para)}</p>`);
+      });
+    String(bodyInput?.value || "")
+      .split(/\n+/)
+      .filter(Boolean)
+      .forEach((para) => {
+        blocks.push(`<p class="admin-bio-preview__para">${escapeHtml(para)}</p>`);
+      });
+    previewContent.innerHTML =
+      blocks.join("") || '<p class="admin-preview-empty">هیچ دەقێک نییە.</p>';
+  }
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const tab = button.getAttribute("data-bio-tab");
+      tabButtons.forEach((entry) => {
+        const active = entry === button;
+        entry.classList.toggle("is-active", active);
+        entry.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      if (editPanel) editPanel.hidden = tab !== "edit";
+      if (previewPanel) {
+        previewPanel.hidden = tab !== "preview";
+        if (tab === "preview") renderBioPreview();
+      }
+    });
+  });
 })();

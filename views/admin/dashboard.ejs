@@ -1,4 +1,5 @@
 <section class="admin-dashboard">
+  <%- include("partials/breadcrumb") %>
   <header class="admin-page-header">
     <div>
       <h1 class="t-h2">بەڕێوەبەر</h1>
@@ -53,6 +54,53 @@
       <span>دەق و وێنەی پەڕەی ژیاننامە</span>
     </a>
   </div>
+
+  <% if (drafts && drafts.length) { %>
+  <section class="admin-section admin-section--drafts">
+    <div class="admin-section__head">
+      <h2 class="t-h3">ڕەشنووسەکان — چاوەڕێی بڵاوکردنەوە</h2>
+      <a class="t-meta admin-link" href="/admin/items?status=draft">هەموویان ←</a>
+    </div>
+    <ul class="admin-draft-list">
+      <% drafts.forEach(function (entry) { %>
+      <li class="admin-draft-row float-saucer float-saucer--rounded">
+        <div class="admin-draft-row__main">
+          <a class="admin-draft-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
+          <p class="t-meta"><%= contentTypeLabels[entry.contentType] %></p>
+        </div>
+        <div class="admin-draft-row__actions">
+          <a class="btn btn-sm btn-light" href="/admin/items/<%= entry.id %>">دەستکاری</a>
+          <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
+          <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
+        </div>
+      </li>
+      <% }); %>
+    </ul>
+  </section>
+  <% } %>
+
+  <% if (archived && archived.length) { %>
+  <section class="admin-section admin-section--archived">
+    <div class="admin-section__head">
+      <h2 class="t-h3">شاردراوەکان</h2>
+      <a class="t-meta admin-link" href="/admin/items?status=archived">هەموویان ←</a>
+    </div>
+    <ul class="admin-draft-list">
+      <% archived.forEach(function (entry) { %>
+      <li class="admin-draft-row float-saucer float-saucer--rounded">
+        <div class="admin-draft-row__main">
+          <a class="admin-draft-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
+          <p class="t-meta"><%= contentTypeLabels[entry.contentType] %> · <%= statusLabels[entry.status] %></p>
+        </div>
+        <div class="admin-draft-row__actions">
+          <a class="btn btn-sm btn-light" href="/admin/items/<%= entry.id %>">دەستکاری</a>
+          <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
+        </div>
+      </li>
+      <% }); %>
+    </ul>
+  </section>
+  <% } %>
 
   <section class="admin-section">
     <div class="admin-section__head">

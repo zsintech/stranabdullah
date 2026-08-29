@@ -4,14 +4,23 @@
   const coverAlt = item && item.media.coverImage && item.media.coverImage.alt ? item.media.coverImage.alt : "";
   const documentUrl = item && item.media && item.media.documentUrl ? item.media.documentUrl : "";
   const videoUrl = item && item.media && item.media.videoUrl ? item.media.videoUrl : "";
-  const currentStatus = item ? item.status : "draft";
+  const currentStatus = item ? item.status : (typeof defaultStatus !== "undefined" ? defaultStatus : "draft");
   const activeType = item ? item.contentType : (typeof defaultType !== "undefined" && defaultType ? defaultType : "article");
   const ytThumb = videoUrl ? youtubeThumbnail(videoUrl) : "";
   const mediaKinds = ["interview", "podcast", "video", "photo", "book", "audiobook"];
   const isWritingKind = mediaKinds.indexOf(activeType) < 0;
   const isBookKind = activeType === "book" || activeType === "audiobook";
+  const isMediaKind = ["interview", "podcast", "video", "photo"].indexOf(activeType) >= 0;
+  const quickAddFlow = !item && (typeof fromQuickAdd !== "undefined" && fromQuickAdd);
+  const isArchived = item && item.status === "archived";
+  const isPublished = item && item.status === "published";
+  const isDraft = item && item.status === "draft";
 %>
 <section class="admin-editor-page">
+  <%- include("partials/breadcrumb") %>
+  <% if (isArchived) { %>
+  <p class="admin-banner admin-banner--archived">ئەم تۆمارە شاردراوەتەوە — لە ماڵپەڕدا نیشان نادرێت. بۆ گەڕاندنەوە دۆخ بگۆڕە بۆ بڵاوکراوە یان ڕەشنووس.</p>
+  <% } %>
   <header class="admin-editor-header">
     <div>
       <p class="admin-kicker"><%= item ? "دەستکاری" : "نوێ" %></p>
@@ -20,11 +29,20 @@
     <div class="admin-editor-header__actions">
       <% if (item) { %>
       <a class="btn btn-light btn-sm" href="/admin/items/<%= item.id %>/preview" target="_blank" rel="noopener">پێشبینین</a>
-      <% if (item.status === "published") { %>
+      <% if (isPublished) { %>
       <a class="btn btn-light btn-sm" href="/archive/<%= item.slug %>" target="_blank" rel="noopener">بینینی گشتی</a>
+      <button class="btn btn-sm admin-btn-hide" type="submit" form="item-form" name="intent" value="archive_list">شاردنەوە</button>
+      <% } else if (isDraft) { %>
+      <button class="btn btn-sm admin-btn-hide" type="submit" form="item-form" name="intent" value="archive_list">شاردنەوە</button>
+      <% } else if (isArchived) { %>
+      <button class="btn btn-secondary btn-sm" type="submit" form="item-form" name="intent" value="publish">بڵاوکردنەوە</button>
       <% } %>
       <% } %>
-      <button class="btn btn-primary btn-sm" type="submit" form="item-form">پاشەکەوت</button>
+      <button class="btn btn-primary btn-sm" type="submit" form="item-form" name="intent" value="save">پاشەکەوت</button>
+      <button class="btn btn-secondary btn-sm" type="submit" form="item-form" name="intent" value="publish">پاشەکەوت و بڵاوکردنەوە</button>
+      <% if (isMediaKind) { %>
+      <button class="btn btn-light btn-sm" type="submit" form="item-form" name="intent" value="publish_new">بڵاوکردنەوە و نوێی تر</button>
+      <% } %>
     </div>
   </header>
   <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
@@ -41,7 +59,18 @@
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
 
     <div class="admin-editor-main">
-      <div class="admin-card float-saucer float-saucer--rounded admin-kind-card">
+      <ol class="admin-workflow" data-workflow aria-label="هەنگاوەکان">
+        <li class="admin-workflow__step" data-workflow-step="media">١ · میدیا</li>
+        <li class="admin-workflow__step" data-workflow-step="details">٢ · وردەکاری</li>
+        <li class="admin-workflow__step" data-workflow-step="publish">٣ · بڵاوکردنەوە</li>
+      </ol>
+
+      <details class="admin-kind-details float-saucer float-saucer--rounded admin-card admin-kind-card" <%= quickAddFlow ? "" : "open" %> data-kind-details>
+        <summary class="admin-kind-summary">
+          <span class="admin-kind-summary__label">جۆری تۆمار: <strong data-kind-label><%= contentTypeLabels[activeType] %></strong></span>
+          <span class="admin-kind-summary__toggle">گۆڕین</span>
+        </summary>
+        <div class="admin-kind-details__body">
         <h2 class="admin-card__title">جۆری تۆمار</h2>
         <p class="admin-card__hint">هەڵبژێرە ئەم تۆمارە لە کوێ دەردەکەوێت — سێ جۆری یوتیوب لە پەڕەی میدیا، وێنە، یان نووسین/کتێب.</p>
         <div class="admin-kind-grid" role="radiogroup" aria-label="جۆری تۆمار" data-kind-grid>
@@ -85,7 +114,15 @@
             <% }); %>
           </select>
         </div>
-      </div>
+
+        <ul class="admin-kind-checklist" data-kind-checklist hidden>
+          <li data-check="title">ناونیشان</li>
+          <li data-check="youtube">لینکی یوتیوب</li>
+          <li data-check="cover">وێنەی بەرگ</li>
+          <li data-check="published">بڵاوکراوە</li>
+        </ul>
+        </div>
+      </details>
 
       <div class="admin-card float-saucer float-saucer--rounded">
         <div class="admin-field-stack">
@@ -291,15 +328,22 @@
         </div>
       </details>
 
-      <div class="admin-form-footer">
-        <button class="btn btn-primary" type="submit">پاشەکەوت</button>
-        <a class="btn btn-secondary" href="/admin/items">گەڕانەوە</a>
+      <div class="admin-form-footer admin-form-footer--sticky">
+        <button class="btn btn-primary" type="submit" name="intent" value="save">پاشەکەوت</button>
+        <button class="btn btn-secondary" type="submit" name="intent" value="publish">پاشەکەوت و بڵاوکردنەوە</button>
+        <button class="btn btn-light" type="submit" name="intent" value="save_list">پاشەکەوت و گەڕانەوە</button>
+        <button class="btn admin-btn-hide" type="submit" name="intent" value="archive_list">پاشەکەوت و شاردنەوە</button>
+        <% if (isMediaKind) { %>
+        <button class="btn btn-light" type="submit" name="intent" value="publish_new">بڵاوکردنەوە و نوێی تر</button>
+        <% } %>
+        <a class="btn btn-light" href="/admin/items">گەڕانەوە</a>
       </div>
     </div>
 
     <aside class="admin-editor-sidebar">
       <div class="admin-card float-saucer float-saucer--rounded">
         <h2 class="admin-card__title">دۆخ</h2>
+        <p class="admin-card__hint">بڵاوکراوە = لە ماڵپەڕدا · ڕەشنووس = تەنها لێرە · شاردراوەتەوە = شاردن لە ماڵپەڕ</p>
         <div class="admin-status-picker">
           <% ["draft", "published", "archived"].forEach(function (status) { %>
           <label class="admin-status-option admin-status-option--<%= status %>">
@@ -352,4 +396,4 @@
   </form>
   <% } %>
 </section>
-<script src="/js/admin-editor.js?v=20260827d" defer></script>
+<script src="/js/admin-editor.js?v=20260829c" defer></script>

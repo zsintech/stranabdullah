@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { asyncHandler } from "@/lib/async-handler";
-import { consumeAdminFlash, setAdminFlash, setAdminSession, clearAdminSession, isAllowedAdminEmail, allowedAdminEmails, readAdminSession } from "@/lib/admin-session";
+import { consumeAdminFlash, setAdminFlash, setAdminSession, clearAdminSession, isAllowedAdminEmail, allowedAdminEmails, readAdminSession, type AdminFlash } from "@/lib/admin-session";
 import { assertCsrf, CsrfError, issueCsrf, readCsrf } from "@/lib/csrf";
 import { AuthError, signInWithPassword } from "@/lib/firebase-password";
 import { storeAdminUpload, isAllowedUpload, inferUploadMime } from "@/lib/admin-upload";
@@ -14,9 +14,10 @@ import { sourceOutletLabel } from "@/lib/content-labels";
 import { requireAdmin } from "@/middleware/require-admin";
 import { isUsingSeedFallback, isFirestoreDegraded, withAdminRepo, adminErrorMessage } from "@/repositories";
 import { splitList } from "@/lib/slug";
-import { contentTypes, type ContentStatus, type ContentType } from "@/types/content";
+import { contentTypes, type ContentStatus, type ContentType, type ContentItem } from "@/types/content";
 import { DEFAULT_BIOGRAPHY } from "@/types/biography";
 import { contentTypeLabels } from "@/lib/content-labels";
+import type { Response } from "express";
 import type { ContentDraftInput } from "@/repositories/content-repository";
 
 const upload = multer({
@@ -55,7 +56,7 @@ const statusLabels: Record<ContentStatus, string> = {
 const statusHints: Record<ContentStatus, string> = {
   draft: "تەنها لە بەڕێوەبەر دەردەکەوێت — لە ماڵپەڕدا نییە",
   published: "لە ماڵپەڕدا دەردەکەوێت",
-  archived: "شاردراوەتەوە — لە ماڵپەڕدا نییە",
+  archived: "لە ماڵپەڕدا نیشان نادرێت — دەتوانیت دووبارە بڵاوی بکەیتەوە",
 };
 
 function text(body: Record<string, unknown>, key: string): string {
@@ -70,6 +71,13 @@ function draftFromBody(
   const publishedDate = text(body, "publishedAt");
   const yearRaw = text(body, "year");
   const documentFromBody = text(body, "documentUrl") || undefined;
+  const intent = text(body, "intent");
+  const status =
+    intent === "publish" || intent === "publish_list" || intent === "publish_new"
+      ? "published"
+      : intent === "archive" || intent === "archive_list"
+        ? "archived"
+        : ((text(body, "status") || "draft") as ContentStatus);
   return {
     slug: text(body, "slug") || undefined,
     title: text(body, "title"),
@@ -79,7 +87,7 @@ function draftFromBody(
     bodyFormat: text(body, "bodyFormat") === "plain" ? "plain" : "markdown",
     contentType: (text(body, "contentType") || "article") as ContentType,
     language: (text(body, "language") || "ku") as ContentDraftInput["language"],
-    status: (text(body, "status") || "draft") as ContentStatus,
+    status,
     publishedAt: publishedDate ? new Date(`${publishedDate}T12:00:00.000Z`).toISOString() : undefined,
     year: yearRaw ? Number(yearRaw) : undefined,
     location: text(body, "location") || undefined,
@@ -116,6 +124,49 @@ function safeNext(value: unknown): string {
   if (typeof value !== "string") return "/admin";
   if (!value.startsWith("/admin")) return "/admin";
   return value;
+}
+
+const MEDIA_QUICK_TYPES = new Set<ContentType>(["interview", "podcast", "video", "photo"]);
+
+function publicUrlForItem(item: Pick<ContentItem, "status" | "slug">): string | undefined {
+  if (item.status !== "published" || !item.slug) return undefined;
+  return `/archive/${item.slug}`;
+}
+
+function itemSavedFlash(item: ContentItem, baseMessage: string): AdminFlash {
+  const href = publicUrlForItem(item);
+  const message =
+    item.status === "published" && href
+      ? `${baseMessage} ئێستا لە ماڵپەڕدا دەردەکەوێت.`
+      : item.status === "archived"
+        ? `${baseMessage} لە ماڵپەڕدا نیشان نادرێت.`
+        : baseMessage;
+  return { type: "ok", message, href, hrefLabel: href ? "بینین لە ماڵپەڕ" : undefined };
+}
+
+function archiveFlash(message = "تۆمار شاردرایەوە.") {
+  return { type: "ok" as const, message: `${message} لە ماڵپەڕدا نیشان نادرێت.` };
+}
+
+function saveIntent(body: Record<string, unknown>): string {
+  return text(body, "intent") || "save";
+}
+
+function redirectAfterItemSave(res: Response, item: ContentItem, intent: string, message: string): void {
+  if (intent === "archive" || intent === "archive_list") {
+    setAdminFlash(res, archiveFlash(message));
+  } else {
+    setAdminFlash(res, itemSavedFlash(item, message));
+  }
+  if (intent === "save_list" || intent === "publish_list" || intent === "archive_list") {
+    res.redirect("/admin/items");
+    return;
+  }
+  if (intent === "publish_new") {
+    res.redirect(`/admin/items/new?type=${encodeURIComponent(item.contentType)}`);
+    return;
+  }
+  res.redirect(`/admin/items/${item.id}`);
 }
 
 router.get(
@@ -213,10 +264,15 @@ router.get(
       archived: items.filter((item) => item.status === "archived").length,
       featured: items.filter((item) => item.featured).length,
     };
+    const drafts = items.filter((item) => item.status === "draft").slice(0, 6);
+    const archived = items.filter((item) => item.status === "archived").slice(0, 6);
     await renderAdmin(res, "dashboard", {
       pageTitle: "بەڕێوەبەر",
       counts,
       recent: items.slice(0, 8),
+      drafts,
+      archived,
+      breadcrumbs: [{ label: "سەرەکی" }],
     });
   }),
 );
@@ -239,6 +295,7 @@ router.get(
       items,
       filters: { status: status ?? "", type: type ?? "", q: q ?? "" },
       contentTypes,
+      breadcrumbs: [{ href: "/admin", label: "سەرەکی" }, { label: "تۆمارەکان" }],
     });
   }),
 );
@@ -250,11 +307,21 @@ router.get(
       typeof req.query.type === "string" && contentTypes.includes(req.query.type as ContentType)
         ? (req.query.type as ContentType)
         : "article";
+    const fromQuickAdd =
+      typeof req.query.type === "string" && contentTypes.includes(req.query.type as ContentType);
+    const defaultStatus: ContentStatus = MEDIA_QUICK_TYPES.has(requested) ? "published" : "draft";
     await renderAdmin(res, "item-form", {
       pageTitle: "تۆماری نوێ",
       item: null,
       contentTypes,
       defaultType: requested,
+      defaultStatus,
+      fromQuickAdd,
+      breadcrumbs: [
+        { href: "/admin", label: "سەرەکی" },
+        { href: "/admin/items", label: "تۆمارەکان" },
+        { label: "نوێ" },
+      ],
     });
   }),
 );
@@ -277,12 +344,12 @@ router.post(
       const body = req.body as Record<string, unknown>;
       const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
       const media = await mediaFromRequest(body, files);
+      const intent = saveIntent(body);
       const item = await withAdminRepo(
         (repo) => repo.create(draftFromBody(body, media), req.adminUser!.email),
         "write",
       );
-      setAdminFlash(res, { type: "ok", message: "تۆمارەکە پاشەکەوت کرا." });
-      res.redirect(`/admin/items/${item.id}`);
+      redirectAfterItemSave(res, item, intent, "تۆمارەکە پاشەکەوت کرا.");
     } catch (error) {
       if (error instanceof CsrfError) {
         setAdminFlash(res, { type: "error", message: "داواکارییەکە بەسەرچوو." });
@@ -308,6 +375,11 @@ router.get(
       pageTitle: item.title,
       item,
       contentTypes,
+      breadcrumbs: [
+        { href: "/admin", label: "سەرەکی" },
+        { href: "/admin/items", label: "تۆمارەکان" },
+        { label: item.title },
+      ],
     });
   }),
 );
@@ -331,9 +403,12 @@ router.post(
       const body = req.body as Record<string, unknown>;
       const files = req.files as { cover?: Express.Multer.File[]; document?: Express.Multer.File[] } | undefined;
       const media = await mediaFromRequest(body, files);
-      await withAdminRepo((repo) => repo.update(id, draftFromBody(body, media), req.adminUser!.email), "write");
-      setAdminFlash(res, { type: "ok", message: "گۆڕانکارییەکان پاشەکەوت کران." });
-      res.redirect(`/admin/items/${id}`);
+      const intent = saveIntent(body);
+      const item = await withAdminRepo(
+        (repo) => repo.update(id, draftFromBody(body, media), req.adminUser!.email),
+        "write",
+      );
+      redirectAfterItemSave(res, item, intent, "گۆڕانکارییەکان پاشەکەوت کران.");
     } catch (error) {
       setAdminFlash(res, {
         type: "error",
@@ -351,8 +426,16 @@ router.post(
       assertCsrf(req);
       const status = text(req.body as Record<string, unknown>, "status") as ContentStatus;
       if (!(status in statusLabels)) throw new Error("دۆخی نادیار.");
-      await withAdminRepo((repo) => repo.setStatus(req.params.id, status, req.adminUser!.email), "write");
-      setAdminFlash(res, { type: "ok", message: `دۆخ بوو بە ${statusLabels[status]}.` });
+      const item = await withAdminRepo(
+        (repo) => repo.setStatus(req.params.id, status, req.adminUser!.email),
+        "write",
+      );
+      setAdminFlash(
+        res,
+        status === "archived"
+          ? archiveFlash(`دۆخ بوو بە ${statusLabels[status]}.`)
+          : itemSavedFlash(item, `دۆخ بوو بە ${statusLabels[status]}.`),
+      );
     } catch (error) {
       setAdminFlash(res, { type: "error", message: adminErrorMessage(error, "گۆڕینی دۆخ سەرکەوتوو نەبوو.") });
     }
@@ -455,6 +538,7 @@ router.get(
     await renderAdmin(res, "biography", {
       pageTitle: "ژیاننامە",
       biography,
+      breadcrumbs: [{ href: "/admin", label: "سەرەکی" }, { label: "ژیاننامە" }],
     });
   }),
 );

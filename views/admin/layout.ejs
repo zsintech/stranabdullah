@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles/app.css?v=20260827c" />
-    <link rel="stylesheet" href="/css/admin.css?v=20260827e" />
+    <link rel="stylesheet" href="/css/admin.css?v=20260829c" />
     <style>
       :root {
         --font-arabic: "Amiri", "Noto Naskh Arabic", serif;
@@ -57,12 +57,20 @@
     <main class="admin-main">
       <div class="site-container admin-main__inner">
         <% if (typeof flash !== "undefined" && flash) { %>
-        <p class="admin-flash admin-flash--<%= flash.type %>"><%= flash.message %></p>
+        <p class="admin-flash admin-flash--<%= flash.type %>">
+          <%= flash.message %>
+          <% if (flash.href) { %>
+          <a href="<%= flash.href %>" target="_blank" rel="noopener" class="admin-flash__link"><%= flash.hrefLabel || "بینین لە ماڵپەڕ" %></a>
+          <% } %>
+          <% if (flash.secondaryHref) { %>
+          <a href="<%= flash.secondaryHref %>" class="admin-flash__link admin-flash__link--secondary"><%= flash.secondaryLabel || "بەردەوامبوون" %></a>
+          <% } %>
+        </p>
         <% } %>
         <% if (typeof seedMode !== "undefined" && seedMode && typeof adminUser !== "undefined" && adminUser) { %>
         <p class="admin-flash admin-flash--error">ئێستا لەسەر ناوەڕۆکی ناوخۆیی (seed) دەنووسیت — گۆڕانکارییەکان دوای ڕیستارتی سێرڤەر نامێنن. بۆ بەرهەم CONTENT_SOURCE=firestore دابنێ.</p>
         <% } else if (typeof firestoreDegraded !== "undefined" && firestoreDegraded && typeof adminUser !== "undefined" && adminUser) { %>
-        <p class="admin-flash admin-flash--error">سنووری Firestore تەواو بووە — لیستەکان کاتی لە ناوەڕۆکی ناوخۆیی دەردەکەون و پاشەکەوتکردن لەوانەیە کار نەکات تا کۆتا دێتەوە.</p>
+        <p class="admin-flash admin-flash--error">سنووری Firestore تەواو بووە — دەتوانیت لیستەکان ببینیت، بەڵام پاشەکەوتکردن کار ناکات تا کۆتای ڕۆژ دێتەوە. بۆ پاشەکەوتکردنی بەردەوام Firebase Blaze دابنێ.</p>
         <% } %>
         <%- body %>
       </div>

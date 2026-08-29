@@ -1,4 +1,5 @@
 <section class="admin-bio-page">
+  <%- include("partials/breadcrumb") %>
   <header class="admin-page-header">
     <div>
       <p class="admin-kicker">ماڵپەڕ</p>
@@ -9,55 +10,77 @@
   </header>
   <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
-  <form method="post" action="/admin/biography" enctype="multipart/form-data" class="admin-form admin-bio-form" data-admin-media>
+  <form method="post" action="/admin/biography" enctype="multipart/form-data" class="admin-form admin-bio-form" data-admin-bio>
     <input type="hidden" name="_csrf" value="<%= csrf %>" />
-    <div class="admin-card float-saucer float-saucer--rounded">
-      <div>
-        <label class="field-label" for="name">ناو</label>
-        <input class="field field--title" id="name" name="name" required value="<%= biography.name %>" />
-      </div>
-      <div>
-        <label class="field-label" for="intro">پێشەکی</label>
-        <textarea class="field admin-textarea" id="intro" name="intro"><%= biography.intro %></textarea>
-      </div>
-      <div>
-        <label class="field-label" for="body">دەقی زیاتر</label>
-        <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body"><%= biography.body %></textarea>
+
+    <div class="admin-compose__head admin-bio-tabs-head">
+      <div class="admin-editor-tabs" role="tablist" aria-label="ژیاننامە">
+        <button type="button" class="admin-editor-tab is-active" data-bio-tab="edit" role="tab" aria-selected="true">دەستکاری</button>
+        <button type="button" class="admin-editor-tab" data-bio-tab="preview" role="tab" aria-selected="false">پێشبینین</button>
       </div>
     </div>
 
-    <div class="admin-card float-saucer float-saucer--rounded">
-      <h2 class="admin-card__title">وێنەی پۆرترێت</h2>
-      <label class="admin-drop" data-drop="image">
-        <input class="admin-drop__input" id="portrait" name="portrait" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
-        <span class="admin-drop__text">کلیک بکە یان وێنە بکێشە ئێرە</span>
-        <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
-      </label>
-      <div class="admin-cover-preview" data-cover-preview <%= biography.portraitUrl ? "" : "hidden" %>>
-        <img src="<%= biography.portraitUrl || "" %>" alt="" />
-      </div>
-      <p class="admin-file-name t-meta" data-file-name hidden></p>
-      <div class="admin-field-stack mt-4">
+    <div data-bio-edit-panel>
+      <div class="admin-card float-saucer float-saucer--rounded">
         <div>
-          <label class="field-label" for="portraitUrl">یان URL</label>
-          <input class="field" id="portraitUrl" name="portraitUrl" dir="ltr" value="<%= biography.portraitUrl %>" data-cover-url />
+          <label class="field-label" for="name">ناو</label>
+          <input class="field field--title" id="name" name="name" required value="<%= biography.name %>" data-bio-name />
         </div>
         <div>
-          <label class="field-label" for="portraitAlt">دەقی جێگرەوەی وێنە</label>
-          <input class="field" id="portraitAlt" name="portraitAlt" value="<%= biography.portraitAlt %>" />
+          <label class="field-label" for="intro">پێشەکی</label>
+          <p class="admin-field-hint">بەشی سەرەکی ژیاننامە — هەر بەشێک بە بەتاڵی جیا بکەرەوە (Enter دووجار).</p>
+          <textarea class="field admin-textarea" id="intro" name="intro" data-bio-intro><%= biography.intro %></textarea>
+        </div>
+        <div>
+          <label class="field-label" for="body">دەق</label>
+          <p class="admin-field-hint">بەشەکانی زیاتر — هەر بەشێک بە بەتاڵی جیا بکەرەوە.</p>
+          <textarea class="field admin-textarea admin-textarea--tall" id="body" name="body" data-bio-body><%= biography.body %></textarea>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded">
+        <h2 class="admin-card__title">وێنەی پۆرترێت</h2>
+        <p class="admin-card__hint">وێنەی ئێستا لە خوارەوە دەردەکەوێت. بۆ گۆڕین وێنەیەکی نوێ بار بکە یان URL دابنێ.</p>
+        <% if (biography.portraitUrl) { %>
+        <p class="t-meta admin-portrait-current">وێنەی ئێستا: <span dir="ltr"><%= biography.portraitUrl %></span></p>
+        <% } %>
+        <label class="admin-drop" data-drop="image">
+          <input class="admin-drop__input" id="portrait" name="portrait" type="file" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" />
+          <span class="admin-drop__text">گۆڕینی وێنە — کلیک بکە یان وێنە بکێشە ئێرە</span>
+          <span class="admin-drop__hint">JPEG, PNG, WebP · تا ٤٠ مێگابایت</span>
+        </label>
+        <div class="admin-cover-preview" data-cover-preview <%= biography.portraitUrl ? "" : "hidden" %>>
+          <img src="<%= biography.portraitUrl || "" %>" alt="" />
+        </div>
+        <p class="admin-file-name t-meta" data-file-name hidden></p>
+        <div class="admin-field-stack mt-4">
+          <div>
+            <label class="field-label" for="portraitUrl">یان URL</label>
+            <input class="field" id="portraitUrl" name="portraitUrl" dir="ltr" value="<%= biography.portraitUrl %>" data-cover-url />
+          </div>
+          <div>
+            <label class="field-label" for="portraitAlt">دەقی جێگرەوەی وێنە</label>
+            <input class="field" id="portraitAlt" name="portraitAlt" value="<%= biography.portraitAlt %>" />
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card float-saucer float-saucer--rounded">
+        <div>
+          <label class="field-label" for="note">تێبینیی خوارەوە</label>
+          <textarea class="field admin-textarea" id="note" name="note" data-bio-note><%= biography.note %></textarea>
         </div>
       </div>
     </div>
 
-    <div class="admin-card float-saucer float-saucer--rounded">
-      <div>
-        <label class="field-label" for="note">تێبینیی خوارەوە</label>
-        <textarea class="field admin-textarea" id="note" name="note"><%= biography.note %></textarea>
-      </div>
+    <div class="admin-card float-saucer float-saucer--rounded admin-bio-preview-card" data-bio-preview-panel hidden>
+      <h2 class="admin-card__title" data-bio-preview-name><%= biography.name %></h2>
+      <div class="admin-bio-preview" data-bio-preview-content></div>
     </div>
+
     <div class="admin-form-footer">
       <button class="btn btn-primary" type="submit">پاشەکەوت</button>
     </div>
   </form>
 </section>
-<script src="/js/admin-editor.js?v=20260827b" defer></script>
+<script src="/js/admin-editor.js?v=20260829b" defer></script>
