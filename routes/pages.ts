@@ -19,7 +19,7 @@ router.get(
     const [all, books, photoItems] = await Promise.all([
       withContentRepo((repo) => repo.listPublished({ limit: 1000 }).then((result) => result.items)),
       withContentRepo((repo) => repo.getByType("book", 40)),
-      withContentRepo((repo) => repo.getByType("photo", 40)),
+      withContentRepo((repo) => repo.getByType("photo", 100)),
     ]);
 
     const years = yearFacets(all);
@@ -28,10 +28,11 @@ router.get(
 
     const featured = all.find((item) => item.featured) ?? all[0];
     const rest = all.filter((item) => item.id !== featured?.id);
+    const photoDate = (item: ContentItem) => item.publishedAt ?? item.audit?.updatedAt ?? "";
     const photos = photoItems
       .filter((item) => coverOf(item))
-      .sort((a, b) => (b.publishedAt ?? "").localeCompare(a.publishedAt ?? ""))
-      .slice(0, 8);
+      .sort((a, b) => photoDate(b).localeCompare(photoDate(a)))
+      .slice(0, 3);
 
     const latest = rest.slice(0, 8);
     const kurdish = pickUnused(rest, latest, (item) => item.language === "ku", 8);
