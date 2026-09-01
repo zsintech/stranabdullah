@@ -1042,6 +1042,29 @@ img.hero__art {
   }
 }
 
+.photo-lane--home .photo-lane__frame:hover .photo-lane__media,
+.photo-lane--home .photo-lane__frame:focus-visible .photo-lane__media,
+.photo-lane--home .photo-lane__frame:focus-within .photo-lane__media {
+  transform: translateY(-10px);
+  filter: drop-shadow(0 14px 32px rgba(4, 24, 18, 0.24))
+    drop-shadow(0 4px 12px rgba(4, 24, 18, 0.12));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .photo-lane--home .photo-lane__track:hover .photo-lane__frame:not(:hover):not(:focus-visible):not(:focus-within) {
+    filter: brightness(0.84) saturate(0.78);
+  }
+}
+
+.photo-lane--home .photo-lane__viewport {
+  overflow: visible;
+}
+
+.photo-lane--home .photo-lane__frame img {
+  max-width: min(100%, 24rem);
+  max-height: clamp(13rem, 40vh, 22rem);
+}
+
 /* Editorial three-up: overlapping prints, hover brings one forward */
 @media (min-width: 760px) {
   .photo-lane--spread .photo-lane__track {
@@ -1095,6 +1118,38 @@ img.hero__art {
   .photo-lane--spread .photo-lane__frame:focus-within .photo-lane__media {
     transform: scale(1.1) translateY(-10px);
   }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__track {
+    justify-items: center;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame {
+    justify-self: center;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child {
+    margin-inline-end: -2.5rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
+    margin-inline: -1.35rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
+    margin-inline-start: -2.5rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:hover,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-visible,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-within {
+    z-index: 50;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:hover .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-visible .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-within .photo-lane__media {
+    transform: translateY(-12px);
+  }
 }
 
 @media (hover: none) {
@@ -1117,6 +1172,11 @@ img.hero__art {
     transform: translateY(0);
   }
 
+  .photo-lane--home .photo-lane__frame:active .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:focus-visible .photo-lane__media {
+    transform: translateY(-6px);
+  }
+
   .photo-lane__frame:active .photo-lane__media,
   .photo-lane__frame:focus-visible .photo-lane__media {
     transform: scale(1.04) translateY(-4px);
@@ -1137,6 +1197,43 @@ img.hero__art {
   .photo-lane__frame--wide,
   .photo-lane__frame--tall {
     min-width: unset;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__track {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0;
+    overflow: visible;
+    padding-block: 1.25rem 2rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame {
+    flex: 0 0 auto;
+    margin-inline: -1.1rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:first-child {
+    z-index: 3;
+    margin-block-start: 1.75rem;
+    margin-inline-end: -0.65rem;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
+    z-index: 2;
+    margin-block-start: 0;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:last-child {
+    z-index: 1;
+    margin-block-start: 2.5rem;
+    margin-inline-start: -0.65rem;
+  }
+
+  .photo-lane--home .photo-lane__frame img {
+    max-width: min(46vw, 11rem);
+    max-height: clamp(9rem, 28vh, 14rem);
   }
 }
 

@@ -1,7 +1,8 @@
 <%
   var lane = typeof locals === "object" && locals ? locals : {};
   var gallery = Array.isArray(lane.shots) ? lane.shots : [];
-  var isSpread = gallery.length > 0 && gallery.length <= 3;
+  var forceSpread = Boolean(lane.forceSpread);
+  var isSpread = forceSpread || (gallery.length > 0 && gallery.length <= 3);
   var kicker = lane.headingKicker || "ئەرشیف";
   var title = lane.headingTitle || "وێنە";
   var headingId = lane.laneHeadingId || "photos-heading";

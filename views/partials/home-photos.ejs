@@ -1,6 +1,6 @@
 <%
   const fromAdmin = (typeof photos !== "undefined" && photos ? photos : [])
-    .map(function (item, index) {
+    .map(function (item) {
       const src = coverOf(item);
       if (!src) return null;
       return {
@@ -8,15 +8,33 @@
         src: src,
         title: item.title,
         yearLabel: item.subtitle || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
-        wide: Boolean(item.extras && item.extras.homeGalleryWide) || index % 3 === 1,
+        wide: false,
       };
     })
     .filter(Boolean);
 
-  const shots = fromAdmin.length ? fromAdmin : archivePhotoFallbacks;
+  const pool = fromAdmin.length ? fromAdmin : archivePhotoFallbacks;
+  const top3 = pool.slice(0, 3);
+  let shots = top3;
+  if (top3.length === 3) {
+    shots = [
+      Object.assign({}, top3[1], { wide: false }),
+      Object.assign({}, top3[0], { wide: true }),
+      Object.assign({}, top3[2], { wide: false }),
+    ];
+  } else if (top3.length === 2) {
+    shots = [
+      Object.assign({}, top3[1], { wide: false }),
+      Object.assign({}, top3[0], { wide: true }),
+    ];
+  } else if (top3.length === 1) {
+    shots = [Object.assign({}, top3[0], { wide: true })];
+  }
 %>
 <%- include("photo-lane", {
   shots: shots,
+  forceSpread: true,
+  laneMod: " photo-lane--home",
   headingKicker: "ئەرشیف",
   headingTitle: "وێنە",
   laneHeadingId: "photos-heading",
