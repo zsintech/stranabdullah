@@ -79,7 +79,10 @@ export function applyDraft(
       outlet: input.outlet?.trim() || current?.extras?.outlet,
       publisher: input.publisher?.trim() || current?.extras?.publisher,
       isbn: input.isbn?.trim() || current?.extras?.isbn,
-      homeGallery: input.homeGallery ?? current?.extras?.homeGallery ?? false,
+      homeGallery:
+        input.homeGallery ??
+        current?.extras?.homeGallery ??
+        (!current && input.contentType === "photo"),
       homeGalleryOrder:
         input.homeGalleryOrder ??
         (typeof current?.extras?.homeGalleryOrder === "number" ? current.extras.homeGalleryOrder : undefined),

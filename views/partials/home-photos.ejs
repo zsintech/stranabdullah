@@ -1,6 +1,6 @@
 <%
   const fromAdmin = (typeof photos !== "undefined" && photos ? photos : [])
-    .map(function (item) {
+    .map(function (item, index) {
       const src = coverOf(item);
       if (!src) return null;
       return {
@@ -8,7 +8,7 @@
         src: src,
         title: item.title,
         yearLabel: item.subtitle || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
-        wide: Boolean(item.extras && item.extras.homeGalleryWide),
+        wide: Boolean(item.extras && item.extras.homeGalleryWide) || index % 3 === 1,
       };
     })
     .filter(Boolean);

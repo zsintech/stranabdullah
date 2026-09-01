@@ -908,16 +908,16 @@ img.hero__art {
 
 .photo-lane__media {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #121c18;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow: visible;
+  background: transparent;
   border-radius: 0;
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cream, #f8f5ee) 55%, rgba(4, 24, 18, 0.35));
+  box-shadow: none;
   transition:
     transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1),
-    box-shadow 480ms ease;
+    filter 480ms ease;
   will-change: transform;
 }
 
@@ -925,10 +925,8 @@ img.hero__art {
 .photo-lane__frame:focus-visible .photo-lane__media,
 .photo-lane__frame:focus-within .photo-lane__media {
   transform: scale(1.07) translateY(-6px);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--cream, #f8f5ee) 70%, rgba(4, 24, 18, 0.2)),
-    0 12px 28px rgba(4, 24, 18, 0.24),
-    0 32px 64px rgba(4, 24, 18, 0.32);
+  filter: drop-shadow(0 12px 28px rgba(4, 24, 18, 0.22))
+    drop-shadow(0 32px 64px rgba(4, 24, 18, 0.28));
 }
 
 .photo-lane__media::before {
@@ -949,22 +947,17 @@ img.hero__art {
   opacity: 1;
 }
 
-.photo-lane__frame--tall .photo-lane__media {
-  aspect-ratio: 3 / 4.05;
-}
-
+.photo-lane__frame--tall .photo-lane__media,
 .photo-lane__frame--wide .photo-lane__media {
-  aspect-ratio: 5 / 3.7;
+  aspect-ratio: unset;
 }
 
 .photo-lane__frame img {
   display: block;
   width: auto;
   height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: center;
+  max-width: min(72vw, 26rem);
+  max-height: clamp(12rem, 38vh, 20rem);
   filter: saturate(0.82) contrast(1.06) brightness(0.96);
   transition:
     transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -1080,12 +1073,15 @@ img.hero__art {
     margin-inline-start: -1.75rem;
   }
 
-  .photo-lane--spread .photo-lane__frame--tall .photo-lane__media {
-    aspect-ratio: 3 / 4.2;
+  .photo-lane--spread .photo-lane__frame--tall .photo-lane__media,
+  .photo-lane--spread .photo-lane__frame--wide .photo-lane__media {
+    aspect-ratio: unset;
   }
 
-  .photo-lane--spread .photo-lane__frame--wide .photo-lane__media {
-    aspect-ratio: 5 / 3.45;
+  .photo-lane--spread .photo-lane__frame--tall .photo-lane__media img,
+  .photo-lane--spread .photo-lane__frame--wide .photo-lane__media img {
+    max-width: min(100%, 22rem);
+    max-height: clamp(14rem, 42vh, 24rem);
   }
 
   .photo-lane--spread .photo-lane__frame:hover,
@@ -1138,17 +1134,28 @@ img.hero__art {
 }
 
 @media (max-width: 759px) {
-  .photo-lane__frame--wide {
-    min-width: min(82vw, 26rem);
-  }
-
+  .photo-lane__frame--wide,
   .photo-lane__frame--tall {
-    min-width: min(64vw, 16.5rem);
+    min-width: unset;
   }
 }
 
 .photo-lane--video .photo-lane__media {
   display: block;
+  width: 100%;
+  overflow: hidden;
+  background: #121c18;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--cream, #f8f5ee) 55%, rgba(4, 24, 18, 0.35));
+}
+
+.photo-lane--video .photo-lane__frame:hover .photo-lane__media,
+.photo-lane--video .photo-lane__frame:focus-visible .photo-lane__media,
+.photo-lane--video .photo-lane__frame:focus-within .photo-lane__media {
+  filter: none;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--cream, #f8f5ee) 70%, rgba(4, 24, 18, 0.2)),
+    0 12px 28px rgba(4, 24, 18, 0.24),
+    0 32px 64px rgba(4, 24, 18, 0.32);
 }
 
 .photo-lane--video .photo-lane__frame--wide .photo-lane__media,

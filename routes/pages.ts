@@ -29,11 +29,21 @@ router.get(
     const featured = all.find((item) => item.featured) ?? all[0];
     const rest = all.filter((item) => item.id !== featured?.id);
     const photos = photoItems
-      .filter((item) => coverOf(item) && item.extras?.homeGallery)
+      .filter((item) => coverOf(item))
       .sort((a, b) => {
-        const ao = typeof a.extras?.homeGalleryOrder === "number" ? a.extras.homeGalleryOrder : 999;
-        const bo = typeof b.extras?.homeGalleryOrder === "number" ? b.extras.homeGalleryOrder : 999;
-        if (ao !== bo) return ao - bo;
+        const aPinned = a.extras?.homeGallery
+          ? typeof a.extras.homeGalleryOrder === "number"
+            ? a.extras.homeGalleryOrder
+            : 0
+          : null;
+        const bPinned = b.extras?.homeGallery
+          ? typeof b.extras.homeGalleryOrder === "number"
+            ? b.extras.homeGalleryOrder
+            : 0
+          : null;
+        if (aPinned !== null && bPinned !== null) return aPinned - bPinned;
+        if (aPinned !== null) return -1;
+        if (bPinned !== null) return 1;
         return (b.publishedAt ?? "").localeCompare(a.publishedAt ?? "");
       })
       .slice(0, 8);
