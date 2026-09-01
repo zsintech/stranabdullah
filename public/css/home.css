@@ -1056,44 +1056,52 @@ img.hero__art {
   }
 }
 
+.photo-lane--home {
+  overflow: visible;
+}
+
 .photo-lane--home .photo-lane__viewport {
   overflow: visible;
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__track {
-  display: grid;
-  grid-auto-flow: unset;
-  grid-auto-columns: unset;
-  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.42fr) minmax(0, 0.88fr);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  flex-wrap: nowrap;
   gap: 0;
+  width: 100%;
+  max-width: 100%;
   overflow: visible;
   scroll-snap-type: none;
   padding-inline: var(--gutter, 1.25rem);
   padding-block: clamp(1rem, 3vw, 2.25rem) clamp(1.25rem, 4vw, 2.5rem);
-  align-items: center;
-  justify-items: center;
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__frame {
-  justify-self: center;
+  flex: 0 0 auto;
+  margin-inline: clamp(-2rem, -7vw, -4.75rem);
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child {
   z-index: 3;
   margin-block-start: clamp(1.25rem, 4vw, 2.75rem);
-  margin-inline-end: clamp(-1.25rem, -4vw, -2.5rem);
+  margin-inline-start: 0;
+  margin-inline-end: clamp(-2.5rem, -9vw, -5.5rem);
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
   z-index: 2;
   margin-block-start: 0;
-  margin-inline: clamp(-0.65rem, -2.5vw, -1.35rem);
+  margin-inline: clamp(-2.75rem, -8vw, -5.25rem);
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
   z-index: 1;
   margin-block-start: clamp(1.75rem, 5vw, 4.25rem);
-  margin-inline-start: clamp(-1.25rem, -4vw, -2.5rem);
+  margin-inline-end: 0;
+  margin-inline-start: clamp(-2.5rem, -9vw, -5.5rem);
 }
 
 .photo-lane--home.photo-lane--spread .photo-lane__frame:hover,
