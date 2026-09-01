@@ -862,7 +862,7 @@ img.hero__art {
   grid-auto-flow: column;
   grid-auto-columns: minmax(15rem, 72vw);
   gap: 0.85rem;
-  align-items: start;
+  align-items: center;
   overflow-x: auto;
   padding-inline: var(--gutter, 1.25rem);
   scroll-snap-type: x mandatory;
@@ -908,7 +908,9 @@ img.hero__art {
 
 .photo-lane__media {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   background: #121c18;
   border-radius: 0;
@@ -955,15 +957,14 @@ img.hero__art {
   aspect-ratio: 5 / 3.7;
 }
 
-.photo-lane__frame--tall img {
-  object-position: center 16%;
-}
-
 .photo-lane__frame img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
   filter: saturate(0.82) contrast(1.06) brightness(0.96);
   transition:
     transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1),
@@ -974,7 +975,6 @@ img.hero__art {
 
 .photo-lane__frame:hover img,
 .photo-lane__frame:focus-visible img {
-  transform: scale(1.035);
   filter: saturate(0.92) contrast(1.08) brightness(1);
 }
 
@@ -1059,7 +1059,7 @@ img.hero__art {
     overflow: visible;
     padding-inline: var(--gutter, 1.25rem);
     padding-block: 1.5rem 2.25rem;
-    align-items: start;
+    align-items: center;
   }
 
   .photo-lane--spread .photo-lane__frame--tall:first-child {
@@ -1147,6 +1147,10 @@ img.hero__art {
   }
 }
 
+.photo-lane--video .photo-lane__media {
+  display: block;
+}
+
 .photo-lane--video .photo-lane__frame--wide .photo-lane__media,
 .photo-lane--video .photo-lane__frame--tall .photo-lane__media {
   aspect-ratio: 16 / 9;
@@ -1154,6 +1158,11 @@ img.hero__art {
 
 .photo-lane--video .photo-lane__frame--tall img,
 .photo-lane--video .photo-lane__frame img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
   object-position: center center;
 }
 
