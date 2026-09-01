@@ -25,14 +25,20 @@ const summary =
   process.env.ADMIN_E2E_SUMMARY ||
   "لەگەڵ برای بەڕێز سەڵاح رەشید وەزیری مافی مرۆڤ لە کابینەی سێیەمی حکومەتی هەرێم";
 
+const coverUrl =
+  process.env.ADMIN_E2E_COVER_URL ||
+  (baseUrl.includes("stranabdullah.org") ? `${baseUrl}/brand/photos/salah-rashid.png` : "");
+
 async function main() {
   if (!email) throw new Error("ADMIN_ALLOWED_EMAILS is not set.");
   if (!password) throw new Error("Set ADMIN_E2E_PASSWORD for login.");
-  if (!fs.existsSync(imagePath)) throw new Error(`Image not found: ${imagePath}`);
+  const useFile = !coverUrl;
+  if (useFile && !fs.existsSync(imagePath)) throw new Error(`Image not found: ${imagePath}`);
 
   console.log(`Admin E2E → ${baseUrl}`);
   console.log(`Email: ${email}`);
-  console.log(`Image: ${imagePath}`);
+  if (coverUrl) console.log(`Cover URL: ${coverUrl}`);
+  else console.log(`Image: ${imagePath}`);
 
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
@@ -47,7 +53,11 @@ async function main() {
 
   await page.fill("#title", title);
   await page.fill("#summary", summary);
-  await page.setInputFiles("#cover", imagePath);
+  if (coverUrl) {
+    await page.fill("#coverUrl", coverUrl);
+  } else {
+    await page.setInputFiles("#cover", imagePath);
+  }
 
   const statusPublished = page.locator('input[name="status"][value="published"]');
   if (await statusPublished.isVisible()) await statusPublished.check();
