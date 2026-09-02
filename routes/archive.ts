@@ -8,7 +8,7 @@ import { kuDigits, readingTime } from "@/lib/format";
 import { articleBodyHtml } from "@/lib/markdown";
 import { renderPage } from "@/lib/render-page";
 import { proxyPdfUrl, volumesForSlug } from "@/lib/pdf-map";
-import { coverOf, archivePhotoFallbacks } from "@/lib/view-helpers";
+import { coverOf, archivePhotoFallbacks, preparePhotoLaneShots } from "@/lib/view-helpers";
 import { withContentRepo } from "@/repositories";
 import { ArchiveFiltersSchema, contentTypes } from "@/types/content";
 
@@ -126,7 +126,7 @@ router.get(
       !filters.q &&
       !filters.year &&
       (!filters.type || filters.type === "photo");
-    const photoShots = canUseFallbacks
+    const rawPhotoShots = canUseFallbacks
       ? archivePhotoFallbacks.map((shot) => ({ ...shot }))
       : filteredPhotos.map((item, index) => ({
           href: `/archive/${item.slug}`,
@@ -135,6 +135,7 @@ router.get(
           yearLabel: item.subtitle || (item.year ? `ساڵی ${kuDigits(item.year)}` : ""),
           wide: Boolean(item.extras?.homeGalleryWide) || index % 3 === 1,
         }));
+    const photoShots = preparePhotoLaneShots(rawPhotoShots);
 
     await renderPage(res, "archive", {
       pageTitle: "ئەرشیف",

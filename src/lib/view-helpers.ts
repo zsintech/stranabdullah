@@ -50,6 +50,45 @@ export const archivePhotoFallbacks = [
   },
 ] as const;
 
+export type PhotoLaneShot = {
+  href: string;
+  src: string;
+  title?: string;
+  yearLabel?: string;
+  wide?: boolean;
+  external?: boolean;
+  play?: boolean;
+};
+
+/** Match homepage spread ordering: wide center print, tall sides, scroll lane when 4+. */
+export function preparePhotoLaneShots(pool: PhotoLaneShot[]): PhotoLaneShot[] {
+  if (!pool.length) return [];
+
+  if (pool.length > 3) {
+    return pool.map((shot, index) => ({
+      ...shot,
+      wide: shot.wide || index % 3 === 1,
+    }));
+  }
+
+  if (pool.length === 3) {
+    return [
+      { ...pool[1], wide: false },
+      { ...pool[0], wide: true },
+      { ...pool[2], wide: false },
+    ];
+  }
+
+  if (pool.length === 2) {
+    return [
+      { ...pool[1], wide: false },
+      { ...pool[0], wide: true },
+    ];
+  }
+
+  return [{ ...pool[0], wide: true }];
+}
+
 export function coverOf(item: ContentItem): string | undefined {
   return (
     item.media.coverImage?.cachedUrl ||
