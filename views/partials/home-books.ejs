@@ -39,19 +39,13 @@
         draggable="false"
       >
         <span class="book-lane__media">
-          <span class="book-peel is-flat" data-book-peel dir="ltr">
-            <span class="peel-top">
-              <img
-                src="<%= cover %>"
-                alt="<%= book.title || 'بەرگی کتێب' %>"
-                loading="<%= index < 4 ? 'eager' : 'lazy' %>"
-                decoding="async"
-                draggable="false"
-              />
-            </span>
-            <span class="peel-back" aria-hidden="true"></span>
-            <span class="peel-bottom" aria-hidden="true"></span>
-          </span>
+          <img
+            src="<%= cover %>"
+            alt="<%= book.title || 'بەرگی کتێب' %>"
+            loading="<%= index < 4 ? 'eager' : 'lazy' %>"
+            decoding="async"
+            draggable="false"
+          />
         </span>
         <span class="book-lane__caption">
           <span class="book-lane__index"><%= kuDigits(index + 1) %></span>
@@ -65,7 +59,5 @@
     </div>
   </div>
 </section>
-<script src="/js/home-books.js?v=20260826d" defer></script>
-<script src="/js/peel.js?v=20141224a" defer></script>
-<script src="/js/book-peel.js?v=20260825k" defer></script>
+<script src="/js/home-books.js?v=20260902f" defer></script>
 <% } %>

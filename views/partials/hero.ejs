@@ -1,6 +1,7 @@
 <section class="hero" aria-labelledby="hero-name" data-hero>
   <div class="hero__field" aria-hidden="true"></div>
   <div class="hero__atmosphere" aria-hidden="true"></div>
+  <div class="hero__fade" aria-hidden="true"></div>
 
   <img
     class="hero__art"
@@ -13,40 +14,36 @@
     data-hero-art
   />
 
-  <div class="hero__grid">
-    <div class="hero__visual" aria-hidden="true">
-      <span class="hero__plate-glow" data-hero-glow></span>
+  <div class="hero__frame shell">
+    <div class="hero__copy">
+    <p class="hero__folio" style="--i: 0">
+      <span class="hero__folio-label">ئەرشیف</span>
+      <span class="hero__folio-sep" aria-hidden="true">·</span>
+      <span class="hero__folio-year"><%= kuDigits(new Date().getFullYear()) %></span>
+    </p>
+
+    <h1 id="hero-name" class="hero__title" style="--i: 1"><%= SITE_NAME_SHORT %></h1>
+
+    <div class="hero__divider" aria-hidden="true" style="--i: 3">
+      <span class="hero__divider-line"></span>
+      <span class="hero__divider-gem"></span>
+      <span class="hero__divider-line hero__divider-line--short"></span>
     </div>
 
-    <div class="hero__content">
-      <p class="hero__folio" style="--i: 0">
-        <span class="hero__folio-label">ئەرشیف</span>
-        <span class="hero__folio-sep" aria-hidden="true">·</span>
-        <span class="hero__folio-year"><%= kuDigits(new Date().getFullYear()) %></span>
-      </p>
+    <p class="hero__description" style="--i: 4"><%= SITE_DESCRIPTION %></p>
 
-      <h1 id="hero-name" class="hero__title" style="--i: 1"><%= SITE_NAME_SHORT %></h1>
-
-      <div class="hero__divider" aria-hidden="true" style="--i: 3">
-        <span class="hero__divider-line"></span>
-        <span class="hero__divider-gem"></span>
-        <span class="hero__divider-line hero__divider-line--short"></span>
-      </div>
-
-      <p class="hero__description" style="--i: 4"><%= SITE_DESCRIPTION %></p>
-
-      <div class="hero__actions" style="--i: 5">
-        <a href="/archive" class="hero__cta hero__cta--primary group">
-          <span class="link-underline"><%= archiveLabels.short %></span>
-          <span class="arrow-slide" aria-hidden="true">←</span>
-        </a>
-        <span class="hero__actions-rule" aria-hidden="true"></span>
-        <a href="/biography" class="hero__cta hero__cta--ghost group">
-          <span class="link-underline">ژیاننامە</span>
-          <span class="arrow-slide" aria-hidden="true">←</span>
-        </a>
-      </div>
+    <div class="hero__actions" style="--i: 5">
+      <a href="/archive" class="hero__cta hero__cta--primary group">
+        <span class="link-underline"><%= archiveLabels.short %></span>
+        <span class="arrow-slide" aria-hidden="true">←</span>
+      </a>
+      <span class="hero__actions-rule" aria-hidden="true"></span>
+      <a href="/biography" class="hero__cta hero__cta--ghost group">
+        <span class="link-underline">ژیاننامە</span>
+        <span class="arrow-slide" aria-hidden="true">←</span>
+      </a>
+    </div>
     </div>
   </div>
 </section>
-<script src="/js/home-hero.js?v=20260825b" defer></script>
+<script src="/js/home-hero.js?v=20260902j" defer></script>

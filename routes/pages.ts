@@ -29,9 +29,14 @@ router.get(
     const featured = all.find((item) => item.featured) ?? all[0];
     const rest = all.filter((item) => item.id !== featured?.id);
     const photoDate = (item: ContentItem) => item.publishedAt ?? item.audit?.updatedAt ?? "";
-    const photos = photoItems
-      .filter((item) => coverOf(item))
-      .sort((a, b) => photoDate(b).localeCompare(photoDate(a)));
+    const withCover = photoItems.filter((item) => coverOf(item));
+    const flagged = withCover.filter((item) => item.extras?.homeGallery);
+    const photos = (flagged.length ? flagged : withCover).sort((a, b) => {
+      const orderA = typeof a.extras?.homeGalleryOrder === "number" ? a.extras.homeGalleryOrder : Number.MAX_SAFE_INTEGER;
+      const orderB = typeof b.extras?.homeGalleryOrder === "number" ? b.extras.homeGalleryOrder : Number.MAX_SAFE_INTEGER;
+      if (orderA !== orderB) return orderA - orderB;
+      return photoDate(b).localeCompare(photoDate(a));
+    });
 
     const latest = rest.slice(0, 8);
     const kurdish = pickUnused(rest, latest, (item) => item.language === "ku", 8);

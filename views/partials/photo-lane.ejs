@@ -32,6 +32,12 @@
   <% if (gallery.length) { %>
   <div class="photo-lane__viewport">
     <% if (!isSpread) { %>
+    <button type="button" class="photo-lane__nav photo-lane__nav--prev" data-photo-prev aria-label="وێنەی پێشوو">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+    <button type="button" class="photo-lane__nav photo-lane__nav--next" data-photo-next aria-label="وێنەی دواتر">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
     <div class="photo-lane__fade photo-lane__fade--start" aria-hidden="true"></div>
     <div class="photo-lane__fade photo-lane__fade--end" aria-hidden="true"></div>
     <% } %>
@@ -76,6 +82,6 @@
   <% } %>
 </section>
 <% if (gallery.length && !isSpread) { %>
-<script src="/js/home-photos.js?v=20260827a" defer></script>
+<script src="/js/home-photos.js?v=20260902d" defer></script>
 <% } %>
 <% } %>

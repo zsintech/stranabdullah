@@ -3,7 +3,7 @@
   data-home="<%= onHome ? 'true' : 'false' %>"
   data-over-hero="<%= headerOverHero ? 'true' : 'false' %>"
 >
-  <div data-header-shell class="shell flex items-center gap-3 transition-[height,padding,gap] duration-300 sm:gap-5">
+  <div data-header-shell class="shell flex items-center gap-3 transition-[height,padding,gap] duration-300">
     <a href="/" class="masthead-lockup group" aria-label="نووسینگەی تایبەتی ستران عەبدوڵڵا">
       <span class="masthead-flora" aria-hidden>
         <img src="/brand/tulip.png" alt="" class="masthead-flora__bloom" />
@@ -37,9 +37,9 @@
         aria-controls="mobile-nav"
       >
         <span class="sr-only" data-menu-label>کردنەوەی مێنو</span>
-        <span aria-hidden class="relative block h-3 w-6">
-          <span data-bar-top class="absolute inset-x-0 top-0 h-px bg-current transition-transform duration-300"></span>
-          <span data-bar-bottom class="absolute inset-x-0 top-3 h-px bg-current transition-transform duration-300"></span>
+        <span class="masthead-toggle__bars" aria-hidden="true">
+          <span data-bar-top class="masthead-toggle__bar masthead-toggle__bar--top"></span>
+          <span data-bar-bottom class="masthead-toggle__bar masthead-toggle__bar--bottom"></span>
         </span>
       </button>
     </div>

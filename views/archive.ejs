@@ -1,7 +1,7 @@
 <div class="bg-cream-100">
   <div class="relative">
     <% if (latestYearDisplay) { %>
-    <span aria-hidden class="decorative-year decorative-year--xl pointer-events-none absolute -top-4 end-[var(--gutter)] z-0 hidden opacity-80 sm:block"><%= latestYearDisplay %></span>
+    <span aria-hidden class="decorative-year decorative-year--xl decorative-year--masthead pointer-events-none absolute -top-4 end-[var(--gutter)] z-0 opacity-80"><%= latestYearDisplay %></span>
     <% } %>
     <%- include("partials/masthead", {
       tone: "forest",
@@ -27,7 +27,7 @@
 
   <div class="site-container site-container--body archive-body">
     <%- include("partials/archive-filters") %>
-    <div class="mt-7 lg:mt-10">
+    <div class="archive-body__main">
       <% const photoOnly = typeof filters !== "undefined" && filters.type === "photo"; %>
       <% if (!photoOnly) { %>
       <% if (!groups.length) { %>

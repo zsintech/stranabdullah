@@ -10,13 +10,13 @@
       <% } %>
       <span class="article-index__date t-meta tabular-nums"><%= formatKuNumeric(entry.publishedAt) %></span>
       <span class="article-index__copy min-w-0">
-        <span class="link-underline font-display text-[1.05rem] font-bold leading-snug text-forest-950 sm:text-[1.2rem]"><%= entry.title %></span>
+        <span class="link-underline article-index__title"><%= entry.title %></span>
         <% if (typeof excerpt !== "undefined" && excerpt && isUsefulExcerpt(entry)) { %>
         <span class="t-small mt-1 block line-clamp-2 text-ink-muted"><%= entry.summary %></span>
         <% } %>
       </span>
       <% if (!(typeof columns !== "undefined" && columns)) { %>
-      <span class="article-index__meta t-meta hidden sm:flex">
+      <span class="article-index__meta t-meta">
         <% if (entry.language !== "ku") { %>
         <span><%= languageLabels[entry.language] %></span>
         <% } else { %>

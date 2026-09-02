@@ -6,7 +6,7 @@
   <span class="decorative-word page-masthead__word" aria-hidden><%= word %></span>
 
   <% if (typeof ghostSrc !== "undefined" && ghostSrc) { %>
-  <div class="page-masthead__ghost hidden md:block" aria-hidden>
+  <div class="page-masthead__ghost" aria-hidden>
     <%- include("editorial-image", {
       imgSrc: ghostSrc,
       imgAlt: "",
@@ -18,10 +18,10 @@
   </div>
   <% } %>
 
-  <%- include("botanical", { extraClass: "pointer-events-none absolute -bottom-16 -end-10 hidden h-64 w-auto opacity-[0.07] md:block" }) %>
+  <%- include("botanical", { extraClass: "page-masthead__ornament botanical-ghost" }) %>
 
   <% if (typeof showTulip !== "undefined" && showTulip) { %>
-  <%- include("tulip-mark", { extraClass: "pointer-events-none absolute -bottom-10 start-[8%] hidden h-28 w-auto text-tulip/80 md:block" }) %>
+  <%- include("tulip-mark", { extraClass: "page-masthead__tulip" }) %>
   <% } %>
 
   <div class="site-container page-masthead__content relative z-[1]">
