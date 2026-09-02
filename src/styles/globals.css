@@ -2765,15 +2765,17 @@ textarea,
     height: 100%;
     border: 0;
   }
-    padding: 0.65rem;
-    overflow: hidden;
+
+  .youtube-embed__caption {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.85rem;
   }
-  .photo-tile__media {
-    display: block;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
+
+  .youtube-embed__watch {
+    text-decoration: none;
   }
+
   .essay-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

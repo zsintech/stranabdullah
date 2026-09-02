@@ -1,4 +1,5 @@
 <% const embed = typeof embedUrl !== "undefined" && embedUrl ? embedUrl : youtubeEmbedUrl(typeof videoUrl !== "undefined" ? videoUrl : ""); %>
+<% const watch = typeof watchUrl !== "undefined" && watchUrl ? watchUrl : youtubeWatchUrl(typeof videoUrl !== "undefined" ? videoUrl : ""); %>
 <% if (embed) { %>
 <figure class="youtube-embed">
   <div class="youtube-embed__frame">
@@ -11,5 +12,12 @@
       referrerpolicy="strict-origin-when-cross-origin"
     ></iframe>
   </div>
+  <% if (watch) { %>
+  <figcaption class="youtube-embed__caption">
+    <a href="<%= watch %>" class="youtube-embed__watch btn btn-secondary btn-sm" rel="noopener noreferrer" target="_blank">
+      بینین لە یوتیوب ←
+    </a>
+  </figcaption>
+  <% } %>
 </figure>
 <% } %>

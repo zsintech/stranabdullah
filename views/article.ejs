@@ -9,6 +9,7 @@
   <%- include("partials/book-page") %>
   <% } else { %>
   <% const ytEmbed = item.media && item.media.videoUrl ? youtubeEmbedUrl(item.media.videoUrl) : ""; %>
+  <% const ytWatch = item.media && item.media.videoUrl ? (item.source && item.source.externalUrl ? item.source.externalUrl : youtubeWatchUrl(item.media.videoUrl)) : ""; %>
   <article>
     <header class="border-b border-forest-950/12 bg-paper">
       <div class="site-container pb-12 pt-10 lg:pb-16 lg:pt-14">
@@ -42,7 +43,7 @@
     <% if (ytEmbed) { %>
     <div class="site-container pb-0 pt-6 lg:pt-8">
       <div class="measure mx-auto">
-        <%- include("partials/youtube-embed", { embedUrl: ytEmbed, embedTitle: item.title }) %>
+        <%- include("partials/youtube-embed", { embedUrl: ytEmbed, watchUrl: ytWatch, embedTitle: item.title }) %>
       </div>
     </div>
     <% } else if (typeof coverUrl !== "undefined" && coverUrl) { %>

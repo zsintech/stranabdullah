@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { ContentDraftInput } from "@/repositories/content-repository";
 import { ContentItemSchema, type ContentItem, type ContentStatus } from "@/types/content";
-import { youtubeThumbnail } from "@/lib/youtube";
+import { youtubeThumbnail, youtubeId, youtubeWatchUrl } from "@/lib/youtube";
 import { slugify } from "@/lib/slug";
 
 export function applyDraft(
@@ -26,6 +26,18 @@ export function applyDraft(
   const existingCover = current?.media?.coverImage;
   const videoUrl = input.videoUrl?.trim() || current?.media?.videoUrl;
   const ytThumb = youtubeThumbnail(videoUrl);
+  const ytVideoId = youtubeId(videoUrl);
+  const ytWatchUrl = youtubeWatchUrl(videoUrl);
+  const youtubeSource =
+    ytVideoId && ytWatchUrl
+      ? {
+          platform: "youtube",
+          externalId: ytVideoId,
+          externalUrl: ytWatchUrl,
+          imported: true,
+          importedAt: current?.source?.importedAt ?? now,
+        }
+      : undefined;
 
   function coverFromUrl(url: string, alt: string) {
     if (/^https?:\/\//i.test(url)) return { remoteUrl: url, alt };
@@ -51,7 +63,7 @@ export function applyDraft(
     people: input.people ?? current?.people ?? [],
     featured: input.featured ?? current?.featured ?? false,
     featuredOrder: current?.featuredOrder,
-    source: current?.source,
+    source: youtubeSource ?? current?.source,
     media: {
       coverImage: coverUrl
         ? coverFromUrl(coverUrl, coverAlt)
@@ -76,7 +88,7 @@ export function applyDraft(
     extras: {
       ...(current?.extras ?? {}),
       author: input.author?.trim() || current?.extras?.author,
-      outlet: input.outlet?.trim() || current?.extras?.outlet,
+      outlet: input.outlet?.trim() || current?.extras?.outlet || (youtubeSource ? "یوتیوب" : undefined),
       publisher: input.publisher?.trim() || current?.extras?.publisher,
       isbn: input.isbn?.trim() || current?.extras?.isbn,
       homeGallery:

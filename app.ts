@@ -33,7 +33,7 @@ import {
 } from "./src/lib/format";
 import { archiveLabels } from "./src/lib/archive-labels";
 import { SITE_EMAIL, SITE_NAME, SITE_NAME_SHORT, SITE_DESCRIPTION } from "./src/lib/constants";
-import { youtubeEmbedUrl, youtubeId, youtubeThumbnail } from "./src/lib/youtube";
+import { youtubeEmbedUrl, youtubeId, youtubeThumbnail, youtubeWatchUrl } from "./src/lib/youtube";
 import { withContentRepo } from "./src/repositories/index";
 import { getServerEnv } from "./src/lib/env";
 import { readArchiveCountCache, writeArchiveCountCache } from "./src/lib/public-cache";
@@ -80,6 +80,7 @@ app.locals.SITE_DESCRIPTION = SITE_DESCRIPTION;
 app.locals.youtubeId = youtubeId;
 app.locals.youtubeThumbnail = youtubeThumbnail;
 app.locals.youtubeEmbedUrl = youtubeEmbedUrl;
+app.locals.youtubeWatchUrl = youtubeWatchUrl;
 
 app.use((req, _res, next) => {
   console.log(`${req.method} ${req.path}`);
