@@ -1,0 +1,17 @@
+<li class="admin-draft-row float-saucer float-saucer--rounded">
+  <div class="admin-draft-row__main">
+    <a class="admin-draft-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
+    <p class="t-meta">
+      <%= contentTypeLabels[entry.contentType] %>
+      <% if (typeof showStatus !== "undefined" && showStatus) { %> · <%= statusLabels[entry.status] %><% } %>
+    </p>
+  </div>
+  <div class="admin-draft-row__actions">
+    <a class="btn btn-sm btn-light" href="/admin/items/<%= entry.id %>">دەستکاری</a>
+    <% if (typeof actions !== "undefined" && actions) { %>
+      <% actions.forEach(function (action) { %>
+      <%- include("status-form", { entry, csrf, status: action.status, back: action.back, label: action.label, buttonClass: action.buttonClass, confirm: action.confirm }) %>
+      <% }); %>
+    <% } %>
+  </div>
+</li>

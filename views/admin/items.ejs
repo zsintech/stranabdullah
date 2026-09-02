@@ -3,19 +3,11 @@
   <header class="admin-page-header">
     <div>
       <h1 class="t-h2">تۆمارەکان</h1>
-      <p class="t-meta"><%= kuDigits(items.length) %> تۆمار</p>
+      <p class="t-meta"><%= kuDigits(typeof pagination !== "undefined" ? pagination.total : items.length) %> تۆمار</p>
     </div>
     <a class="btn btn-primary" href="/admin/items/new">+ نوێ</a>
   </header>
   <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
-
-  <div class="admin-quick-actions admin-quick-actions--compact">
-    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=interview">چاوپێکەوتن</a>
-    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=podcast">پۆدکاست</a>
-    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=video">ڤیدیۆ</a>
-    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new?type=photo">وێنە</a>
-    <a class="admin-quick-action admin-quick-action--compact" href="/admin/items/new">نووسین</a>
-  </div>
 
   <form method="get" action="/admin/items" class="admin-filters admin-filters--bar float-saucer float-saucer--rounded">
     <input class="field" name="q" value="<%= filters.q %>" placeholder="گەڕان بە ناونیشان..." />
@@ -72,19 +64,50 @@
       <div class="admin-item-row__actions">
         <a class="btn btn-sm btn-secondary" href="/admin/items/<%= entry.id %>">دەستکاری</a>
         <% if (entry.status === "published") { %>
-        <a class="btn btn-sm btn-light" href="/archive/<%= entry.slug %>" target="_blank" rel="noopener">بینین</a>
-        <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
-        <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
+        <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟", confirmDanger: true }) %>
         <% } else if (entry.status === "draft") { %>
         <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin/items", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
-        <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
         <% } else if (entry.status === "archived") { %>
         <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin/items", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
-        <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
         <% } %>
+        <details class="admin-row-menu">
+          <summary class="btn btn-sm btn-light">زیاتر</summary>
+          <div class="admin-row-menu__panel">
+            <% if (entry.status === "published") { %>
+            <a class="btn btn-sm btn-light" href="/archive/<%= entry.slug %>" target="_blank" rel="noopener">بینین</a>
+            <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
+            <% } else if (entry.status === "draft") { %>
+            <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin/items", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟", confirmDanger: true }) %>
+            <% } else if (entry.status === "archived") { %>
+            <%- include("partials/status-form", { entry, csrf, status: "draft", back: "/admin/items", label: "ڕەشنووس", buttonClass: "btn-light" }) %>
+            <% } %>
+          </div>
+        </details>
       </div>
     </article>
     <% }); %>
   </div>
+
+  <% if (typeof pagination !== "undefined" && pagination.totalPages > 1) { %>
+  <% const qs = function (pageNum) {
+    const parts = [];
+    if (filters.q) parts.push("q=" + encodeURIComponent(filters.q));
+    if (filters.status) parts.push("status=" + encodeURIComponent(filters.status));
+    if (filters.type) parts.push("type=" + encodeURIComponent(filters.type));
+    parts.push("page=" + pageNum);
+    return "?" + parts.join("&");
+  }; %>
+  <nav class="admin-pagination" aria-label="پەڕەکان">
+    <p class="admin-pagination__meta">پەڕەی <%= kuDigits(pagination.page) %> لە <%= kuDigits(pagination.totalPages) %> · <%= kuDigits(pagination.total) %> تۆمار</p>
+    <div class="admin-pagination__links">
+      <% if (pagination.page > 1) { %>
+      <a class="btn btn-sm btn-light" href="/admin/items<%= qs(pagination.page - 1) %>">← پێشوو</a>
+      <% } %>
+      <% if (pagination.page < pagination.totalPages) { %>
+      <a class="btn btn-sm btn-light" href="/admin/items<%= qs(pagination.page + 1) %>">دواتر →</a>
+      <% } %>
+    </div>
+  </nav>
+  <% } %>
   <% } %>
 </section>

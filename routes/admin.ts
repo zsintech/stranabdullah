@@ -284,17 +284,25 @@ router.get(
     const status = typeof req.query.status === "string" ? (req.query.status as ContentStatus) : undefined;
     const type = typeof req.query.type === "string" ? (req.query.type as ContentType) : undefined;
     const q = typeof req.query.q === "string" ? req.query.q : undefined;
-    const items = await withAdminRepo((repo) =>
+    const pageRaw = typeof req.query.page === "string" ? parseInt(req.query.page, 10) : 1;
+    const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+    const PAGE_SIZE = 25;
+    const allItems = await withAdminRepo((repo) =>
       repo.listAll({
         status: status && status in statusLabels ? status : undefined,
         type: type && contentTypes.includes(type) ? type : undefined,
         q,
       }),
     );
+    const total = allItems.length;
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const safePage = Math.min(page, totalPages);
+    const items = allItems.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
     await renderAdmin(res, "items", {
       pageTitle: "تۆمارەکان",
       items,
       filters: { status: status ?? "", type: type ?? "", q: q ?? "" },
+      pagination: { page: safePage, totalPages, total, pageSize: PAGE_SIZE },
       contentTypes,
       breadcrumbs: [{ href: "/admin", label: "سەرەکی" }, { label: "تۆمارەکان" }],
     });

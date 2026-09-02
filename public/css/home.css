@@ -959,6 +959,11 @@ img.hero__art {
   .photo-lane__nav {
     display: inline-flex;
   }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__nav,
+  .photo-lane--home.photo-lane--spread .photo-lane__fade {
+    display: none;
+  }
 }
 
 .photo-lane__track {
@@ -1097,7 +1102,7 @@ img.hero__art {
   transition: opacity 280ms ease, transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-@media (max-width: 767px), (hover: none) {
+@media (max-width: 767px) {
   .photo-lane__caption {
     opacity: 1;
     transform: none;
@@ -1105,23 +1110,24 @@ img.hero__art {
     inset-block-end: 0;
     width: 100%;
     max-width: 100%;
-    padding: 0.38rem 0.48rem 0.32rem;
+    padding: 1.1rem 0.75rem 0.65rem;
     gap: 0;
     grid-template-columns: minmax(0, 1fr);
-    background: color-mix(in srgb, var(--cream, #f8f5ee) 94%, #fff);
-    color: var(--forest-950, #043b2b);
+    background: none;
+    box-shadow: none;
+    color: #f4efe4;
     text-shadow: none;
-    box-shadow: 0 1px 3px rgba(4, 18, 14, 0.16);
   }
 
   .photo-lane__media::before,
   .photo-lane--home .photo-lane__media::before {
-    content: none;
-    display: none;
+    content: "";
+    display: block;
+    opacity: 0.88;
   }
 
   .photo-lane--home .photo-lane__caption {
-    color: var(--forest-950, #043b2b);
+    color: #f4efe4;
     text-shadow: none;
   }
 
@@ -1136,15 +1142,15 @@ img.hero__art {
   }
 
   .photo-lane__caption-title {
-    font-size: 0.7rem;
-    line-height: 1.32;
+    font-size: 0.82rem;
+    line-height: 1.35;
     -webkit-line-clamp: 2;
   }
 
   .photo-lane__year {
-    font-size: 0.64rem;
+    font-size: 0.72rem;
     line-height: 1.3;
-    color: color-mix(in srgb, var(--forest-950, #043b2b) 58%, transparent);
+    color: color-mix(in srgb, #f4efe4 72%, transparent);
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -1231,7 +1237,7 @@ img.hero__art {
   display: none;
 }
 
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) {
   .photo-lane--home .photo-lane__caption {
     text-shadow:
       0 1px 2px rgba(4, 18, 14, 0.85),
@@ -1298,51 +1304,125 @@ img.hero__art {
   }
 
   .photo-lane--home .photo-lane__viewport {
-    overflow-x: auto;
-    overflow-y: visible;
-    scrollbar-width: none;
+    overflow: hidden;
+    position: relative;
   }
 
-  .photo-lane--home .photo-lane__viewport::-webkit-scrollbar {
-    display: none;
-  }
-
-  .photo-lane--home.photo-lane--spread .photo-lane__track {
-    justify-content: flex-start;
+  /* Home photos: sized prints, center snap, neighbors peek at their own scale */
+  .photo-lane--home .photo-lane__track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--gutter, 1.25rem);
-    -webkit-overflow-scrolling: touch;
-    padding-block: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+    scroll-behavior: smooth;
+    scroll-padding-inline: max(
+      var(--gutter, 1.25rem),
+      calc((100% - min(82vw, 20.5rem)) / 2)
+    );
+    gap: 0;
+    padding-inline: max(
+      var(--gutter, 1.25rem),
+      calc((100% - min(82vw, 20.5rem)) / 2)
+    );
+    padding-block: clamp(0.85rem, 2.5vw, 1.35rem) clamp(1rem, 3vw, 1.75rem);
   }
 
+  .photo-lane--home .photo-lane__frame,
   .photo-lane--home.photo-lane--spread .photo-lane__frame,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--wide,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
-    margin-inline: clamp(-0.35rem, -1.2vw, -0.55rem);
-    margin-block-start: clamp(0.35rem, 1.5vw, 0.75rem);
+    flex: 0 0 auto;
+    width: auto;
+    min-width: unset;
+    margin-inline: clamp(-0.85rem, -3.5vw, -1.35rem);
+    margin-block-start: 0;
+    z-index: 1;
+    scroll-snap-align: center;
+    scroll-snap-stop: normal;
   }
 
+  .photo-lane--home .photo-lane__frame--wide,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
     margin-block-start: 0;
+    z-index: 2;
+  }
+
+  .photo-lane--home .photo-lane__frame--tall,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
+    margin-block-start: clamp(0.55rem, 2.2vw, 1.15rem);
+    z-index: 1;
+  }
+
+  .photo-lane--home .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide .photo-lane__media {
+    display: block;
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    aspect-ratio: unset;
+    overflow: hidden;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:hover .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-visible .photo-lane__media,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame:focus-within .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:hover .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:focus-visible .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:focus-within .photo-lane__media {
+    transform: none;
+    filter: none;
   }
 
   .photo-lane--home .photo-lane__frame img,
-  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
-    max-width: min(68vw, 14.5rem);
-    max-height: clamp(9rem, 36vw, 14rem);
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame img {
+    width: auto;
+    height: auto;
+    max-width: min(68vw, 15rem);
+    max-height: clamp(9.5rem, 36vw, 14.5rem);
+    object-fit: unset;
   }
 
-  .photo-lane--home .photo-lane__head {
+  .photo-lane--home .photo-lane__frame--wide img,
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
+    max-width: min(82vw, 20.5rem);
+    max-height: clamp(11rem, 46vw, 17.5rem);
+  }
+
+  .photo-lane--home .photo-lane__nav {
+    display: inline-flex;
+  }
+
+  .photo-lane--home .photo-lane__head,
+  .book-lane__head {
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 0.45rem;
+    margin-block-end: clamp(1.25rem, 4vw, 1.75rem);
   }
 
-  .photo-lane--home .photo-lane__all {
+  .photo-lane--home .photo-lane__all,
+  .book-lane__all {
     margin-inline: auto;
+    min-height: var(--touch-min, 2.75rem);
+    padding-inline: 0.35rem;
+    opacity: 1;
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .photo-lane__title,
+  .book-lane__title {
+    font-size: clamp(1.65rem, 7vw, 2rem);
+    line-height: 1.05;
   }
 }
 
@@ -1370,14 +1450,16 @@ img.hero__art {
   transform: translateY(clamp(-6px, -1.2vw, -12px));
 }
 
-.photo-lane--home .photo-lane__frame img {
-  max-width: min(100%, clamp(7.5rem, 28vw, 24rem));
-  max-height: clamp(8rem, 26vh, 22rem);
-}
+@media (min-width: 768px) {
+  .photo-lane--home .photo-lane__frame img {
+    max-width: min(100%, clamp(7.5rem, 28vw, 24rem));
+    max-height: clamp(8rem, 26vh, 22rem);
+  }
 
-.photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
-  max-width: min(100%, clamp(9rem, 34vw, 26rem));
-  max-height: clamp(9rem, 32vh, 24rem);
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
+    max-width: min(100%, clamp(9rem, 34vw, 26rem));
+    max-height: clamp(9rem, 32vh, 24rem);
+  }
 }
 
 /* Home scroll lane: overlapping prints, drag to browse */
@@ -1482,9 +1564,20 @@ img.hero__art {
     filter: none;
   }
 
-  .photo-lane__media::before {
-    content: none;
-    display: none;
+  .photo-lane__media::before,
+  .photo-lane--home .photo-lane__media::before {
+    content: "";
+    display: block;
+    opacity: 0.88;
+  }
+
+  .photo-lane__caption {
+    opacity: 1;
+    transform: none;
+    background: none;
+    box-shadow: none;
+    color: #f4efe4;
+    text-shadow: none;
   }
 
   .photo-lane__frame:active .photo-lane__media::before,
@@ -1525,7 +1618,8 @@ img.hero__art {
     min-width: unset;
   }
 
-  .photo-lane--spread .photo-lane__track {
+  /* Non-home spread lanes (e.g. /media) keep horizontal scroll; home stacks above */
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__track {
     display: flex;
     flex-wrap: nowrap;
     gap: 0;
@@ -1535,24 +1629,23 @@ img.hero__art {
     padding-block: clamp(0.85rem, 2.5vw, 1.35rem) clamp(1rem, 3vw, 1.75rem);
   }
 
-  .photo-lane--spread .photo-lane__frame {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame {
     flex: 0 0 auto;
     scroll-snap-align: center;
     margin-inline: clamp(-0.55rem, -2vw, -0.85rem);
     margin-block-start: 0;
   }
 
-  .photo-lane--spread .photo-lane__frame--wide {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame--wide {
     margin-block-start: 0;
   }
 
-  .photo-lane--spread .photo-lane__frame--tall:first-child,
-  .photo-lane--spread .photo-lane__frame--tall:last-child {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame--tall:first-child,
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame--tall:last-child {
     margin-block-start: clamp(0.5rem, 1.8vw, 1rem);
   }
 
-  .photo-lane--spread .photo-lane__frame img,
-  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame img {
     max-width: min(72vw, 16rem);
     max-height: clamp(10rem, 38vw, 15rem);
   }
@@ -1574,23 +1667,15 @@ img.hero__art {
 
 /* Touch / always-visible captions: no overlap so labels stay on their print */
 @media (max-width: 767px), (hover: none) {
-  .photo-lane--home.photo-lane--spread .photo-lane__track,
-  .photo-lane--spread .photo-lane__track {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__track {
     gap: clamp(0.45rem, 1.5vw, 0.85rem);
   }
 
-  .photo-lane--home.photo-lane--spread .photo-lane__frame,
-  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide,
-  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child,
-  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
-    margin-inline: 0;
+  .photo-lane--home.photo-lane--spread .photo-lane__track {
+    gap: 0;
   }
 
-  .photo-lane--spread .photo-lane__frame {
-    margin-inline: 0;
-  }
-
-  .photo-lane--home:not(.photo-lane--spread) .photo-lane__frame {
+  .photo-lane--spread:not(.photo-lane--home) .photo-lane__frame {
     margin-inline: 0;
   }
 }

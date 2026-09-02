@@ -5,7 +5,10 @@
       <h1 class="t-h2">بەڕێوەبەر</h1>
       <p class="t-body admin-lead">نووسین زیاد بکە، دەستکاری بکە، و بڵاوی بکەوە — گۆڕانکارییەکان ڕاستەوخۆ لە ماڵپەڕدا دەردەکەون.</p>
     </div>
-    <a class="btn btn-primary" href="/admin/items/new">+ تۆماری نوێ</a>
+    <div class="admin-page-header__actions">
+      <button type="button" class="admin-help" data-help="dashboard" aria-expanded="false" aria-label="ڕوونکردنەوە">؟</button>
+      <a class="btn btn-primary" href="/admin/items/new">+ تۆماری نوێ</a>
+    </div>
   </header>
   <%- include("../partials/gold-rule", { extraClass: "mb-8 max-w-[14rem]" }) %>
 
@@ -63,17 +66,14 @@
     </div>
     <ul class="admin-draft-list">
       <% drafts.forEach(function (entry) { %>
-      <li class="admin-draft-row float-saucer float-saucer--rounded">
-        <div class="admin-draft-row__main">
-          <a class="admin-draft-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
-          <p class="t-meta"><%= contentTypeLabels[entry.contentType] %></p>
-        </div>
-        <div class="admin-draft-row__actions">
-          <a class="btn btn-sm btn-light" href="/admin/items/<%= entry.id %>">دەستکاری</a>
-          <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
-          <%- include("partials/status-form", { entry, csrf, status: "archived", back: "/admin", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }) %>
-        </div>
-      </li>
+      <%- include("partials/item-row", {
+        entry,
+        csrf,
+        actions: [
+          { status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" },
+          { status: "archived", back: "/admin", label: "شاردنەوە", buttonClass: "admin-btn-hide", confirm: "دڵنیایت لە شاردنەوەی ئەم تۆمارە لە ماڵپەڕ؟" }
+        ]
+      }) %>
       <% }); %>
     </ul>
   </section>
@@ -87,16 +87,14 @@
     </div>
     <ul class="admin-draft-list">
       <% archived.forEach(function (entry) { %>
-      <li class="admin-draft-row float-saucer float-saucer--rounded">
-        <div class="admin-draft-row__main">
-          <a class="admin-draft-row__title" href="/admin/items/<%= entry.id %>"><%= entry.title %></a>
-          <p class="t-meta"><%= contentTypeLabels[entry.contentType] %> · <%= statusLabels[entry.status] %></p>
-        </div>
-        <div class="admin-draft-row__actions">
-          <a class="btn btn-sm btn-light" href="/admin/items/<%= entry.id %>">دەستکاری</a>
-          <%- include("partials/status-form", { entry, csrf, status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }) %>
-        </div>
-      </li>
+      <%- include("partials/item-row", {
+        entry,
+        csrf,
+        showStatus: true,
+        actions: [
+          { status: "published", back: "/admin", label: "بڵاوکردنەوە", buttonClass: "btn-primary" }
+        ]
+      }) %>
       <% }); %>
     </ul>
   </section>

@@ -4,6 +4,8 @@ import { kuDigits } from "@/lib/format";
 import { youtubeEmbedUrl, youtubeId, youtubeThumbnail, youtubeWatchUrl } from "@/lib/youtube";
 import type { ContentItem, ContentType } from "@/types/content";
 
+export type YoutubePlaylistKey = "kurdi" | "interview" | "archive";
+
 export type ChannelVideo = {
   id: string;
   title: string;
@@ -11,6 +13,14 @@ export type ChannelVideo = {
   uploadDate: string;
   duration: number;
   watchUrl: string;
+  playlist: YoutubePlaylistKey;
+};
+
+export type YoutubePlaylistMeta = {
+  key: YoutubePlaylistKey;
+  title: string;
+  id: string;
+  url: string;
 };
 
 export type VideoLaneEntry = {
@@ -19,6 +29,7 @@ export type VideoLaneEntry = {
   href: string;
   title: string;
   summary: string;
+  playlist: YoutubePlaylistKey;
   contentType: ContentType;
   videoUrl: string;
   embedUrl: string;
@@ -29,17 +40,18 @@ export type VideoLaneEntry = {
   external?: boolean;
 };
 
-export function classifyYoutubeVideo(title: string, durationSec: number): ContentType {
-  const t = title.trim();
-  if (/پۆدکاست|podcast/i.test(t) || /نۆستالیژ/i.test(t)) return "podcast";
-  if (/یادی|مەراسیمی|ساڵڕۆژ|ڕێپۆرتاج/i.test(t) || durationSec <= 300) return "video";
-  if (/کۆڕ|تێروانین|چاوپێکەوتن|گفتوگۆ/i.test(t) || durationSec >= 900) return "interview";
-  return durationSec >= 1200 ? "interview" : "video";
-}
+export const YOUTUBE_PLAYLIST_ORDER: YoutubePlaylistKey[] = ["kurdi", "interview", "archive"];
 
-function ytSlug(id: string): string {
-  return `yt-${id.toLowerCase().replace(/[^a-z0-9]+/g, "")}`;
-}
+export const YOUTUBE_PLAYLIST_LABELS: Record<YoutubePlaylistKey, string> = {
+  kurdi: "کۆڕ",
+  interview: "چاوپێکەوتن",
+  archive: "ئەرشیف",
+};
+
+type SnapshotFile = {
+  playlists?: YoutubePlaylistMeta[];
+  videos?: Array<ChannelVideo & { playlist?: YoutubePlaylistKey }>;
+};
 
 function yearFromTitle(title: string, uploadYear: number): number {
   const easternDigits = "٠١٢٣٤٥٦٧٨٩";
@@ -49,18 +61,44 @@ function yearFromTitle(title: string, uploadYear: number): number {
   return uploadYear;
 }
 
-export function loadYoutubeSnapshot(): ChannelVideo[] {
+function ytSlug(id: string): string {
+  return `yt-${id.toLowerCase().replace(/[^a-z0-9]+/g, "")}`;
+}
+
+function playlistToContentType(playlist: YoutubePlaylistKey): ContentType {
+  if (playlist === "archive") return "video";
+  return "interview";
+}
+
+export function loadYoutubeSnapshot(): { playlists: YoutubePlaylistMeta[]; videos: ChannelVideo[] } {
   try {
     const file = path.join(process.cwd(), "data/youtube-videos.json");
-    const raw = JSON.parse(readFileSync(file, "utf8")) as { videos?: ChannelVideo[] };
-    return Array.isArray(raw.videos) ? raw.videos : [];
+    const raw = JSON.parse(readFileSync(file, "utf8")) as SnapshotFile;
+    const playlists = Array.isArray(raw.playlists) ? raw.playlists : [];
+    const videos = Array.isArray(raw.videos)
+      ? raw.videos
+          .filter((video): video is ChannelVideo => Boolean(video.id && video.playlist))
+          .map((video) => ({
+            id: video.id,
+            title: video.title,
+            description: video.description || video.title,
+            uploadDate: video.uploadDate || "",
+            duration: Number(video.duration) || 0,
+            watchUrl: video.watchUrl || `https://www.youtube.com/watch?v=${video.id}`,
+            playlist: video.playlist as YoutubePlaylistKey,
+          }))
+      : [];
+    return { playlists, videos };
   } catch {
-    return [];
+    return { playlists: [], videos: [] };
   }
 }
 
+export function getYoutubePlaylistMeta(key: YoutubePlaylistKey): YoutubePlaylistMeta | undefined {
+  return loadYoutubeSnapshot().playlists.find((playlist) => playlist.key === key);
+}
+
 export function channelVideoToLaneEntry(video: ChannelVideo): VideoLaneEntry {
-  const contentType = classifyYoutubeVideo(video.title, video.duration);
   const slug = ytSlug(video.id);
   const uploadYear = /^\d{4}/.test(video.uploadDate)
     ? Number(video.uploadDate.slice(0, 4))
@@ -74,7 +112,8 @@ export function channelVideoToLaneEntry(video: ChannelVideo): VideoLaneEntry {
     external: true,
     title: video.title,
     summary: video.description || video.title,
-    contentType,
+    playlist: video.playlist,
+    contentType: playlistToContentType(video.playlist),
     videoUrl: video.watchUrl,
     embedUrl: youtubeEmbedUrl(video.watchUrl) ?? "",
     watchUrl: youtubeWatchUrl(video.watchUrl) ?? video.watchUrl,
@@ -84,13 +123,21 @@ export function channelVideoToLaneEntry(video: ChannelVideo): VideoLaneEntry {
   };
 }
 
+function inferPlaylistFromItem(item: ContentItem): YoutubePlaylistKey | null {
+  if (item.contentType === "video") return "archive";
+  if (item.contentType === "interview") return "interview";
+  if (item.contentType === "podcast") return "interview";
+  return null;
+}
+
 export function contentItemToVideoEntry(item: ContentItem): VideoLaneEntry | null {
   const videoUrl = item.media?.videoUrl;
   const id = youtubeId(videoUrl);
   const embedUrl = youtubeEmbedUrl(videoUrl);
   const watchUrl = youtubeWatchUrl(videoUrl);
   const thumbUrl = youtubeThumbnail(videoUrl);
-  if (!id || !embedUrl || !watchUrl || !thumbUrl) return null;
+  const playlist = inferPlaylistFromItem(item);
+  if (!id || !embedUrl || !watchUrl || !thumbUrl || !playlist) return null;
 
   return {
     id,
@@ -98,6 +145,7 @@ export function contentItemToVideoEntry(item: ContentItem): VideoLaneEntry | nul
     href: `/archive/${item.slug}`,
     title: item.title,
     summary: item.summary || item.title,
+    playlist,
     contentType: item.contentType,
     videoUrl: videoUrl!,
     embedUrl,
@@ -112,33 +160,46 @@ export function contentItemToVideoEntry(item: ContentItem): VideoLaneEntry | nul
   };
 }
 
-export function getChannelVideosByType(): Record<"interview" | "podcast" | "video", VideoLaneEntry[]> {
-  const grouped: Record<"interview" | "podcast" | "video", VideoLaneEntry[]> = {
+export function getChannelVideosByPlaylist(): Record<YoutubePlaylistKey, VideoLaneEntry[]> {
+  const grouped: Record<YoutubePlaylistKey, VideoLaneEntry[]> = {
+    kurdi: [],
     interview: [],
-    podcast: [],
-    video: [],
+    archive: [],
   };
 
-  for (const video of loadYoutubeSnapshot()) {
+  for (const video of loadYoutubeSnapshot().videos) {
     const entry = channelVideoToLaneEntry(video);
-    if (entry.contentType === "interview" || entry.contentType === "podcast" || entry.contentType === "video") {
-      grouped[entry.contentType].push(entry);
-    }
+    grouped[video.playlist].push(entry);
   }
 
   return grouped;
 }
 
-export function mergeVideoEntries(repo: ContentItem[], snapshot: VideoLaneEntry[]): VideoLaneEntry[] {
-  const merged = repo.map(contentItemToVideoEntry).filter((entry): entry is VideoLaneEntry => entry !== null);
+export function mergeVideoEntries(
+  repo: ContentItem[],
+  snapshot: VideoLaneEntry[],
+  playlist: YoutubePlaylistKey,
+): VideoLaneEntry[] {
+  const merged = repo
+    .map(contentItemToVideoEntry)
+    .filter((entry): entry is VideoLaneEntry => entry !== null && entry.playlist === playlist);
   const seen = new Set(merged.map((entry) => entry.id));
 
   for (const entry of snapshot) {
-    if (!seen.has(entry.id)) {
+    if (entry.playlist === playlist && !seen.has(entry.id)) {
       merged.push(entry);
       seen.add(entry.id);
     }
   }
 
   return merged;
+}
+
+/** @deprecated Use playlist keys from YouTube instead of title heuristics. */
+export function classifyYoutubeVideo(title: string, durationSec: number): ContentType {
+  const t = title.trim();
+  if (/پۆدکاست|podcast/i.test(t) || /نۆستالیژ/i.test(t)) return "interview";
+  if (/یادی|مەراسیمی|ساڵڕۆژ|ڕێپۆرتاج/i.test(t) || durationSec <= 300) return "video";
+  if (/کۆڕ|تێروانین|چاوپێکەوتن|گفتوگۆ/i.test(t) || durationSec >= 900) return "interview";
+  return durationSec >= 1200 ? "interview" : "video";
 }

@@ -3,37 +3,41 @@
     tone: "forest",
     eyebrow: "دەنگ و وێنە",
     title: "میدیا",
-    description: "چاوپێکەوتن، پۆدکاست و ڤیدیۆی ئەرشیف لە یوتیوب، لەگەڵ وێنەکان.",
-    ghostSrc: "/brand/banner.png"
+    description: "ڤیدیۆکانی یوتیوب بەپێی کۆڕ، چاوپێکەوتن و ئەرشیف، لەگەڵ وێنەکان.",
+    ghostSrc: "/brand/banner.png",
+    mastheadInner: '<p class="mt-6"><a href="https://www.youtube.com/@StranAbdulla" class="inline-flex items-center gap-2 text-sm font-medium text-cream-100/85 hover:text-cream-100 transition-colors" rel="noopener noreferrer" target="_blank"><span class="link-underline">@StranAbdulla</span><span class="arrow-slide" aria-hidden="true">←</span></a></p>',
+  }) %>
+
+  <%- include("partials/video-lane", {
+    entries: typeof kurdiEntries !== "undefined" ? kurdiEntries : [],
+    headingKicker: (typeof kurdiCount !== "undefined" ? kurdiCount : "٠") + " ڤیدیۆ",
+    headingTitle: "کۆڕ",
+    laneHeadingId: "kurdi-videos-heading",
+    playlistUrl: typeof kurdiPlaylist !== "undefined" && kurdiPlaylist ? kurdiPlaylist.url : "",
+    playlistLabel: "لیستی کۆڕ",
+    laneMod: "video-lane--editorial",
+    showEmpty: false,
   }) %>
 
   <%- include("partials/video-lane", {
     entries: typeof interviewEntries !== "undefined" ? interviewEntries : [],
-    headingKicker: "یوتیوب",
+    headingKicker: (typeof interviewCount !== "undefined" ? interviewCount : "٠") + " ڤیدیۆ",
     headingTitle: "چاوپێکەوتن",
     laneHeadingId: "interviews-heading",
-    laneMoreHref: (typeof interviewEntries !== "undefined" && interviewEntries.length) ? "/archive?type=interview" : "",
-    laneMoreLabel: "هەموو چاوپێکەوتنەکان",
+    playlistUrl: typeof interviewPlaylist !== "undefined" && interviewPlaylist ? interviewPlaylist.url : "",
+    playlistLabel: "لیستی چاوپێکەوتن",
+    laneMod: "video-lane--editorial",
     showEmpty: false,
   }) %>
 
   <%- include("partials/video-lane", {
-    entries: typeof podcastEntries !== "undefined" ? podcastEntries : [],
-    headingKicker: "یوتیوب",
-    headingTitle: "پۆدکاست",
-    laneHeadingId: "podcasts-heading",
-    laneMoreHref: (typeof podcastEntries !== "undefined" && podcastEntries.length) ? "/archive?type=podcast" : "",
-    laneMoreLabel: "هەموو پۆدکاستەکان",
-    showEmpty: false,
-  }) %>
-
-  <%- include("partials/video-lane", {
-    entries: typeof videoEntries !== "undefined" ? videoEntries : [],
-    headingKicker: "یوتیوب",
-    headingTitle: "ڤیدیۆی ئەرشیف",
+    entries: typeof archiveVideoEntries !== "undefined" ? archiveVideoEntries : [],
+    headingKicker: (typeof videoCount !== "undefined" ? videoCount : "٠") + " ڤیدیۆ",
+    headingTitle: "ئەرشیف",
     laneHeadingId: "videos-heading",
-    laneMoreHref: (typeof videoEntries !== "undefined" && videoEntries.length) ? "/archive?type=video" : "",
-    laneMoreLabel: "هەموو ڤیدیۆکان",
+    playlistUrl: typeof archivePlaylist !== "undefined" && archivePlaylist ? archivePlaylist.url : "",
+    playlistLabel: "لیستی ئەرشیف",
+    laneMod: "video-lane--editorial",
     showEmpty: false,
   }) %>
 
@@ -64,3 +68,5 @@
     laneMod: " photo-lane--home",
   }) %>
 </div>
+
+<script src="/js/video-lane.js?v=20260902n" defer></script>

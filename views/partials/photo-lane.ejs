@@ -9,6 +9,7 @@
   var moreHref = lane.laneMoreHref || "";
   var moreLabel = lane.laneMoreLabel || "هەمووی ببینە";
   var extraClass = lane.laneMod ? (" " + lane.laneMod) : "";
+  var isHome = extraClass.indexOf("photo-lane--home") !== -1;
   var allowEmpty = Boolean(lane.showEmpty);
   var emptyCopy = lane.emptyNote || "لە بەڕێوەبەر لینکی یوتیوب دابنێ.";
 %>
@@ -31,7 +32,7 @@
 
   <% if (gallery.length) { %>
   <div class="photo-lane__viewport">
-    <% if (!isSpread) { %>
+    <% if (!isSpread || isHome) { %>
     <button type="button" class="photo-lane__nav photo-lane__nav--prev" data-photo-prev aria-label="وێنەی پێشوو">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" /></svg>
     </button>
@@ -81,7 +82,7 @@
   </div>
   <% } %>
 </section>
-<% if (gallery.length && !isSpread) { %>
-<script src="/js/home-photos.js?v=20260902d" defer></script>
+<% if (gallery.length && (!isSpread || isHome)) { %>
+<script src="/js/home-photos.js?v=20260902g" defer></script>
 <% } %>
 <% } %>

@@ -99,6 +99,19 @@
   margin-bottom: 0.35rem;
 }
 
+.admin-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-footer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .admin-lead {
   margin-top: 0.35rem;
   max-width: 36rem;
@@ -133,7 +146,7 @@
 
 /* Cards */
 .admin-card {
-  padding: 1.15rem 1.2rem;
+  padding: 0.9rem 1rem;
 }
 
 .admin-card--muted {
@@ -345,15 +358,15 @@
 .admin-item-list {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
-  margin-top: 1.5rem;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .admin-item-row {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.85rem 1rem;
-  padding: 0.85rem 1rem;
+  gap: 0.65rem 0.85rem;
+  padding: 0.65rem 0.85rem;
   align-items: center;
 }
 
@@ -467,20 +480,30 @@
 .admin-editor-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1rem;
+}
+
+@media (min-width: 960px) {
+  .admin-editor-sidebar {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+    max-height: calc(100vh - 7rem);
+    overflow-y: auto;
+  }
 }
 
 .admin-editor-main {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1rem;
   min-width: 0;
 }
 
 .admin-field-stack {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .admin-field-hint {
@@ -668,7 +691,7 @@
 .admin-compose__input {
   display: block;
   width: 100%;
-  min-height: 28rem;
+  min-height: 14rem;
   margin: 0;
   padding: 1rem 1.1rem 1.25rem;
   border: 0;
@@ -689,7 +712,7 @@
 }
 
 .admin-preview {
-  min-height: 28rem;
+  min-height: 14rem;
   padding: 1rem 1.15rem 1.4rem;
 }
 
@@ -863,7 +886,16 @@
 
 .admin-filters--bar {
   margin-top: 0;
-  padding: 1rem 1.1rem;
+  padding: 0.75rem 0.9rem;
+  position: sticky;
+  top: 4.5rem;
+  z-index: 15;
+}
+
+@media (min-width: 1024px) {
+  .admin-filters--bar {
+    top: 5.75rem;
+  }
 }
 
 @media (min-width: 800px) {
@@ -1086,6 +1118,9 @@
   position: sticky;
   bottom: 0;
   z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding: 0.85rem 0;
   margin-top: 0.5rem;
   background: linear-gradient(
@@ -1095,12 +1130,8 @@
   );
 }
 
-@media (min-width: 960px) {
-  .admin-form-footer--sticky {
-    position: static;
-    background: none;
-    padding-bottom: 0;
-  }
+.admin-form-footer--sticky .btn {
+  flex: 0 0 auto;
 }
 
 .admin-btn-hide {
@@ -1404,3 +1435,193 @@
 .admin-quick-actions--media {
   margin-top: 0.85rem;
 }
+
+/* Collapsible cover/pdf extras */
+.admin-cover-extra {
+  margin-top: 0.65rem;
+}
+
+.admin-cover-extra > summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--forest-800);
+  user-select: none;
+}
+
+/* Help popovers */
+.field-label-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--forest) 22%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--forest) 6%, white);
+  color: var(--forest-800);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.admin-help:hover,
+.admin-help[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--gold, #dca927) 55%, var(--forest-950));
+  background: color-mix(in srgb, var(--gold, #dca927) 18%, white);
+}
+
+.admin-help-popover {
+  position: absolute;
+  z-index: 60;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--forest) 18%, transparent);
+  background: #fff;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--forest-950) 18%, transparent);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.admin-help-popover[hidden] {
+  display: none;
+}
+
+/* Confirm / alert dialog */
+.admin-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.admin-dialog[hidden] {
+  display: none;
+}
+
+.admin-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--forest-950) 45%, transparent);
+}
+
+.admin-dialog__panel {
+  position: relative;
+  width: min(24rem, 100%);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--forest) 14%, transparent);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--forest-950) 22%, transparent);
+}
+
+.admin-dialog__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.admin-dialog__body {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
+}
+
+.admin-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Compact row actions menu */
+.admin-row-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.admin-row-menu > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.admin-row-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-row-menu__panel {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 0.25rem);
+  z-index: 20;
+  min-width: 9rem;
+  padding: 0.35rem;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--forest) 14%, transparent);
+  background: #fff;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--forest-950) 14%, transparent);
+}
+
+.admin-row-menu__panel .btn,
+.admin-row-menu__panel .admin-inline-form {
+  display: block;
+  width: 100%;
+}
+
+.admin-row-menu__panel .btn {
+  justify-content: flex-start;
+  text-align: start;
+}
+
+.admin-row-menu__panel .admin-inline-form button {
+  width: 100%;
+}
+
+.admin-item-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+/* Pagination */
+.admin-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--forest) 12%, transparent);
+}
+
+.admin-pagination__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.admin-pagination__meta {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
+}
+
+.admin-page-help {
+  margin-inline-start: auto;
+}
+

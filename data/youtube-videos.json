@@ -1,9 +1,30 @@
 {
   "channel": "@StranAbdulla",
-  "syncedAt": "2026-09-02T11:11:25.638Z",
+  "syncedAt": "2026-09-02T14:20:00.000Z",
+  "playlists": [
+    {
+      "key": "kurdi",
+      "title": "کۆڕ",
+      "id": "PLdrq8cG9yoE0",
+      "url": "https://www.youtube.com/playlist?list=PLdrq8cG9yoE0"
+    },
+    {
+      "key": "interview",
+      "title": "چاوپێکەوتن",
+      "id": "PLJDRXcKsfe00",
+      "url": "https://www.youtube.com/playlist?list=PLJDRXcKsfe00"
+    },
+    {
+      "key": "archive",
+      "title": "ئەرشیف",
+      "id": "PLAKldf959CNs",
+      "url": "https://www.youtube.com/playlist?list=PLAKldf959CNs"
+    }
+  ],
   "videos": [
     {
       "id": "_upIgTFJB8Y",
+      "playlist": "kurdi",
       "title": "یەک لە دە ... وێستگەیەک کۆششی مام جەلالانە..",
       "description": "یەک لە دە ... وێستگەیەک کۆششی مام جەلالانە..",
       "uploadDate": "",
@@ -12,6 +33,7 @@
     },
     {
       "id": "nREuJXFsVu8",
+      "playlist": "kurdi",
       "title": "تێروانینێکی سیاسی بۆ رۆماننوس عەرەبی شەمۆ",
       "description": "تێروانینێکی سیاسی بۆ رۆماننوس عەرەبی شەمۆ",
       "uploadDate": "",
@@ -20,6 +42,7 @@
     },
     {
       "id": "RKuut8DGNy8",
+      "playlist": "kurdi",
       "title": "کۆڕی (بۆ ئەوەی نەبێتە زەمی پاشەملە)",
       "description": "کۆڕی (بۆ ئەوەی نەبێتە زەمی پاشەملە)",
       "uploadDate": "",
@@ -27,15 +50,8 @@
       "watchUrl": "https://www.youtube.com/watch?v=RKuut8DGNy8"
     },
     {
-      "id": "ZaBh01BXeD4",
-      "title": "نۆستالیژیای کتێب، ئەوینی گەڕانەوەیە بۆ کتێب",
-      "description": "نۆستالیژیای کتێب، ئەوینی گەڕانەوەیە بۆ کتێب",
-      "uploadDate": "",
-      "duration": 2399,
-      "watchUrl": "https://www.youtube.com/watch?v=ZaBh01BXeD4"
-    },
-    {
       "id": "XAiwDpbDFEM",
+      "playlist": "interview",
       "title": "ستران عەبدوڵڵا بۆ سەنگەر عەبدولڕەحمان  هیوادارم بچمە هێزەکانی 70 تاوەکو لەدەست تۆ نەجاتم بێت",
       "description": "ستران عەبدوڵڵا بۆ سەنگەر عەبدولڕەحمان  هیوادارم بچمە هێزەکانی 70 تاوەکو لەدەست تۆ نەجاتم بێت",
       "uploadDate": "",
@@ -44,6 +60,7 @@
     },
     {
       "id": "u4wmy0Teelg",
+      "playlist": "interview",
       "title": "ستران عەبدوڵڵا باسی ئەوە دەکات لە داهاتوودا لە کەرکووک لەگەڵ کێدا هاوپەیمانێتی دەکەن",
       "description": "ستران عەبدوڵڵا باسی ئەوە دەکات لە داهاتوودا لە کەرکووک لەگەڵ کێدا هاوپەیمانێتی دەکەن",
       "uploadDate": "",
@@ -52,6 +69,7 @@
     },
     {
       "id": "fo4_Nzwsqtk",
+      "playlist": "interview",
       "title": "حکومڕانیی بەم جۆرە بەڕێوەناچێت",
       "description": "حکومڕانیی بەم جۆرە بەڕێوەناچێت",
       "uploadDate": "",
@@ -59,7 +77,17 @@
       "watchUrl": "https://www.youtube.com/watch?v=fo4_Nzwsqtk"
     },
     {
+      "id": "ZaBh01BXeD4",
+      "playlist": "interview",
+      "title": "نۆستالیژیای کتێب، ئەوینی گەڕانەوەیە بۆ کتێب",
+      "description": "نۆستالیژیای کتێب، ئەوینی گەڕانەوەیە بۆ کتێب",
+      "uploadDate": "",
+      "duration": 2399,
+      "watchUrl": "https://www.youtube.com/watch?v=ZaBh01BXeD4"
+    },
+    {
       "id": "br0y07wUD0w",
+      "playlist": "archive",
       "title": "یادی یەکەمین ساڵڕۆژی بەرنامەی ڕێپۆرتاجی تەلەفیزیۆنی خاک - ١٩٩٨",
       "description": "یادی یەکەمین ساڵڕۆژی بەرنامەی ڕێپۆرتاجی تەلەفیزیۆنی خاک - ١٩٩٨",
       "uploadDate": "",
@@ -68,6 +96,7 @@
     },
     {
       "id": "sMKhAbQOjR8",
+      "playlist": "archive",
       "title": "مەراسیمی یادی ڕۆژنامەی کوردستانی نوێ  - ساڵی ١٩٩٨",
       "description": "مەراسیمی یادی ڕۆژنامەی کوردستانی نوێ  - ساڵی ١٩٩٨",
       "uploadDate": "",

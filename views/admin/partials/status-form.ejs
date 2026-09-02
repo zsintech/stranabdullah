@@ -2,7 +2,7 @@
   method="post"
   action="/admin/items/<%= entry.id %>/status"
   class="admin-inline-form<%= typeof extraClass !== "undefined" && extraClass ? " " + extraClass : "" %>"
-  <% if (typeof confirm !== "undefined" && confirm) { %>onsubmit="return confirm('<%= confirm %>');"<% } %>
+  <% if (typeof confirm !== "undefined" && confirm) { %>data-confirm="<%= confirm %>"<% if (typeof confirmTitle !== "undefined" && confirmTitle) { %> data-confirm-title="<%= confirmTitle %>"<% } %><% if (typeof confirmDanger !== "undefined" && confirmDanger) { %> data-confirm-danger<% } %><% } %>
 >
   <input type="hidden" name="_csrf" value="<%= csrf %>" />
   <input type="hidden" name="status" value="<%= status %>" />

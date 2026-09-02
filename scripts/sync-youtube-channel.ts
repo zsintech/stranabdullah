@@ -1,5 +1,5 @@
 /**
- * Sync published YouTube channel videos into Firestore as interview / podcast / video items.
+ * Sync YouTube channel playlists into Firestore and data/youtube-videos.json.
  *
  * Usage:
  *   npx tsx scripts/sync-youtube-channel.ts
@@ -13,14 +13,23 @@ import { spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { stripUndefined } from "@/lib/strip-undefined";
+import {
+  YOUTUBE_PLAYLIST_LABELS,
+  type YoutubePlaylistKey,
+} from "@/lib/youtube-channel";
 import { applyDraft } from "@/repositories/content-draft";
 import { getAdminFirestore } from "@/server/auth/firebase-admin";
 import type { ContentItem, ContentType } from "@/types/content";
 
 const CHANNEL = process.env.YOUTUBE_CHANNEL || "@StranAbdulla";
-const CHANNEL_URL = `https://www.youtube.com/${CHANNEL.replace(/^@?/, "@")}/videos`;
 const ACTOR = "sync-youtube-channel";
 const dryRun = process.argv.includes("--dry-run");
+
+const PLAYLIST_IDS: Record<YoutubePlaylistKey, string> = {
+  kurdi: "PLdrq8cG9yoE0",
+  interview: "PLJDRXcKsfe00",
+  archive: "PLAKldf959CNs",
+};
 
 type YtRow = {
   id: string;
@@ -29,6 +38,7 @@ type YtRow = {
   uploadDate: string;
   duration: number;
   watchUrl: string;
+  playlist: YoutubePlaylistKey;
 };
 
 function ytSlug(id: string): string {
@@ -40,14 +50,6 @@ function uploadDateToIso(yyyymmdd: string): string {
   return `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}T12:00:00.000Z`;
 }
 
-function classifyVideo(title: string, durationSec: number): ContentType {
-  const t = title.trim();
-  if (/پۆدکاست|podcast/i.test(t) || /نۆستالیژ/i.test(t)) return "podcast";
-  if (/یادی|مەراسیمی|ساڵڕۆژ|ڕێپۆرتاج/i.test(t) || durationSec <= 300) return "video";
-  if (/کۆڕ|تێروانین|چاوپێکەوتن|گفتوگۆ/i.test(t) || durationSec >= 900) return "interview";
-  return durationSec >= 1200 ? "interview" : "video";
-}
-
 function yearFromTitle(title: string, uploadYear: number): number {
   const easternDigits = "٠١٢٣٤٥٦٧٨٩";
   const western = title.replace(/[٠-٩]/g, (ch) => String(easternDigits.indexOf(ch)));
@@ -56,15 +58,20 @@ function yearFromTitle(title: string, uploadYear: number): number {
   return uploadYear;
 }
 
-function fetchChannelVideos(): YtRow[] {
+function playlistToContentType(playlist: YoutubePlaylistKey): ContentType {
+  return playlist === "archive" ? "video" : "interview";
+}
+
+function fetchPlaylistVideos(playlist: YoutubePlaylistKey, playlistId: string): YtRow[] {
+  const url = `https://www.youtube.com/playlist?list=${playlistId}`;
   const result = spawnSync(
     "python",
-    ["-m", "yt_dlp", "--flat-playlist", "--skip-download", "-j", CHANNEL_URL],
+    ["-m", "yt_dlp", "--flat-playlist", "--skip-download", "-j", url],
     { encoding: "utf8", env: { ...process.env, PYTHONIOENCODING: "utf-8" }, maxBuffer: 16 * 1024 * 1024 },
   );
 
   if (result.status !== 0) {
-    throw new Error(result.stderr || result.stdout || "yt-dlp failed — install with: pip install yt-dlp");
+    throw new Error(result.stderr || result.stdout || `yt-dlp failed for ${playlist}`);
   }
 
   return result.stdout
@@ -88,8 +95,22 @@ function fetchChannelVideos(): YtRow[] {
         uploadDate: row.upload_date?.trim() || "",
         duration: Number(row.duration) || 0,
         watchUrl: `https://www.youtube.com/watch?v=${id}`,
+        playlist,
       } satisfies YtRow;
     });
+}
+
+function fetchAllPlaylistVideos(): YtRow[] {
+  const seen = new Set<string>();
+  const videos: YtRow[] = [];
+  for (const [key, id] of Object.entries(PLAYLIST_IDS) as Array<[YoutubePlaylistKey, string]>) {
+    for (const video of fetchPlaylistVideos(key, id)) {
+      if (seen.has(video.id)) continue;
+      seen.add(video.id);
+      videos.push(video);
+    }
+  }
+  return videos;
 }
 
 async function findExistingByYoutubeId(id: string, slug: string): Promise<ContentItem | null> {
@@ -108,12 +129,21 @@ async function findExistingByYoutubeId(id: string, slug: string): Promise<Conten
 }
 
 async function main() {
-  console.log(`Fetching ${CHANNEL_URL} …`);
-  const videos = fetchChannelVideos();
-  if (!videos.length) throw new Error("No videos found on channel.");
+  console.log(`Fetching playlists for ${CHANNEL} …`);
+  const videos = fetchAllPlaylistVideos();
+  if (!videos.length) throw new Error("No videos found in channel playlists.");
 
   const snapshotPath = path.join(process.cwd(), "data/youtube-videos.json");
-  writeFileSync(snapshotPath, JSON.stringify({ channel: CHANNEL, syncedAt: new Date().toISOString(), videos }, null, 2));
+  const playlists = (Object.keys(PLAYLIST_IDS) as YoutubePlaylistKey[]).map((key) => ({
+    key,
+    title: YOUTUBE_PLAYLIST_LABELS[key],
+    id: PLAYLIST_IDS[key],
+    url: `https://www.youtube.com/playlist?list=${PLAYLIST_IDS[key]}`,
+  }));
+  writeFileSync(
+    snapshotPath,
+    JSON.stringify({ channel: CHANNEL, syncedAt: new Date().toISOString(), playlists, videos }, null, 2),
+  );
   console.log(`Snapshot → ${snapshotPath} (${videos.length} videos)`);
 
   const col = getAdminFirestore().collection("contentItems");
@@ -131,7 +161,7 @@ async function main() {
       slug: existing?.slug || slug,
       title: video.title,
       summary: video.description || video.title,
-      contentType: classifyVideo(video.title, video.duration),
+      contentType: playlistToContentType(video.playlist),
       language: "ku" as const,
       status: "published" as const,
       publishedAt: uploadDateToIso(video.uploadDate),
@@ -139,10 +169,10 @@ async function main() {
       videoUrl: video.watchUrl,
       outlet: "یوتیوب",
       topics: ["میدیا"],
-      tags: ["youtube", "imported"],
+      tags: ["youtube", "imported", video.playlist],
     };
 
-    console.log(`${existing ? "update" : "create"} [${draft.contentType}] ${video.title}`);
+    console.log(`${existing ? "update" : "create"} [${video.playlist}/${draft.contentType}] ${video.title}`);
 
     if (dryRun) continue;
 

@@ -12,6 +12,7 @@
     "seed:publications": "node scripts/seed-publications.mjs",
     "migrate:firestore": "tsx scripts/migrate-seed-to-firestore.ts",
     "upload:book-pdfs": "tsx scripts/upload-book-pdfs.ts",
+    "upload:photos": "tsx scripts/upload-photos.ts",
     "import:hewalname-pdfs": "tsx scripts/import-hewalname-pdfs.ts",
     "sync:hewalname-pdfs": "tsx scripts/sync-hewalname-to-firestore.ts",
     "download:map-pdfs": "tsx scripts/download-map-pdfs.ts",

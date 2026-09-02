@@ -8,8 +8,10 @@ import { countBy, pickUnused } from "@/lib/home";
 import { renderPage } from "@/lib/render-page";
 import { coverOf } from "@/lib/view-helpers";
 import {
-  getChannelVideosByType,
+  getChannelVideosByPlaylist,
+  getYoutubePlaylistMeta,
   mergeVideoEntries,
+  YOUTUBE_PLAYLIST_LABELS,
 } from "@/lib/youtube-channel";
 import { withContentRepo, withAdminRepo } from "@/repositories";
 import type { ContentItem } from "@/types/content";
@@ -141,36 +143,42 @@ router.get(
 router.get(
   "/media",
   asyncHandler(async (_req, res) => {
-    const [interviews, podcasts, videos, photos] = await Promise.all([
+    const [interviews, videos, photos] = await Promise.all([
       withContentRepo((repo) => repo.getByType("interview", 40)),
-      withContentRepo((repo) => repo.getByType("podcast", 40)),
       withContentRepo((repo) => repo.getByType("video", 40)),
       withContentRepo((repo) => repo.getByType("photo", 60)),
     ]);
 
-    const channelByType = getChannelVideosByType();
-    const interviewEntries = mergeVideoEntries(interviews, channelByType.interview);
-    const podcastEntries = mergeVideoEntries(podcasts, channelByType.podcast);
-    const videoEntries = mergeVideoEntries(videos, channelByType.video);
+    const channelByPlaylist = getChannelVideosByPlaylist();
+    const kurdiEntries = mergeVideoEntries(interviews, channelByPlaylist.kurdi, "kurdi");
+    const interviewEntries = mergeVideoEntries(interviews, channelByPlaylist.interview, "interview");
+    const archiveVideoEntries = mergeVideoEntries(videos, channelByPlaylist.archive, "archive");
+
+    const kurdiPlaylist = getYoutubePlaylistMeta("kurdi");
+    const interviewPlaylist = getYoutubePlaylistMeta("interview");
+    const archivePlaylist = getYoutubePlaylistMeta("archive");
 
     await renderPage(res, "media", {
       pageTitle: "میدیا",
-      pageDescription: "چاوپێکەوتن، پۆدکاست و ڤیدیۆی ئەرشیف لە یوتیوب، لەگەڵ وێنەکان.",
+      pageDescription: "ڤیدیۆکانی یوتیوب بەپێی کۆڕ، چاوپێکەوتن و ئەرشیف، لەگەڵ وێنەکان.",
       interviews,
-      podcasts,
       videos,
       photos,
+      kurdiEntries,
       interviewEntries,
-      podcastEntries,
-      videoEntries,
+      archiveVideoEntries,
+      kurdiPlaylist,
+      interviewPlaylist,
+      archivePlaylist,
+      youtubePlaylistLabels: YOUTUBE_PLAYLIST_LABELS,
       empty:
+        kurdiEntries.length === 0 &&
         interviewEntries.length === 0 &&
-        podcastEntries.length === 0 &&
-        videoEntries.length === 0 &&
+        archiveVideoEntries.length === 0 &&
         photos.length === 0,
+      kurdiCount: kuDigits(kurdiEntries.length),
       interviewCount: kuDigits(interviewEntries.length),
-      podcastCount: kuDigits(podcastEntries.length),
-      videoCount: kuDigits(videoEntries.length),
+      videoCount: kuDigits(archiveVideoEntries.length),
       photoCount: kuDigits(photos.length),
       loadLaneCss: true,
     });

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles/app.css?v=20260827c" />
-    <link rel="stylesheet" href="/css/admin.css?v=20260829c" />
+    <link rel="stylesheet" href="/css/admin.css?v=20260902a" />
     <style>
       :root {
         --font-arabic: "Amiri", "Noto Naskh Arabic", serif;
@@ -75,5 +75,22 @@
         <%- body %>
       </div>
     </main>
+
+    <div class="admin-dialog" data-admin-dialog hidden>
+      <div class="admin-dialog__backdrop" data-admin-dialog-backdrop></div>
+      <div class="admin-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="admin-dialog-title">
+        <h2 class="admin-dialog__title" id="admin-dialog-title" data-admin-dialog-title>دڵنیایت؟</h2>
+        <p class="admin-dialog__body" data-admin-dialog-body></p>
+        <div class="admin-dialog__actions">
+          <button type="button" class="btn btn-light btn-sm" data-admin-dialog-cancel>پاشگەزبوونەوە</button>
+          <button type="button" class="btn btn-primary btn-sm" data-admin-dialog-confirm>بەڵێ</button>
+        </div>
+      </div>
+    </div>
+
+    <% if (typeof adminUser !== "undefined" && adminUser) { %>
+    <script src="/js/admin-help.js?v=20260902a" defer></script>
+    <script src="/js/admin-dialog.js?v=20260902a" defer></script>
+    <% } %>
   </body>
 </html>
