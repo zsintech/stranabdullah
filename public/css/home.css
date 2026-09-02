@@ -1056,6 +1056,17 @@ img.hero__art {
   }
 }
 
+.photo-lane--home .photo-lane__media::before {
+  content: none;
+  display: none;
+}
+
+.photo-lane--home .photo-lane__caption {
+  text-shadow:
+    0 1px 2px rgba(4, 18, 14, 0.85),
+    0 4px 16px rgba(4, 18, 14, 0.55);
+}
+
 .photo-lane--home {
   overflow: visible;
 }
@@ -1124,6 +1135,48 @@ img.hero__art {
 .photo-lane--home.photo-lane--spread .photo-lane__frame--wide img {
   max-width: min(100%, clamp(9rem, 34vw, 26rem));
   max-height: clamp(9rem, 32vh, 24rem);
+}
+
+/* Home scroll lane: overlapping prints, drag to browse */
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  align-items: flex-end;
+  scroll-snap-type: x proximity;
+  padding-block: clamp(1rem, 3vw, 2.25rem) clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  margin-inline: clamp(-1.35rem, -4.5vw, -2.75rem);
+}
+
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame--wide {
+  margin-block-start: 0;
+}
+
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame--tall {
+  margin-block-start: clamp(0.75rem, 2.5vw, 1.75rem);
+}
+
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:hover,
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:focus-visible,
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:focus-within {
+  z-index: 50;
+}
+
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:hover .photo-lane__media,
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:focus-visible .photo-lane__media,
+.photo-lane--home:not(.photo-lane--spread) .photo-lane__frame:focus-within .photo-lane__media {
+  transform: translateY(clamp(-6px, -1.2vw, -12px));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .photo-lane--home:not(.photo-lane--spread) .photo-lane__track:hover .photo-lane__frame:not(:hover):not(:focus-visible):not(:focus-within) {
+    filter: brightness(0.84) saturate(0.78);
+  }
 }
 
 /* Editorial three-up: overlapping prints, hover brings one forward */

@@ -8,32 +8,37 @@
         src: src,
         title: item.title,
         yearLabel: item.subtitle || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
-        wide: false,
+        wide: Boolean(item.extras && item.extras.homeGalleryWide),
       };
     })
     .filter(Boolean);
 
   const pool = fromAdmin.length ? fromAdmin : archivePhotoFallbacks;
-  const top3 = pool.slice(0, 3);
-  let shots = top3;
-  if (top3.length === 3) {
+  const useSpread = pool.length <= 3;
+  let shots = pool;
+
+  if (useSpread && pool.length === 3) {
     shots = [
-      Object.assign({}, top3[1], { wide: false }),
-      Object.assign({}, top3[0], { wide: true }),
-      Object.assign({}, top3[2], { wide: false }),
+      Object.assign({}, pool[1], { wide: false }),
+      Object.assign({}, pool[0], { wide: true }),
+      Object.assign({}, pool[2], { wide: false }),
     ];
-  } else if (top3.length === 2) {
+  } else if (useSpread && pool.length === 2) {
     shots = [
-      Object.assign({}, top3[1], { wide: false }),
-      Object.assign({}, top3[0], { wide: true }),
+      Object.assign({}, pool[1], { wide: false }),
+      Object.assign({}, pool[0], { wide: true }),
     ];
-  } else if (top3.length === 1) {
-    shots = [Object.assign({}, top3[0], { wide: true })];
+  } else if (useSpread && pool.length === 1) {
+    shots = [Object.assign({}, pool[0], { wide: true })];
+  } else {
+    shots = pool.map(function (shot, index) {
+      return Object.assign({}, shot, { wide: shot.wide || index % 3 === 1 });
+    });
   }
 %>
 <%- include("photo-lane", {
   shots: shots,
-  forceSpread: true,
+  forceSpread: useSpread,
   laneMod: " photo-lane--home",
   headingKicker: "ئەرشیف",
   headingTitle: "وێنە",

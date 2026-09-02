@@ -31,8 +31,7 @@ router.get(
     const photoDate = (item: ContentItem) => item.publishedAt ?? item.audit?.updatedAt ?? "";
     const photos = photoItems
       .filter((item) => coverOf(item))
-      .sort((a, b) => photoDate(b).localeCompare(photoDate(a)))
-      .slice(0, 3);
+      .sort((a, b) => photoDate(b).localeCompare(photoDate(a)));
 
     const latest = rest.slice(0, 8);
     const kurdish = pickUnused(rest, latest, (item) => item.language === "ku", 8);
