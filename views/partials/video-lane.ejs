@@ -1,0 +1,116 @@
+<%
+  var lane = typeof locals === "object" && locals ? locals : {};
+  var entries = Array.isArray(lane.entries) ? lane.entries : [];
+  var kicker = lane.headingKicker || "یوتیوب";
+  var title = lane.headingTitle || "ڤیدیۆ";
+  var headingId = lane.laneHeadingId || "video-lane-heading";
+  var moreHref = lane.laneMoreHref || "";
+  var moreLabel = lane.laneMoreLabel || "هەمووی ببینە";
+  var channelUrl = lane.channelUrl || "https://www.youtube.com/@StranAbdulla";
+  var allowEmpty = Boolean(lane.showEmpty);
+  var emptyCopy = lane.emptyNote || "لینکی یوتیوب لە بەڕێوەبەر دابنێ.";
+  var featured = entries[0] || null;
+  var rest = entries.length > 1 ? entries.slice(1) : [];
+%>
+<section class="video-lane<%= entries.length ? "" : " video-lane--empty" %>" aria-labelledby="<%= headingId %>" data-video-lane>
+  <div class="site-container">
+    <header class="video-lane__head">
+      <div class="video-lane__intro">
+        <p class="video-lane__kicker"><%= kicker %></p>
+        <h2 id="<%= headingId %>" class="video-lane__title"><%= title %></h2>
+      </div>
+      <div class="video-lane__actions">
+        <% if (moreHref && entries.length) { %>
+        <a href="<%= moreHref %>" class="video-lane__all group">
+          <span class="link-underline"><%= moreLabel %></span>
+          <span class="arrow-slide" aria-hidden="true">←</span>
+        </a>
+        <% } %>
+        <a href="<%= channelUrl %>" class="video-lane__channel" rel="noopener noreferrer" target="_blank">
+          <span class="link-underline">@StranAbdulla</span>
+          <span class="arrow-slide" aria-hidden="true">←</span>
+        </a>
+      </div>
+    </header>
+  </div>
+
+  <% if (entries.length && featured) { %>
+  <div class="video-lane__stage">
+    <div class="site-container video-lane__feature-wrap">
+      <article class="video-lane__feature">
+        <div class="video-lane__feature-media">
+          <%- include("youtube-embed", {
+            embedUrl: featured.embedUrl,
+            watchUrl: featured.watchUrl,
+            embedTitle: featured.title,
+          }) %>
+        </div>
+        <div class="video-lane__feature-copy">
+          <p class="video-lane__meta">
+            <span><%= featured.outlet %></span>
+            <% if (featured.yearLabel) { %>
+            <span aria-hidden="true">·</span>
+            <span><%= featured.yearLabel %></span>
+            <% } %>
+          </p>
+          <h3 class="video-lane__feature-title">
+            <a href="<%= featured.href %>" class="video-lane__feature-link"<% if (featured.external) { %> rel="noopener noreferrer" target="_blank"<% } %>><%= featured.title %></a>
+          </h3>
+          <% if (featured.summary && featured.summary !== featured.title) { %>
+          <p class="video-lane__feature-lede"><%= featured.summary %></p>
+          <% } %>
+        </div>
+      </article>
+    </div>
+
+    <% if (rest.length) { %>
+    <div class="video-lane__viewport">
+      <div class="video-lane__fade video-lane__fade--start" aria-hidden="true"></div>
+      <div class="video-lane__fade video-lane__fade--end" aria-hidden="true"></div>
+      <div class="video-lane__track" dir="rtl" tabindex="0" aria-label="<%= title %> — لیست">
+        <% rest.forEach(function (entry, index) { %>
+        <article class="video-lane__card" style="--i: <%= index + 1 %>">
+          <div class="video-lane__card-media">
+            <button
+              type="button"
+              class="video-lane__card-play"
+              data-video-play
+              data-embed-url="<%= entry.embedUrl %>"
+              data-watch-url="<%= entry.watchUrl %>"
+              aria-label="لێدانی <%= entry.title %>"
+            >
+              <img
+                src="<%= entry.thumbUrl %>"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                class="video-lane__card-thumb"
+              />
+              <span class="video-lane__card-play-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 6.5v11l9-5.5-9-5.5Z" fill="currentColor" /></svg>
+              </span>
+            </button>
+            <div class="video-lane__card-frame" hidden data-video-frame></div>
+          </div>
+          <div class="video-lane__card-copy">
+            <p class="video-lane__meta video-lane__meta--card">
+              <span><%= entry.outlet %></span>
+              <% if (entry.yearLabel) { %><span aria-hidden="true">·</span><span><%= entry.yearLabel %></span><% } %>
+            </p>
+            <h3 class="video-lane__card-title">
+              <a href="<%= entry.href %>" class="video-lane__card-link"<% if (entry.external) { %> rel="noopener noreferrer" target="_blank"<% } %>><%= entry.title %></a>
+            </h3>
+          </div>
+        </article>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+  <script src="/js/video-lane.js?v=20260902l" defer></script>
+  <% } else if (allowEmpty) { %>
+  <div class="site-container">
+    <p class="video-lane__empty"><%= emptyCopy %></p>
+  </div>
+  <% } %>
+</section>

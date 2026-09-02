@@ -5,8 +5,12 @@ import { archiveLabels } from "@/lib/archive-labels";
 import { sourceOutletLabel } from "@/lib/content-labels";
 import { kuDigits } from "@/lib/format";
 import { countBy, pickUnused } from "@/lib/home";
-import { coverOf } from "@/lib/view-helpers";
 import { renderPage } from "@/lib/render-page";
+import { coverOf } from "@/lib/view-helpers";
+import {
+  getChannelVideosByType,
+  mergeVideoEntries,
+} from "@/lib/youtube-channel";
 import { withContentRepo, withAdminRepo } from "@/repositories";
 import type { ContentItem } from "@/types/content";
 import { DEFAULT_BIOGRAPHY } from "@/types/biography";
@@ -144,6 +148,11 @@ router.get(
       withContentRepo((repo) => repo.getByType("photo", 60)),
     ]);
 
+    const channelByType = getChannelVideosByType();
+    const interviewEntries = mergeVideoEntries(interviews, channelByType.interview);
+    const podcastEntries = mergeVideoEntries(podcasts, channelByType.podcast);
+    const videoEntries = mergeVideoEntries(videos, channelByType.video);
+
     await renderPage(res, "media", {
       pageTitle: "میدیا",
       pageDescription: "چاوپێکەوتن، پۆدکاست و ڤیدیۆی ئەرشیف لە یوتیوب، لەگەڵ وێنەکان.",
@@ -151,14 +160,17 @@ router.get(
       podcasts,
       videos,
       photos,
+      interviewEntries,
+      podcastEntries,
+      videoEntries,
       empty:
-        interviews.length === 0 &&
-        podcasts.length === 0 &&
-        videos.length === 0 &&
+        interviewEntries.length === 0 &&
+        podcastEntries.length === 0 &&
+        videoEntries.length === 0 &&
         photos.length === 0,
-      interviewCount: kuDigits(interviews.length),
-      podcastCount: kuDigits(podcasts.length),
-      videoCount: kuDigits(videos.length),
+      interviewCount: kuDigits(interviewEntries.length),
+      podcastCount: kuDigits(podcastEntries.length),
+      videoCount: kuDigits(videoEntries.length),
       photoCount: kuDigits(photos.length),
       loadLaneCss: true,
     });

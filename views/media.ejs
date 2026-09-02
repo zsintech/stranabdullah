@@ -1,38 +1,3 @@
-<%
-  function videoShot(item) {
-    const yt = youtubeId(item.media && item.media.videoUrl);
-    const src = coverOf(item) || youtubeThumbnail(item.media && item.media.videoUrl);
-    if (!src && !yt) return null;
-    return {
-      href: "/archive/" + item.slug,
-      src: src || youtubeThumbnail(item.media && item.media.videoUrl),
-      title: item.title,
-      yearLabel: item.extras && item.extras.outlet
-        ? item.extras.outlet
-        : (item.year ? "ساڵی " + kuDigits(item.year) : ""),
-      wide: true,
-      play: true,
-    };
-  }
-
-  const interviewShots = (typeof interviews !== "undefined" ? interviews : []).map(videoShot).filter(Boolean);
-  const podcastShots = (typeof podcasts !== "undefined" ? podcasts : []).map(videoShot).filter(Boolean);
-  const archiveVideoShots = (typeof videos !== "undefined" ? videos : []).map(videoShot).filter(Boolean);
-  const fromAdminPhotos = (typeof photos !== "undefined" ? photos : [])
-    .map(function (item, index) {
-      const src = coverOf(item);
-      if (!src) return null;
-      return {
-        href: "/archive/" + item.slug,
-        src: src,
-        title: item.title,
-        yearLabel: item.location || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
-        wide: index % 3 === 1,
-      };
-    })
-    .filter(Boolean);
-  const photoShots = fromAdminPhotos.length ? fromAdminPhotos : archivePhotoFallbacks;
-%>
 <div class="bg-cream-100">
   <%- include("partials/masthead", {
     tone: "forest",
@@ -42,41 +7,52 @@
     ghostSrc: "/brand/banner.png"
   }) %>
 
-  <%- include("partials/photo-lane", {
-    shots: interviewShots,
+  <%- include("partials/video-lane", {
+    entries: typeof interviewEntries !== "undefined" ? interviewEntries : [],
     headingKicker: "یوتیوب",
     headingTitle: "چاوپێکەوتن",
     laneHeadingId: "interviews-heading",
-    laneMoreHref: interviewShots.length ? "/archive?type=interview" : "",
+    laneMoreHref: (typeof interviewEntries !== "undefined" && interviewEntries.length) ? "/archive?type=interview" : "",
     laneMoreLabel: "هەموو چاوپێکەوتنەکان",
-    laneMod: "photo-lane--video",
-    showEmpty: true,
-    emptyNote: "جۆری چاوپێکەوتن هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+    showEmpty: false,
   }) %>
 
-  <%- include("partials/photo-lane", {
-    shots: podcastShots,
+  <%- include("partials/video-lane", {
+    entries: typeof podcastEntries !== "undefined" ? podcastEntries : [],
     headingKicker: "یوتیوب",
     headingTitle: "پۆدکاست",
     laneHeadingId: "podcasts-heading",
-    laneMoreHref: podcastShots.length ? "/archive?type=podcast" : "",
+    laneMoreHref: (typeof podcastEntries !== "undefined" && podcastEntries.length) ? "/archive?type=podcast" : "",
     laneMoreLabel: "هەموو پۆدکاستەکان",
-    laneMod: "photo-lane--video",
-    showEmpty: true,
-    emptyNote: "جۆری پۆدکاست هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+    showEmpty: false,
   }) %>
 
-  <%- include("partials/photo-lane", {
-    shots: archiveVideoShots,
+  <%- include("partials/video-lane", {
+    entries: typeof videoEntries !== "undefined" ? videoEntries : [],
     headingKicker: "یوتیوب",
     headingTitle: "ڤیدیۆی ئەرشیف",
     laneHeadingId: "videos-heading",
-    laneMoreHref: archiveVideoShots.length ? "/archive?type=video" : "",
+    laneMoreHref: (typeof videoEntries !== "undefined" && videoEntries.length) ? "/archive?type=video" : "",
     laneMoreLabel: "هەموو ڤیدیۆکان",
-    laneMod: "photo-lane--video",
-    showEmpty: true,
-    emptyNote: "جۆری ڤیدیۆ هەڵبژێرە و لینکی یوتیوب لە بەڕێوەبەر دابنێ.",
+    showEmpty: false,
   }) %>
+
+  <%
+    const fromAdminPhotos = (typeof photos !== "undefined" ? photos : [])
+      .map(function (item, index) {
+        const src = coverOf(item);
+        if (!src) return null;
+        return {
+          href: "/archive/" + item.slug,
+          src: src,
+          title: item.title,
+          yearLabel: item.location || (item.year ? "ساڵی " + kuDigits(item.year) : ""),
+          wide: index % 3 === 1,
+        };
+      })
+      .filter(Boolean);
+    const photoShots = fromAdminPhotos.length ? fromAdminPhotos : archivePhotoFallbacks;
+  %>
 
   <%- include("partials/photo-lane", {
     shots: photoShots,
@@ -85,5 +61,6 @@
     laneHeadingId: "media-photos-heading",
     laneMoreHref: "/archive?type=photo",
     laneMoreLabel: "هەموو وێنەکان",
+    laneMod: " photo-lane--home",
   }) %>
 </div>

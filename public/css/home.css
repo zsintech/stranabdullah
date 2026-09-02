@@ -2015,3 +2015,357 @@ img.hero__art {
 .essay-spread__lead-media img {
   height: 14rem;
 }
+
+/* ── Editorial YouTube video lane (media page) ── */
+
+.video-lane {
+  position: relative;
+  padding-block: clamp(2.25rem, 5vw, 4rem) clamp(2.5rem, 5.5vw, 4.5rem);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--cream, #f8f5ee) 92%, #fff), var(--cream, #f8f5ee) 42%, var(--cream, #f8f5ee));
+}
+
+.video-lane + .video-lane {
+  padding-block-start: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.video-lane__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-block-end: clamp(1.35rem, 3vw, 2.25rem);
+}
+
+.video-lane__intro {
+  min-width: 0;
+}
+
+.video-lane__kicker {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 48%, var(--gold, #dca927));
+}
+
+.video-lane__title {
+  margin: 0;
+  font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
+  font-size: clamp(1.85rem, 1.2rem + 2vw, 2.75rem);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  color: var(--forest-950, #043b2b);
+}
+
+.video-lane__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+}
+
+.video-lane__all,
+.video-lane__channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--forest-950, #043b2b);
+  text-decoration: none;
+  opacity: 0.78;
+  transition: opacity 180ms ease;
+}
+
+.video-lane__all:hover,
+.video-lane__all:focus-visible,
+.video-lane__channel:hover,
+.video-lane__channel:focus-visible {
+  opacity: 1;
+}
+
+.video-lane__channel {
+  opacity: 0.62;
+}
+
+.video-lane__stage {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.video-lane__feature-wrap {
+  position: relative;
+}
+
+.video-lane__feature {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  animation: photo-lane-in 780ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (min-width: 900px) {
+  .video-lane__feature {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    align-items: end;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+}
+
+.video-lane__feature-media .youtube-embed {
+  margin: 0;
+}
+
+.video-lane__feature-media .youtube-embed__frame {
+  border-radius: 0.15rem;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--forest-950, #043b2b) 12%, transparent),
+    0 18px 44px rgba(4, 24, 18, 0.16);
+}
+
+.video-lane__feature-media .youtube-embed__caption {
+  display: none;
+}
+
+.video-lane__feature-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+  padding-block-end: 0.35rem;
+}
+
+.video-lane__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 55%, var(--gold, #dca927));
+}
+
+.video-lane__meta--card {
+  font-size: 0.66rem;
+}
+
+.video-lane__feature-title,
+.video-lane__card-title {
+  margin: 0;
+  font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--forest-950, #043b2b);
+}
+
+.video-lane__feature-title {
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 1.85rem);
+}
+
+.video-lane__feature-link,
+.video-lane__card-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.video-lane__feature-link:hover,
+.video-lane__feature-link:focus-visible,
+.video-lane__card-link:hover,
+.video-lane__card-link:focus-visible {
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 72%, var(--gold, #dca927));
+}
+
+.video-lane__feature-lede {
+  margin: 0;
+  font-size: clamp(0.92rem, 0.88rem + 0.2vw, 1.02rem);
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 72%, var(--ink-muted, #5c5346));
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-lane__viewport {
+  position: relative;
+}
+
+.video-lane__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min(16rem, 78vw), 22rem);
+  gap: clamp(0.85rem, 2vw, 1.15rem);
+  overflow-x: auto;
+  padding-inline: var(--gutter, 1.25rem);
+  padding-block: 0.25rem 0.75rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter, 1.25rem);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.video-lane__track::-webkit-scrollbar {
+  display: none;
+}
+
+.video-lane__fade {
+  position: absolute;
+  inset-block: 0;
+  z-index: 2;
+  width: clamp(2rem, 8vw, 4rem);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+
+.video-lane__fade--start {
+  inset-inline-start: 0;
+  background: linear-gradient(
+    to inline-end,
+    var(--cream, #f8f5ee) 15%,
+    color-mix(in srgb, var(--cream, #f8f5ee) 60%, transparent) 55%,
+    transparent
+  );
+}
+
+.video-lane__fade--end {
+  inset-inline-end: 0;
+  background: linear-gradient(
+    to inline-start,
+    var(--cream, #f8f5ee) 15%,
+    color-mix(in srgb, var(--cream, #f8f5ee) 60%, transparent) 55%,
+    transparent
+  );
+}
+
+.video-lane.is-at-start .video-lane__fade--start,
+.video-lane.is-at-end .video-lane__fade--end {
+  opacity: 0;
+}
+
+.video-lane__card {
+  scroll-snap-align: start;
+  animation: photo-lane-in 780ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.video-lane__card-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #121c18;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--forest-950, #043b2b) 12%, transparent),
+    0 10px 24px rgba(4, 24, 18, 0.12);
+  transition:
+    transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 420ms ease;
+}
+
+.video-lane__card:hover .video-lane__card-media,
+.video-lane__card:focus-within .video-lane__card-media {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--forest-950, #043b2b) 18%, transparent),
+    0 16px 36px rgba(4, 24, 18, 0.18);
+}
+
+.video-lane__card-play {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video-lane__card-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-lane__card-play-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.video-lane__card-play-icon svg {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.8rem 0.72rem 0.8rem 0.9rem;
+  color: #f4efe4;
+  background: color-mix(in srgb, #04120e 42%, transparent);
+  border: 1px solid color-mix(in srgb, #f4efe4 55%, transparent);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  transition: transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.video-lane__card-play:hover .video-lane__card-play-icon svg,
+.video-lane__card-play:focus-visible .video-lane__card-play-icon svg {
+  transform: scale(1.08);
+}
+
+.video-lane__card-frame {
+  position: absolute;
+  inset: 0;
+}
+
+.video-lane__card-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-lane__card-copy {
+  padding-block-start: 0.75rem;
+}
+
+.video-lane__card-title {
+  font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-lane__empty {
+  margin: 0;
+  padding: 1.1rem 1.25rem;
+  max-width: 42rem;
+  font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--forest-950, #043b2b) 62%, var(--ink-muted, #5c5346));
+  background: color-mix(in srgb, #fff 55%, var(--cream, #f8f5ee));
+  border: 1px solid color-mix(in srgb, var(--forest-950, #043b2b) 10%, transparent);
+  border-radius: 1.15rem;
+}
+
+@media (max-width: 767px) {
+  .video-lane__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .video-lane__feature-copy {
+    padding-block-end: 0;
+  }
+
+  .video-lane__fade {
+    display: none;
+  }
+}
