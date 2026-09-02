@@ -1573,7 +1573,7 @@ img.hero__art {
 }
 
 /* Touch / always-visible captions: no overlap so labels stay on their print */
-@media (hover: none) {
+@media (max-width: 767px), (hover: none) {
   .photo-lane--home.photo-lane--spread .photo-lane__track,
   .photo-lane--spread .photo-lane__track {
     gap: clamp(0.45rem, 1.5vw, 0.85rem);
