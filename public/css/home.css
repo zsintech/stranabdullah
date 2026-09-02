@@ -23,14 +23,12 @@
   padding-block-start: 3.25rem;
   background: var(--hero-field);
   color: var(--hero-ivory);
-  --masthead-mark-offset: calc(1.45rem + 0.45rem);
 }
 
 @media (min-width: 768px) {
   .home-opening {
     margin-block-start: -3.5rem;
     padding-block-start: 3.5rem;
-    --masthead-mark-offset: calc(1.65rem + 0.55rem);
   }
 }
 
@@ -161,8 +159,7 @@ img.hero__art {
   text-align: start;
   width: min(100%, 38rem);
   max-width: min(52%, 38rem);
-  padding-inline-start: var(--masthead-mark-offset, calc(1.45rem + 0.45rem));
-  padding-inline-end: 0;
+  padding-inline: 0;
   padding-block: clamp(1rem, 2.8vw, 2.25rem);
   box-sizing: border-box;
   pointer-events: none;
@@ -608,7 +605,7 @@ img.hero__art {
 
   .hero__fade {
     background:
-      linear-gradient(180deg, rgba(1, 26, 21, 0.52) 0%, rgba(1, 26, 21, 0.28) 28%, transparent 52%, rgba(1, 26, 21, 0.45) 100%),
+      linear-gradient(180deg, transparent 0%, transparent 28%, transparent 52%, rgba(1, 26, 21, 0.45) 100%),
       linear-gradient(90deg, transparent 42%, rgba(1, 26, 21, 0.38) 100%);
   }
 }
@@ -636,13 +633,7 @@ img.hero__art {
     width: 100%;
     max-width: 100%;
     padding-block: 0 0.65rem;
-    background: linear-gradient(
-      180deg,
-      rgba(1, 26, 21, 0.82) 0%,
-      rgba(1, 26, 21, 0.62) 42%,
-      rgba(1, 26, 21, 0.18) 68%,
-      transparent 88%
-    );
+    background: transparent;
   }
 
   .hero__folio {
@@ -680,7 +671,7 @@ img.hero__art {
 
   .hero__fade {
     background:
-      linear-gradient(180deg, rgba(1, 26, 21, 0.38) 0%, transparent 38%, transparent 62%, rgba(1, 26, 21, 0.42) 100%),
+      linear-gradient(180deg, transparent 0%, transparent 38%, transparent 62%, rgba(1, 26, 21, 0.42) 100%),
       linear-gradient(90deg, rgba(1, 26, 21, 0.1) 0%, transparent 48%);
   }
 

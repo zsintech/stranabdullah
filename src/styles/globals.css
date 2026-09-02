@@ -3203,13 +3203,6 @@ textarea,
     min-height: var(--header-height);
     padding-block: 0;
     gap: clamp(0.45rem, 1.2vw, 0.65rem);
-    --masthead-mark-offset: calc(1.45rem + 0.45rem);
-  }
-  @media (min-width: 768px) {
-    .site-header [data-header-shell],
-    [data-header-shell] {
-      --masthead-mark-offset: calc(1.65rem + 0.55rem);
-    }
   }
   @media (min-width: 640px) {
     .site-header [data-header-shell],
