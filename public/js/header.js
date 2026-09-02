@@ -57,4 +57,11 @@
       setOpen(false);
     });
   });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && toggle && toggle.getAttribute("aria-expanded") === "true") {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
 })();

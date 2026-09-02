@@ -1151,6 +1151,11 @@
   --gutter: clamp(1rem, 4vw, 4.5rem);
   --measure: 50rem;
   --measure-wide: 68.75rem;
+  --bp-sm: 40rem;
+  --bp-md: 48rem;
+  --bp-lg: 64rem;
+  --bp-xl: 80rem;
+  --touch-min: 2.75rem;
   --section-y: clamp(3rem, 2.25rem + 5vw, 8rem);
   --section-y-compact: clamp(4rem, 3rem + 3vw, 5rem);
   --header-height: 4rem;
@@ -1198,6 +1203,7 @@ textarea,
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-height) + env(safe-area-inset-top, 0px));
     background: var(--cream);
     -webkit-text-size-adjust: 100%;
   }
@@ -1650,10 +1656,34 @@ textarea,
   }
   .article-cover {
     width: 100%;
-    max-height: 28rem;
+    max-height: clamp(12rem, 40vh, 28rem);
     object-fit: cover;
     border-radius: 0.5rem;
     box-shadow: 0 12px 40px color-mix(in srgb, var(--forest-950) 12%, transparent);
+  }
+
+  .article-header__container {
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .article-embed__container {
+    padding-block-start: clamp(1.25rem, 3vw, 2rem);
+    padding-block-end: 0;
+  }
+
+  .article-cover-wrap {
+    margin-block-start: -0.35rem;
+    padding: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .article-cover-wrap {
+      margin-block-start: -0.85rem;
+    }
+  }
+
+  .article-body-wrap {
+    padding-block: clamp(2.5rem, 6vw, 4rem) clamp(4rem, 8vw, 7rem);
   }
   .link-inline {
     color: var(--forest-900);
@@ -2785,6 +2815,12 @@ textarea,
     margin: 0;
     padding: 0;
   }
+
+  @media (max-width: 479px) {
+    .essay-grid {
+      grid-template-columns: 1fr;
+    }
+  }
   @media (min-width: 1024px) {
     .essay-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -3019,6 +3055,7 @@ textarea,
     border-bottom: 1px solid rgba(201, 169, 102, 0.2);
     background: var(--field-deep);
     color: var(--header-ivory);
+    padding-top: env(safe-area-inset-top, 0px);
   }
   .site-header::before,
   .site-header::after {
@@ -3353,10 +3390,14 @@ textarea,
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: var(--touch-min);
+    height: var(--touch-min);
     margin-inline-end: -0.15rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: transparent;
     color: var(--header-ivory-muted);
+    cursor: pointer;
     transition: color 200ms var(--ease);
   }
   @media (min-width: 1024px) {
@@ -3367,6 +3408,8 @@ textarea,
   .masthead-toggle:hover,
   .masthead-toggle:focus-visible {
     color: var(--header-ivory);
+    outline: 2px solid color-mix(in srgb, var(--header-gold) 65%, transparent);
+    outline-offset: 2px;
   }
 
   .mobile-nav {
@@ -3397,7 +3440,8 @@ textarea,
     width: min(88%, 20.5rem);
     height: 100%;
     max-height: 100dvh;
-    padding: 1.25rem 1.5rem 1.5rem;
+    padding: calc(1.25rem + env(safe-area-inset-top, 0px)) calc(1.5rem + env(safe-area-inset-right, 0px))
+      calc(1.5rem + env(safe-area-inset-bottom, 0px)) 1.5rem;
     overflow: auto;
     background: var(--paper, #fbf8f1);
     color: var(--forest-950, #011a15);
@@ -3470,6 +3514,8 @@ textarea,
   .mobile-nav__search {
     margin-top: 2rem;
     width: 100%;
+    min-height: var(--touch-min);
+    justify-content: center;
   }
 
   @media (max-width: 639px) {
@@ -3477,8 +3523,9 @@ textarea,
       display: none;
     }
     .masthead-search {
-      min-height: 1.7rem;
-      padding: 0.28rem;
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+      padding: 0.45rem;
     }
   }
   /* ── Archive year groups + entry saucers ── */
@@ -3563,6 +3610,17 @@ textarea,
     grid-template-columns: minmax(5.5rem, 7.5rem) minmax(0, 1fr);
     gap: 0.9rem 1.1rem;
     align-items: start;
+  }
+
+  @media (max-width: 639px) {
+    .archive-entry--media {
+      grid-template-columns: 1fr;
+    }
+
+    .archive-entry__media {
+      width: min(100%, 8.5rem);
+      aspect-ratio: 16 / 10;
+    }
   }
 
   .archive-entry__media {
@@ -4395,6 +4453,10 @@ textarea,
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3) var(--space-4);
     align-items: end;
+  }
+
+  .archive-filters__form .field {
+    font-size: max(1rem, 16px);
   }
   .archive-filters__field--search {
     grid-column: 1 / -1;

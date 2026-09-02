@@ -860,7 +860,7 @@ img.hero__art {
 .photo-lane__track {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(15rem, 72vw);
+  grid-auto-columns: minmax(min(15rem, 78vw), 72vw);
   gap: 0.85rem;
   align-items: center;
   overflow-x: auto;
@@ -986,6 +986,17 @@ img.hero__art {
   transform: translateY(0.65rem);
   pointer-events: none;
   transition: opacity 280ms ease, transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (max-width: 767px), (hover: none) {
+  .photo-lane__caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .photo-lane__media::before {
+    opacity: 0.45;
+  }
 }
 
 .photo-lane__frame:hover .photo-lane__caption,
@@ -1180,7 +1191,7 @@ img.hero__art {
 }
 
 /* Editorial three-up: overlapping prints, hover brings one forward */
-@media (min-width: 760px) {
+@media (min-width: 768px) {
   .photo-lane--spread .photo-lane__track {
     display: grid;
     grid-auto-flow: unset;
@@ -1275,10 +1286,42 @@ img.hero__art {
   }
 }
 
-@media (max-width: 759px) {
+@media (max-width: 767px) {
   .photo-lane__frame--wide,
   .photo-lane__frame--tall {
     min-width: unset;
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame {
+    margin-inline: clamp(-0.65rem, -2.5vw, -1.15rem);
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child {
+    margin-inline-end: clamp(-0.85rem, -3vw, -1.35rem);
+    margin-block-start: clamp(0.65rem, 2vw, 1.25rem);
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
+    margin-inline: clamp(-0.85rem, -3vw, -1.35rem);
+  }
+
+  .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
+    margin-inline-start: clamp(-0.85rem, -3vw, -1.35rem);
+    margin-block-start: clamp(0.85rem, 2.5vw, 1.75rem);
+  }
+
+  .photo-lane--home:not(.photo-lane--spread) .photo-lane__frame {
+    margin-inline: clamp(-0.65rem, -2vw, -1rem);
+  }
+
+  .photo-lane__head {
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+  }
+
+  .photo-lane__all {
+    min-height: var(--touch-min, 2.75rem);
+    align-items: center;
   }
 }
 
