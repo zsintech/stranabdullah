@@ -1093,13 +1093,64 @@ img.hero__art {
 }
 
 @media (max-width: 767px), (hover: none) {
+  .photo-lane__media {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
+  }
+
   .photo-lane__caption {
+    position: static;
+    inset: auto;
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 0.5rem 0.1rem 0;
+    color: var(--forest-950, #043b2b);
+    text-shadow: none;
+  }
+
+  .photo-lane--home .photo-lane__caption {
+    text-shadow: none;
   }
 
   .photo-lane__media::before {
-    opacity: 0.45;
+    content: none;
+    display: none;
+    opacity: 0;
+  }
+
+  .photo-lane__caption-copy {
+    border-block-start-color: color-mix(in srgb, var(--forest-950, #043b2b) 22%, var(--gold, #dca927));
+  }
+
+  .photo-lane__caption-title {
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .photo-lane__year {
+    color: color-mix(in srgb, var(--forest-950, #043b2b) 58%, transparent);
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .photo-lane__index {
+    color: color-mix(in srgb, var(--forest-950, #043b2b) 50%, var(--gold, #dca927));
+  }
+
+  .photo-lane--home .photo-lane__frame:hover .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:focus-visible .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:focus-within .photo-lane__media,
+  .photo-lane--home .photo-lane__frame:active .photo-lane__media {
+    transform: none;
   }
 }
 
@@ -1129,12 +1180,18 @@ img.hero__art {
 }
 
 .photo-lane__caption-title {
-  display: block;
+  display: -webkit-box;
+  min-width: 0;
   font-family: var(--font-arabic, "Amiri"), "Noto Naskh Arabic", serif;
   font-size: clamp(0.86rem, 0.8rem + 0.28vw, 1.02rem);
   font-weight: 700;
   line-height: 1.4;
   text-wrap: pretty;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .photo-lane__year {
@@ -1252,19 +1309,20 @@ img.hero__art {
 
   .photo-lane--home.photo-lane--spread .photo-lane__track {
     justify-content: flex-start;
+    align-items: flex-start;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--gutter, 1.25rem);
     -webkit-overflow-scrolling: touch;
-    padding-block: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+    padding-block: clamp(0.75rem, 2.5vw, 1.25rem) clamp(1.5rem, 5vw, 2.25rem);
   }
 
   .photo-lane--home.photo-lane--spread .photo-lane__frame,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--wide,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:first-child,
   .photo-lane--home.photo-lane--spread .photo-lane__frame--tall:last-child {
-    margin-inline: clamp(-0.35rem, -1.2vw, -0.55rem);
-    margin-block-start: clamp(0.35rem, 1.5vw, 0.75rem);
+    margin-inline: 0.2rem;
+    margin-block-start: 0;
   }
 
   .photo-lane--home.photo-lane--spread .photo-lane__frame--wide {
@@ -1426,7 +1484,9 @@ img.hero__art {
   }
 
   .photo-lane__media::before {
-    opacity: 0.22;
+    content: none;
+    display: none;
+    opacity: 0;
   }
 
   .photo-lane__frame:active .photo-lane__media::before,
@@ -1471,10 +1531,10 @@ img.hero__art {
     display: flex;
     flex-wrap: nowrap;
     gap: 0;
-    align-items: flex-end;
+    align-items: flex-start;
     overflow-x: auto;
     scroll-snap-type: x proximity;
-    padding-block: clamp(0.85rem, 2.5vw, 1.35rem) clamp(1rem, 3vw, 1.75rem);
+    padding-block: clamp(0.85rem, 2.5vw, 1.35rem) clamp(1.5rem, 5vw, 2.25rem);
   }
 
   .photo-lane--spread .photo-lane__frame {
@@ -1499,8 +1559,13 @@ img.hero__art {
     max-height: clamp(10rem, 38vw, 15rem);
   }
 
+  .photo-lane--home:not(.photo-lane--spread) .photo-lane__track {
+    align-items: flex-start;
+    padding-block-end: clamp(1.5rem, 5vw, 2.25rem);
+  }
+
   .photo-lane--home:not(.photo-lane--spread) .photo-lane__frame {
-    margin-inline: clamp(-0.65rem, -2vw, -1rem);
+    margin-inline: 0.2rem;
   }
 
   .photo-lane__head {
